@@ -4,4 +4,6 @@
 **/*.txt
 **/*.pyc
 **/*.html
+**/*.xml
+**/Downloader.jl
 .env/
