@@ -17,30 +17,26 @@ function read_csv(file_path::AbstractString)
     data = CSV.File(file_path) |> DataFrame
     
     # Extract the specified columns
+    file_names = data[!,1]
     urls = data[!, 2]    
-    return urls[1:end]
+    return file_names,urls[1:end]
 end
 
-function download_xml(url,destination)
-    try
-        response = HTTP.request("GET", url)
-#        response = HTTP.get(url)
-        if response.status == 200
-            Downloads.download(url, destination)
-            println("File downloaded successfully!") 
-        else
-            println("Error: HTTP status code ", response.status)
-        end
-    catch e
-        println("Error: ",e)
+function download_xml(url,f)
+    response = HTTP.get(url, ["User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"])
+    open("$f", "w") do file
+        write(file, String(response.body))
     end
 end
 
 function download_run()
-    urls = read_csv("urls/201022.csv")
-    destination = "urls/xml_files/"
-    for url in urls
-        download_xml(url,destination)
+    file_names,urls = read_csv("urls/201022.csv")
+    destination = "urls/xml_files"
+    Threads.@threads for n in 1:length(urls)
+        @show n
+        f = "urls/xml_files/$(file_names[n])"
+        url = urls[n]
+        download_xml(url,f)
     end
 end
 
