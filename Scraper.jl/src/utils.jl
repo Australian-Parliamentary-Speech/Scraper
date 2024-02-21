@@ -21,7 +21,7 @@ end
     return nodes
 end
 
-@xport function filter(str::AbstractString)
+@xport function filter_(str::AbstractString)
     # Replace newline characters with an empty string
     filtered_str = replace(str, "\n" => "")
     # Replace multiple spaces with a single space, excluding spaces between words
