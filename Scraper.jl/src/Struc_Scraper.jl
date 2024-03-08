@@ -24,7 +24,7 @@ end
 
 
 function write_child_nodes_recursive(root,file,depth,indent_level::Int = 0)
-    indent = repeat("  ", indent_level)    
+    indent = repeat(" ", indent_level)    
     if depth <= 0
         return
     end
@@ -42,7 +42,7 @@ function write_main()
     xdoc = parse_file("urls/xml_files/2019-02-12.xml")
     xroot = root(xdoc)
     open("child_nodes.txt", "w") do file
-        write_child_nodes_recursive(xroot,file,3,0)
+        write_child_nodes_recursive(xroot,file,10,0)
     end
 end
  

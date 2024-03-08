@@ -3,7 +3,7 @@ using AndExport
 using RegularExpressions
 
 @xport function find_text(soup,content,delim=nothing)
-    text_list = nodecontent.(findall("$content", soup))
+    text_list = [i.content for i in findall("$content", soup)]
     if split != nothing
         text_new_list = []
         for text in text_list
@@ -39,6 +39,7 @@ end
         print("No numbers found")
     end
 end
+
 
 
 
