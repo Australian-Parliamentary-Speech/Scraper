@@ -42,7 +42,7 @@ function write_main()
     xdoc = parse_file("urls/xml_files/2019-02-12.xml")
     xroot = root(xdoc)
     open("child_nodes.txt", "w") do file
-        write_child_nodes_recursive(xroot,file,10,0)
+        write_child_nodes_recursive(xroot,file,7,0)
     end
 end
  

@@ -35,39 +35,30 @@ function node_indices(filename::AbstractString)
     return all
 end
 
-
-function root_(all_indices,root,max_depth)
-    depth = 1
-    while depth < max_depth
-        parent_nodes = [i for i in all_indices if i[1] == depth]
-        child_nodes = [i for i in all_indices if i[1] == depth+1]
-        for i in 1:length(parent_nodes)-1
-            next_parent = parent_nodes[i+1]
-            now_parent = parent_nodes[i]
-            now_parent_node = XML.Element(now_parent[end])
-            push!(root, now_parent_node)
-            add_text(now_parent_node,now_parent)
-            now_children = [c for c in child_nodes if now_parent[2]<c[2]<next_parent[2]]
-            for child in now_children
-                child_node = XML.Element(child[end])
-                push!(now_parent_node,child_node)
-                add_text(child_node,child)
+function write_root(lines)
+    root = XML.Element("root")
+    parent_nodes = [root]
+    for i in 1:length(lines)-1
+        line,current_indent = lines[i][end],lines[i][1]
+        next_line,next_indent = lines[i+1][end],lines[i+1][1]
+        current_node = XML.Element(line)
+        add_text(current_node,line)
+        if i == 1
+            push!(root,current_node)
+            push!(parent_nodes,current_node)
+        else
+            push!(parent_nodes[end],current_node)
+            if current_indent < next_indent
+                push!(parent_nodes,current_node)
+            elseif current_indent > next_indent
+                n = current_indent - next_indent
+                parent_nodes = parent_nodes[1:end-n]
             end
         end
-
-        final_parent = parent_nodes[end]
-        final_children = [c[end] for c in child_nodes if final_parent[2]<c[2]]
-        final_parent_node = XML.Element(final_parent[end])
-        push!(root, final_parent_node)
-        add_text(final_parent_node,final_parent)
-
-        for child in final_children
-            child_node = XML.Element(child)
-            push!(XML.Element(final_parent[end]),child_node)
-            add_text(child_node,child)
-        end
-        depth += 1
     end
+    last_node = XML.Element(lines[end][end])
+    push!(parent_nodes[end],last_node) 
+    XML.write("check.xml",root)
     return root
 end
 
@@ -78,11 +69,13 @@ end
 
 function test_main()
     fn = "child_nodes.txt"
-    all_indices = node_indices(fn)
-    root = XML.Element("root")
-    max_depth = maximum([i[1] for i in all_indices])
-    root = root_(all_indices,root,max_depth)
-    XML.write("check_.xml",root)
+
+    lines = node_indices(fn)
+    root = write_root(lines)
+
+#    max_depth = maximum([i[1] for i in all_indices])
+ #   @show max_depth
+ #   root = root_(all_indices,root,max_depth)
 end
  
 

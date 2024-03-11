@@ -17,7 +17,8 @@ function test()
 end
 
 function test2()
-    xdoc = readxml("urls/xml_files/2021-02-03.xml")
+    xdoc = readxml("check.xml")
+#    xdoc = readxml("urls/xml_files/2021-02-03.xml")
     soup = root(xdoc)
     inter = find_node(soup,"chamber.xscript//interjection")
     qs = find_node(soup,"chamber.xscript//question")
