@@ -82,7 +82,7 @@ function test_main()
     root = XML.Element("root")
     max_depth = maximum([i[1] for i in all_indices])
     root = root_(all_indices,root,max_depth)
-    XML.write("check.xml",root)
+    XML.write("check_.xml",root)
 end
  
 
