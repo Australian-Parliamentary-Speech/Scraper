@@ -72,10 +72,7 @@ function test_main()
 
     lines = node_indices(fn)
     root = write_root(lines)
-
-#    max_depth = maximum([i[1] for i in all_indices])
- #   @show max_depth
- #   root = root_(all_indices,root,max_depth)
+#   root = root_(all_indices,root,max_depth)
 end
  
 

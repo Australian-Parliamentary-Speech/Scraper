@@ -1,4 +1,8 @@
 using HTTP
+using Gumbo
+using AbstractTrees
+using Cascadia
+using DelimitedFiles
 using Downloads
 using CSV
 using DataFrames
@@ -38,6 +42,26 @@ function download_run()
         url = urls[n]
         download_xml(url,f)
     end
+end
+
+
+function main()
+    link = "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22chamber%2Fhansards%2Fff07e01d-cd6d-4be6-bff6-f867d1054a78%2F0103%22;src1=sm1"
+#
+    #url = "https://www.example.com" # Make sure you use the full url with https and everything
+
+    response = HTTP.request("GET", link)
+
+    doc = Gumbo.parsehtml(String(response))
+    subsoup = eachmatch(sel".twoBoxForm",doc.root)
+    for ele in subsoup
+       metapaddings = eachmatch(sel".metaPadding",ele)
+       label = [eachmatch(sel".mdLabel",metapadding) for metapadding in metapaddings]
+       value = [eachmatch(sel".mdValue",metapadding) for metapadding in metapaddings]
+       #@show label[1][2][1].text
+       @show label[1][2] value[1][2]
+    end
+
 end
 
 
