@@ -2,7 +2,12 @@
 
 julia_version = "1.10.2"
 manifest_format = "2.0"
-project_hash = "e3e8a1a3a27e02fbc073862cce2a968b17dc6b49"
+project_hash = "5720786ea580f5be2543800f815b1459ad404cc7"
+
+[[deps.AbstractTrees]]
+git-tree-sha1 = "2d9c9a55f9c93e8887ad391fbae72f8ef55e1177"
+uuid = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+version = "0.4.5"
 
 [[deps.AndExport]]
 deps = ["MacroTools"]
@@ -30,6 +35,12 @@ deps = ["CodecZlib", "Dates", "FilePathsBase", "InlineStrings", "Mmap", "Parsers
 git-tree-sha1 = "679e69c611fff422038e9e21e270c4197d49d918"
 uuid = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 version = "0.10.12"
+
+[[deps.Cascadia]]
+deps = ["AbstractTrees", "Gumbo"]
+git-tree-sha1 = "c0769cbd930aea932c0912c4d2749c619a263fc1"
+uuid = "54eefc05-d75b-58de-a785-1a3403f0919f"
+version = "1.0.2"
 
 [[deps.CodeTracking]]
 deps = ["InteractiveUtils", "UUIDs"]
@@ -133,6 +144,18 @@ uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
 [[deps.Future]]
 deps = ["Random"]
 uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
+
+[[deps.Gumbo]]
+deps = ["AbstractTrees", "Gumbo_jll", "Libdl"]
+git-tree-sha1 = "a1a138dfbf9df5bace489c7a9d5196d6afdfa140"
+uuid = "708ec375-b3d6-5a57-a7ce-8257bf98657a"
+version = "0.8.2"
+
+[[deps.Gumbo_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "29070dee9df18d9565276d68a596854b1764aa38"
+uuid = "528830af-5a63-567c-a44a-034ed33b8444"
+version = "0.10.2+0"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "ConcurrentUtilities", "Dates", "ExceptionUnwrapping", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]

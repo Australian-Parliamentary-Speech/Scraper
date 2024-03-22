@@ -44,6 +44,13 @@ function download_run()
     end
 end
 
+function download_single()
+    url = "https://parlinfo.aph.gov.au/parlInfo/download/chamber/hansardr/27533/toc_unixml/House%20of%20Representatives_2023_12_07_Official.xml;fileType=text%2Fxml"
+    f = "urls/test_files/2023-12-07.xml"
+    download_xml(url,f)
+end
+
+
 
 function main()
     link = "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22chamber%2Fhansards%2Fff07e01d-cd6d-4be6-bff6-f867d1054a78%2F0103%22;src1=sm1"

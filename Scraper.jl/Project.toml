@@ -4,11 +4,14 @@ authors = ["Eve <evecheng999@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 AndExport = "4484d908-372d-4f90-b90b-0ec97f005b8c"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+Cascadia = "54eefc05-d75b-58de-a785-1a3403f0919f"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+Gumbo = "708ec375-b3d6-5a57-a7ce-8257bf98657a"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 LightXML = "9c8b4983-aa76-5018-a973-4c85ecc9e179"
 RegularExpressions = "27faeba3-bc54-5829-b163-df8cb949fe88"
