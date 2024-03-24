@@ -2,8 +2,8 @@ module utils
 using AndExport
 using RegularExpressions
 
-@xport function find_text(soup,content,delim=nothing)
-    text_list = [i.content for i in findall("$content", soup)]
+@xport function find_text(soup,xpath,delim=nothing)
+    text_list = [i.content for i in findall("$xpath", soup)]
     if split != nothing
         text_new_list = []
         for text in text_list
@@ -39,6 +39,13 @@ end
         print("No numbers found")
     end
 end
+
+
+@xport function findall_in_subsoup(path,soup,xpath)
+    nodes = findall("$(path)//$xpath",soup)
+    return nodes
+end
+
 
 
 

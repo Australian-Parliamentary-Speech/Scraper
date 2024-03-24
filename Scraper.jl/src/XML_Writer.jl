@@ -42,7 +42,7 @@ function write_root(lines)
         line,current_indent = lines[i][end],lines[i][1]
         next_line,next_indent = lines[i+1][end],lines[i+1][1]
         current_node = XML.Element(line)
-        add_text(current_node,line)
+        add_text(current_node,lines[i])
         if i == 1
             push!(root,current_node)
             push!(parent_nodes,current_node)
