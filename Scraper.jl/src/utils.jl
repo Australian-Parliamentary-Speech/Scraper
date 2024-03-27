@@ -2,6 +2,42 @@ module utils
 using AndExport
 using RegularExpressions
 
+@xport function edit_row(row)
+    edit_row = ' '
+    for i in row
+        edit_row = edit_row * "\"$i\","
+    end
+    return edit_row
+end
+
+
+@xport function get_talker(path,soup)
+    talker_node = talker_from_any(path,soup)
+    return talker_content(talker_node)
+end
+
+@xport function talker_from_any(path,soup)
+    talker_node = findfirst("$(path)//talker",soup)
+    return talker_node
+end
+
+@xport function talker_content(talker_node)
+    function find_content(xpath,talker_node)
+        talker_content_node = findfirst("$(talker_node.path)//$(xpath)",talker_node)
+        #        @show talker_content_node.path
+        talker_content = talker_content_node.content
+        return talker_content
+    end
+
+    talker_contents = []
+    for xpath in ["name","name.id","electorate","party"]
+        talker_content = find_content(xpath,talker_node)
+        push!(talker_contents,talker_content)
+    end
+    #        @show talker_name.parentnode.path
+    return talker_contents
+end
+
 @xport function find_text(soup,xpath,delim=nothing)
     text_list = [i.content for i in findall("$xpath", soup)]
     if split != nothing
@@ -47,7 +83,11 @@ end
 end
 
 
-
+@xport function read_csv_columns(filename::AbstractString, column_indice::Int)
+    df = CSV.File(filename) |> DataFrame
+    column = df[:, i]
+    return column
+end
 
 
 end
