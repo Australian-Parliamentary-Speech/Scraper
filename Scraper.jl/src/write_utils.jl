@@ -2,6 +2,7 @@ module write_utils
 using AndExport 
 using utils
 using Interjections
+using Questions
 
 @xport function rows_construct(soup,flag,node,io)
     if flag == "question"
@@ -33,7 +34,7 @@ end
 
 @xport function produce_q_a_content(node,soup)
     """get node content"""
-    content = filter_(node.content)
+    content = find_q_a_talk_text(node,soup)
     path = node.path
 
     """get node speaker content"""

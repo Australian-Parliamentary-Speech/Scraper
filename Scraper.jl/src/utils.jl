@@ -22,7 +22,7 @@ end
 end
 
 @xport function talker_content(talker_node)
-    function find_content(xpath,talker_node)
+    function find_content(xpath)
         talker_content_node = findfirst("$(talker_node.path)//$(xpath)",talker_node)
         #        @show talker_content_node.path
         talker_content = talker_content_node.content
@@ -31,7 +31,7 @@ end
 
     talker_contents = []
     for xpath in ["name","name.id","electorate","party"]
-        talker_content = find_content(xpath,talker_node)
+        talker_content = find_content(xpath)
         push!(talker_contents,talker_content)
     end
     #        @show talker_name.parentnode.path
@@ -50,11 +50,7 @@ end
 end
 
 @xport function find_node(soup,nodename)
-    nodes = []
-    for node in findall("$nodename", soup)
-        push!(nodes,node)
-    end    
-    return nodes
+    return findall("$nodename", soup)
 end
 
 @xport function filter_(str::AbstractString)
@@ -77,9 +73,12 @@ end
 end
 
 
-@xport function findall_in_subsoup(path,soup,xpath)
-    nodes = findall("$(path)//$xpath",soup)
-    return nodes
+@xport function find_in_subsoup(path,soup,xpath,all_or_first)
+    if all_or_first == :all
+        return findall("$(path)$xpath",soup)
+    elseif all_or_first == :first
+        return findfirst("$(path)$xpath",soup)
+    end
 end
 
 
@@ -88,6 +87,25 @@ end
     column = df[:, i]
     return column
 end
+
+@xport function create_dict_multiple_values(keys,values)
+    dict_ = Dict()
+    past_keys = []
+    for i in 1:length(keys)
+        key = keys[i]
+        value = values[i]
+        if !(key in past_keys)
+            dict_[key] = [value]
+        elseif key in past_keys
+            prev_value = dict_[key]
+            push!(prev_value,value)
+            dict_[key] = prev_value
+        end
+        push!(past_keys,key)
+    end
+    return dict_
+end
+
 
 
 end
