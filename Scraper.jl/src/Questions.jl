@@ -52,20 +52,33 @@ end
     p_nodes = find_in_subsoup(node.path,soup,"//p",:all)
     function find_talker_in_p(p_node)
         p_talker = find_in_subsoup(p_node.path,soup,"//a",:first)
-        return p_talker
+        if p_talker == nothing
+            p_talker = "N/A"
+        end
+       return p_talker
     end
-    p_talk_nodes = []
+    p_talker_nodes = []
     for p_node in p_nodes
-        p_talk_node = find_talker_in_p(p_node)
-        push!(p_talk_nodes,p_talk_node)
+        p_talker_node = find_talker_in_p(p_node)
+        push!(p_talker_nodes,p_talker_node)
     end
-    return p_nodes,p_talk_nodes
+    return p_nodes,p_talker_nodes
 end
 
 @xport function separate_talk_p_content(node,soup)
-    p_nodes,p_talk_nodes = separate_talk_p_nodes(node,soup)
-    return [p_node.content for p_node in p_nodes],[p_talk_node.content for p_talk_node in p_talk_nodes]
+    p_nodes,p_talker_nodes = separate_talk_p_nodes(node,soup)
+    p_talkers = []
+    for t in p_talker_nodes
+        if t == "N/A"
+            push!(p_talkers,t)
+        else
+            push!(p_talkers, filter_(t.content))
+        end
+    end
+    p_talker_contents = [filter_(c.content) for c in p_nodes]
+    return collect(zip(p_talkers, p_talker_contents))
 end
+
 
 
 end

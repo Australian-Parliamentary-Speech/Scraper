@@ -13,6 +13,8 @@ function test_one_page()
     q_to_a = scrape_question_time_node(q_dict,a_dict)
     fn = "question_to_answers_1.csv"
     open(fn, "w") do io
+        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content"])
+
         for key in keys(q_to_a)
             """question"""
             question_node = q_to_a[key][1][1]

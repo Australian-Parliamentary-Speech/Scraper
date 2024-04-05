@@ -4,37 +4,55 @@ using utils
 using Interjections
 using Questions
 
+@xport function write_row_to_io(io,row)
+    edit_row_ = edit_row(row)
+    println(io,edit_row_)
+end
+
+function row_construct_p_content(node,soup,io,flags,talker)
+    """separate text into blocks of p"""
+    p_talker_content = separate_talk_p_content(node,soup)
+
+    """write q/a row first"""
+    node_row = [flags...,talker...,p_talker_content[1][2]]
+    write_row_to_io(io,node_row)
+  
+    for i in 2:length(p_talker_content)
+        p_talker,p_content = p_talker_content[i]
+        write_row_to_io(io,[0,0,0,p_talker,"N/A","N/A","N/A",p_content])
+    end
+end
+
+
 @xport function rows_construct(soup,flag,node,io)
     if flag == "question"
         flags = [1,0,0]
     elseif flag == "answer"
         flags = [0,1,0]
     elseif flag == "interjection"
-        flag = [0,0,1]
+        flags = [0,0,1]
     end
-    speaker_to_content,inter_to_content = produce_q_a_content(node,soup)
-    node_row = [flags...,speaker_to_content[1]...,speaker_to_content[2]]
-    edit_node_row = edit_row(node_row)
-    println(io,edit_node_row)
-    """inter"""            
+    talker,inter_to_content = produce_q_a_content(node,soup)
+    row_construct_p_content(node,soup,io,flags,talker)
+
+   """inter"""            
     for inter in inter_to_content
         inter_speaker = inter[1]
         inter_content = inter[2]
         inter_row = [0,0,1,inter_speaker...,inter_content]
-        edit_inter_row = edit_row(inter_row)
-        println(io,edit_inter_row)
+        write_row_to_io(io,inter_row)
     end
     return io
 end
 
-@xport function write_row(question_flag,answer_flag,interjection_flag,content,talker_content)
-    name,name.id,electorate,party = talker_content
-    return [name,name.id,electorate,party,content,question_flag,answer_flag,interjection_flag]
-end
+#@xport function write_row(question_flag,answer_flag,interjection_flag,content,talker_content)
+#    name,name.id,electorate,party = talker_content
+#    return [question_flag,answer_flag,interjection_flag,name,name.id,electorate,party,content]
+#end
 
 @xport function produce_q_a_content(node,soup)
-    """get node content"""
-    content = find_q_a_talk_text(node,soup)
+#    """get node content"""
+#    content = find_q_a_talk_text(node,soup)
     path = node.path
 
     """get node speaker content"""
@@ -47,7 +65,7 @@ end
     """get node interjection speakers content"""
     inter_talkers = [get_talker(i.path,soup) for i in inter_nodes]
     """assumption: there is only one speaker for each question or anser"""
-    return (talker,content),collect(zip(inter_talkers,inter_contents))
+    return talker,collect(zip(inter_talkers,inter_contents))
 end
 
 
