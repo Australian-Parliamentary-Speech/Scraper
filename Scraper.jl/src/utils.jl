@@ -2,6 +2,14 @@ module utils
 using AndExport
 using RegularExpressions
 
+@xport function Float_(value)
+    return parse(Float64, value)
+end
+
+@xport function has_nothing(lst)
+    return any(x -> x === nothing, lst)
+end
+
 @xport function edit_row(row)
     edit_row = ' '
     for i in row
@@ -32,6 +40,10 @@ end
     talker_contents = []
     for xpath in ["name","name.id","electorate","party"]
         talker_content = find_content(xpath)
+        if xpath == "name"
+#            @show talker_node.path
+#            @show talker_content
+        end
         push!(talker_contents,talker_content)
     end
     #        @show talker_name.parentnode.path
@@ -62,15 +74,15 @@ end
 end
 
 
-@xport function extract_number(input_string::AbstractString)
-    pattern = r"\d+"
-    match_ = match(pattern, input_string)
-    if match_ != nothing
-        return parse(Int, match_.match)
-    else
-        print("No numbers found")
-    end
-end
+#@xport function extract_number(input_string::AbstractString)
+#    pattern = r"\d+"
+#    match_ = match(pattern, input_string)
+#    if match_ != nothing
+#        return parse(Int, match_.match)
+#    else
+#        print("No numbers found")
+#    end
+#end
 
 
 @xport function find_in_subsoup(path,soup,xpath,all_or_first)

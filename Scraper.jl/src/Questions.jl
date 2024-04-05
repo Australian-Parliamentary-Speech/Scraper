@@ -11,7 +11,9 @@ end
 
 @xport function question_time_node(soup)
     function split_func(expr)
-        return split(expr,"/")[4:5] 
+        key = collect(split(expr,"/")[4:5])
+        key = Question_key_processor(key)
+        return key
     end
     """question using question.path for ordering"""
     q_dict = get_dict(soup,"chamber.xscript//question",split_func)
@@ -34,7 +36,7 @@ end
 
 @xport function answer_to_questions_node(soup)
     function split_func(expr)
-        return split(n.path,"/")
+        return collect(split(n.path,"/"))
     end
     q_dict = get_dict(soup,"answers.to.questions//question",split_func)
     a_dict = get_dict(soup,"answers.to.questions//answer",split_func)
@@ -78,6 +80,27 @@ end
     p_talker_contents = [filter_(c.content) for c in p_nodes]
     return collect(zip(p_talkers, p_talker_contents))
 end
+
+function Question_key_processor(keys)
+    key_final = []
+    for key in keys
+        num = match(r"\[(.*?)\]", key) 
+        if num == nothing 
+            num = 0
+        else
+            num = Float_((num.match[2:end-1]))
+        end
+        push!(key_final,num)
+    end
+    return key_final
+end
+
+@xport function Question_key_sort(keys)
+    sorted_list = sort(keys, by = x -> (x[1], x[2]))
+    return sorted_list
+end
+
+
 
 
 

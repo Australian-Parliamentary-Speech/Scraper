@@ -14,8 +14,8 @@ function test_one_page()
     fn = "question_to_answers_1.csv"
     open(fn, "w") do io
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content"])
-
-        for key in keys(q_to_a)
+        sorted_keys = Question_key_sort(collect(keys(q_to_a)))
+        for key in sorted_keys
             """question"""
             question_node = q_to_a[key][1][1]
             answer_nodes = q_to_a[key][2]
@@ -48,27 +48,6 @@ function test_interjection()
     end
 end
 
-
-function test_question_time()
-    xdoc = readxml("urls/test_files/2023-12-07.xml")
-    soup = root(xdoc)
-    q_dict,a_dict=question_time(soup)
-    q_to_a = scrape_question_time(q_dict,a_dict)
-    fn = "question_to_answers_.csv"
-    open(fn, "w") do io
-        for key in keys(q_to_a)
-            question = filter_(q_to_a[key][1][1].content)[1:100]
-            answers = [filter_(i.content)[1:100] for i in q_to_a[key][2]]
-            row = [question, answers...]
-            edit_row = ' '
-            for i in row
-                edit_row = edit_row * "\"$i\","
-            end
-            @show edit_row
-            println(io,edit_row)
-        end
-    end
-end 
 
 function test_matching()
     xdoc = readxml("urls/test_files/check.xml")
