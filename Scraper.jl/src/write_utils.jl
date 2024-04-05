@@ -19,7 +19,13 @@ function row_construct_p_content(node,soup,io,flags,talker)
   
     for i in 2:length(p_talker_content)
         p_talker,p_content = p_talker_content[i]
-        write_row_to_io(io,[0,0,0,p_talker,"N/A","N/A","N/A",p_content])
+        if occursin("SPEAKER",p_talker)
+            p_talker = talker
+            node_row = [0,0,0,talker...,p_content]
+            write_row_to_io(io,node_row)
+        else 
+            write_row_to_io(io,[0,0,0,p_talker,"N/A","N/A","N/A",p_content])
+        end
     end
 end
 
