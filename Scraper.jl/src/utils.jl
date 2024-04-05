@@ -2,6 +2,17 @@ module utils
 using AndExport
 using RegularExpressions
 
+@xport function remove_the_speaker(text)
+    # Define regular expression pattern to match "(The SPEAKER)"
+    pattern = r"\(The\s+SPEAKER\)"
+    
+    # Replace the matched pattern with an empty string
+    cleaned_text = replace(text, pattern => "")
+    
+    return cleaned_text
+end
+
+
 @xport function Float_(value)
     return parse(Float64, value)
 end

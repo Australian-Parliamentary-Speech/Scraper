@@ -9,4 +9,12 @@ using AndExport
     return inter_nodes
 end
 
+@xport function interjector_name(inter_speaker)
+    if occursin("interjecting", inter_speaker)
+        return remove_the_speaker(string(match(r"(.+?)\s+interjecting—", inter_speaker).captures[1]))
+    else
+        return remove_the_speaker(inter_speaker)
+    end
+end
+
 end

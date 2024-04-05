@@ -12,6 +12,7 @@ end
 function row_construct_p_content(node,soup,io,flags,talker)
     """separate text into blocks of p"""
     p_talker_content = separate_talk_p_content(node,soup)
+    talker[1] = remove_the_speaker(talker[1])
 
     """write q/a row first"""
     node_row = [flags...,talker...,p_talker_content[1][2]]
@@ -45,7 +46,7 @@ end
     for inter in inter_to_content
         inter_speaker = inter[1]
         inter_content = inter[2]
-        inter_row = [0,0,1,inter_speaker...,inter_content]
+        inter_row = [0,0,1,interjector_name(inter_speaker[1]),inter_speaker[2:end]...,inter_content]
         write_row_to_io(io,inter_row)
     end
     return io
