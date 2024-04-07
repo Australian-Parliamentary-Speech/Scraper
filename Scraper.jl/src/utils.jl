@@ -22,11 +22,12 @@ end
 end
 
 @xport function edit_row(row)
-    edit_row = ' '
+    edit_row = ""
     for i in row
+        i = replace(string(i), "\"" => "\'")
         edit_row = edit_row * "\"$i\","
     end
-    return edit_row
+    return edit_row[1:end-1]
 end
 
 
