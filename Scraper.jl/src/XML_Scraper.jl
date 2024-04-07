@@ -3,10 +3,13 @@ using EzXML
 using utils
 using write_utils
 using Questions
+using Scraper
 using Interjections
 using CSV
 
+
 function test_one_page()
+    run_ = Run_Struct(Dict("a_asparent" => true))
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
     q_dict,a_dict=question_time_node(soup)
@@ -20,9 +23,9 @@ function test_one_page()
             question_node = q_to_a[key][1][1]
             answer_nodes = q_to_a[key][2]
             """question"""
-            io = rows_construct(soup,"question",question_node,io)
+            io = rows_construct(soup,"question",question_node,io,run_)
             for answer_node in answer_nodes
-                io = rows_construct(soup,"answer",answer_node,io)
+                io = rows_construct(soup,"answer",answer_node,io,run_)
             end
         end
     end

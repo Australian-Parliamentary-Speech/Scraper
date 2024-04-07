@@ -9,9 +9,9 @@ using Questions
     println(io,edit_row_)
 end
 
-function row_construct_p_content(node,soup,io,flags,talker)
+function row_construct_p_content(node,soup,io,flags,talker,run_)
     """separate text into blocks of p"""
-    p_talker_content = separate_talk_p_content(node,soup)
+    p_talker_content = separate_talk_p_content(node,soup,run_)
     talker[1] = remove_the_speaker(talker[1])
 
     """write q/a row first"""
@@ -31,7 +31,7 @@ function row_construct_p_content(node,soup,io,flags,talker)
 end
 
 
-@xport function rows_construct(soup,flag,node,io)
+@xport function rows_construct(soup,flag,node,io,run_)
     if flag == "question"
         flags = [1,0,0]
     elseif flag == "answer"
@@ -40,7 +40,7 @@ end
         flags = [0,0,1]
     end
     talker,inter_to_content = produce_q_a_content(node,soup)
-    row_construct_p_content(node,soup,io,flags,talker)
+    row_construct_p_content(node,soup,io,flags,talker,run_)
 
    """inter"""            
     for inter in inter_to_content

@@ -1,6 +1,7 @@
 module Questions
 using AndExport
 using utils
+using Parameters
 
 function get_dict(soup,xpath,split_func)
     nodes = find_node(soup,xpath)
@@ -50,12 +51,31 @@ end
     return filter_(text_node.content)
 end
 
-@xport function separate_talk_p_nodes(node,soup)
+function p_with_a_as_parent(p_node,soup)
+    if p_node.parentnode.path[end] == 'a'
+        p_talkers  = find_in_subsoup(p_node.parentnode.path,soup,"/@type",:first)
+        if p_talkers != nothing
+            return  p_talkers.content
+        else
+            return "N/A"
+        end
+    else
+        return "N/A"
+    end
+end
+
+
+@xport function separate_talk_p_nodes(node,soup,run_)
+    @unpack p_option = run_
     p_nodes = find_in_subsoup(node.path,soup,"//p",:all)
     function find_talker_in_p(p_node)
         p_talker = find_in_subsoup(p_node.path,soup,"//a",:first)
         if p_talker == nothing
-            p_talker = "N/A"
+            if p_option["a_asparent"] == true
+                p_talker = p_with_a_as_parent(p_node,soup)
+            else
+                p_talker = "N/A"
+            end
         end
        return p_talker
     end
@@ -67,11 +87,11 @@ end
     return p_nodes,p_talker_nodes
 end
 
-@xport function separate_talk_p_content(node,soup)
-    p_nodes,p_talker_nodes = separate_talk_p_nodes(node,soup)
+@xport function separate_talk_p_content(node,soup,run_)
+    p_nodes,p_talker_nodes = separate_talk_p_nodes(node,soup,run_)
     p_talkers = []
     for t in p_talker_nodes
-        if t == "N/A"
+        if typeof(t) == String
             push!(p_talkers,t)
         else
             push!(p_talkers, filter_(t.content))
