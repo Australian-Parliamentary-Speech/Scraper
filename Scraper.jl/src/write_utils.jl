@@ -4,29 +4,39 @@ using utils
 using Interjections
 using Questions
 
+@xport function replace_empty_string(row)
+    return map(x -> isempty(x) ? "N/A" : x, row)
+end
+
 @xport function write_row_to_io(io,row)
+    row = replace_empty_string(row)
     edit_row_ = edit_row(row)
+#    if row[4] == "Mr Wallace"
+#        @show row
+#        @show edit_row_
+#    end
     println(io,edit_row_)
 end
 
 function row_construct_p_content(node,soup,io,flags,talker,run_)
     talker[1] = remove_the_speaker(talker[1])
+    path_for_debug = node.path
 
     """separate text into blocks of p"""
     p_talker_content = separate_talk_p_content(node,soup,run_)
 
     """write q/a row first"""
-    node_row = [flags...,talker...,p_talker_content[1][2]]
+    node_row = [flags...,talker...,p_talker_content[1][2],path_for_debug]
     write_row_to_io(io,node_row)
   
     for i in 2:length(p_talker_content)
         p_talker,p_content = p_talker_content[i]
         if occursin("SPEAKER",p_talker)
             p_talker = talker
-            node_row = [0,0,0,talker...,p_content]
+            node_row = [0,0,0,talker...,p_content,path_for_debug]
             write_row_to_io(io,node_row)
         else 
-            write_row_to_io(io,[0,0,0,p_talker,"N/A","N/A","N/A",p_content])
+            write_row_to_io(io,[0,0,0,p_talker,"N/A","N/A","N/A",p_content,path_for_debug])
         end
     end
 end
@@ -47,7 +57,7 @@ end
     for inter in inter_to_content
         inter_speaker = inter[1]
         inter_content = inter[2]
-        inter_row = [0,0,1,interjector_name(inter_speaker[1]),inter_speaker[2:end]...,inter_content]
+        inter_row = [0,0,1,interjector_name(inter_speaker[1]),inter_speaker[2:end]...,inter_content,node.path]
         write_row_to_io(io,inter_row)
     end
     return io
