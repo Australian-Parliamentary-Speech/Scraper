@@ -1,0 +1,11 @@
+[ P_option ]
+a_asparent = true
+
+
+[ xpaths ]
+ question = "chamber.xscript//question"
+ answer = "chamber.xscript//answer"
+
+
+
+

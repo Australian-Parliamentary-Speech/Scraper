@@ -6,13 +6,15 @@ using Questions
 using Scraper
 using Interjections
 using CSV
+using load_set_up
 
 
 function test_one_page()
-    run_ = Run_Struct(Dict("a_asparent" => true))
+#    run_ = Run_Struct(Dict("a_asparent" => true),Dict("question_path" => "question"))
+    run_ = setup()
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
-    q_dict,a_dict=question_time_node(soup)
+    q_dict,a_dict=question_time_node(soup,run_)
     q_to_a = scrape_question_time_node(q_dict,a_dict)
     fn = "question_to_answers_1.csv"
     open(fn, "w") do io

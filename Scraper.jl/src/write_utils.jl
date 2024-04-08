@@ -10,9 +10,10 @@ using Questions
 end
 
 function row_construct_p_content(node,soup,io,flags,talker,run_)
+    talker[1] = remove_the_speaker(talker[1])
+
     """separate text into blocks of p"""
     p_talker_content = separate_talk_p_content(node,soup,run_)
-    talker[1] = remove_the_speaker(talker[1])
 
     """write q/a row first"""
     node_row = [flags...,talker...,p_talker_content[1][2]]

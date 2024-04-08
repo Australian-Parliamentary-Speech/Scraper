@@ -2,24 +2,15 @@ module Questions
 using AndExport
 using utils
 using Parameters
+using load_set_up
 
-function get_dict(soup,xpath,split_func)
-    nodes = find_node(soup,xpath)
-    n_ids = [split_func(n.path) for n in nodes]
-    n_dict = create_dict_multiple_values(n_ids,nodes)
-    return n_dict
-end
-
-@xport function question_time_node(soup)
-    function split_func(expr)
-        key = collect(split(expr,"/")[4:5])
-        key = Question_key_processor(key)
-        return key
-    end
+@xport function question_time_node(soup,run_)
+    @unpack xpaths = run_
+    question_path, answer_path = xpaths["QUESTION"],xpaths["ANSWER"]
     """question using question.path for ordering"""
-    q_dict = get_dict(soup,"chamber.xscript//question",split_func)
+    q_dict = get_dict(soup,question_path,set_key_question_time)
     """answer"""
-    a_dict = get_dict(soup,"chamber.xscript//answer",split_func)
+    a_dict = get_dict(soup,answer_path,set_key_question_time)
     return q_dict, a_dict
 end 
 
@@ -36,20 +27,17 @@ end
 end
 
 @xport function answer_to_questions_node(soup)
-    function split_func(expr)
-        return collect(split(n.path,"/"))
-    end
-    q_dict = get_dict(soup,"answers.to.questions//question",split_func)
-    a_dict = get_dict(soup,"answers.to.questions//answer",split_func)
+   q_dict = get_dict(soup,"answers.to.questions//question",set_key_answer_to_questions)
+    a_dict = get_dict(soup,"answers.to.questions//answer",set_key_answer_to_questions)
     return q_dict,a_dict
 end
 
-@xport function find_q_a_talk_text(node,soup)
-    text_node = find_in_subsoup(node.path,soup,"/talk.text",:first)
-#    path = node.path
-#    text_node = findfirst("$(path)/talk.text",soup)
-    return filter_(text_node.content)
-end
+#@xport function find_q_a_talk_text(node,soup)
+#    text_node = find_in_subsoup(node.path,soup,"/talk.text",:first)
+##    path = node.path
+##    text_node = findfirst("$(path)/talk.text",soup)
+#    return filter_(text_node.content)
+#end
 
 function p_with_a_as_parent(p_node,soup)
     if p_node.parentnode.path[end] == 'a'
@@ -71,7 +59,7 @@ end
     function find_talker_in_p(p_node)
         p_talker = find_in_subsoup(p_node.path,soup,"//a",:first)
         if p_talker == nothing
-            if p_option["a_asparent"] == true
+            if p_option["A_ASPARENT"] == true
                 p_talker = p_with_a_as_parent(p_node,soup)
             else
                 p_talker = "N/A"
@@ -79,11 +67,8 @@ end
         end
        return p_talker
     end
-    p_talker_nodes = []
-    for p_node in p_nodes
-        p_talker_node = find_talker_in_p(p_node)
-        push!(p_talker_nodes,p_talker_node)
-    end
+
+    p_talker_nodes = [find_talker_in_p(p_node) for p_node in p_nodes]
     return p_nodes,p_talker_nodes
 end
 
@@ -99,25 +84,6 @@ end
     end
     p_talker_contents = [filter_(c.content) for c in p_nodes]
     return collect(zip(p_talkers, p_talker_contents))
-end
-
-function Question_key_processor(keys)
-    key_final = []
-    for key in keys
-        num = match(r"\[(.*?)\]", key) 
-        if num == nothing 
-            num = 0
-        else
-            num = Float_((num.match[2:end-1]))
-        end
-        push!(key_final,num)
-    end
-    return key_final
-end
-
-@xport function Question_key_sort(keys)
-    sorted_list = sort(keys, by = x -> (x[1], x[2]))
-    return sorted_list
 end
 
 

@@ -1,0 +1,17 @@
+[P_OPTION]
+A_ASPARENT = true
+
+[XPATHS]
+QUESTION = "chamber.xscript//question"
+ANSWER = "chamber.xscript//answer"
+
+[GLOBAL]
+BASE_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/"
+INPUT_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src"
+LOG_FILE = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/Output/log.txt"
+LOGGING = true
+OUTPUT_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/Output"
+
+[METADATA]
+ORIGINAL = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/scrape_set_up.toml"
+DATE = "2024-04-08"

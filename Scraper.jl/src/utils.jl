@@ -2,6 +2,13 @@ module utils
 using AndExport
 using RegularExpressions
 
+@xport function get_dict(soup,xpath,set_key)
+    nodes = find_node(soup,xpath)
+    n_ids = [set_key(n.path) for n in nodes]
+    n_dict = create_dict_multiple_values(n_ids,nodes)
+    return n_dict
+end
+
 @xport function remove_the_speaker(text)
     # Define regular expression pattern to match "(The SPEAKER)"
     pattern = r"\(The\s+SPEAKER\)"
