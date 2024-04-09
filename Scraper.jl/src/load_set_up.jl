@@ -8,7 +8,7 @@ using AndExport
 
 @xport function setup()
     input = setup_input("scrape_set_up.toml", true)
-    run_ = Run_Struct(input["P_OPTION"],input["XPATHS"])
+    run_ = Run_Params(input["P_OPTION"],input["XPATHS"])
     return run_
 end
 

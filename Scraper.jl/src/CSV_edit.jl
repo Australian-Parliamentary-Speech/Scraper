@@ -3,8 +3,15 @@ using CSV,DataFrames
 using utils
 using write_utils
 
-function edit_row(row)
+mutable struct Edit_Params
+    previous_talker::Vector{String}
+end
+
+function edit_row(row,run_params)
     row = edit_out_time_content_row(row)
+    if row[4] == "N/A"
+        row[4:7] = run_params.previous_talker
+    end
     return row
 end
 
@@ -12,7 +19,6 @@ function edit_out_time_content_row(row)
     content = row[end-1]
     new_content = edit_out_time_content(content)
     new_row = vcat(row[1:end-2],[new_content[1]],[row[end]],[new_content[2],new_content[3]])
-    @show new_row
     return new_row
 end
 
@@ -33,6 +39,7 @@ function process_csv(fn)
     csvfile = CSV.File(fn)
     fn = "question_to_answers_edited.csv"
     row_no = 0
+    run_params = Edit_Params([" "])
     open(fn, "w") do io
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content","path","content_1","content_2"])
         for row in eachrow(csvfile)
@@ -40,8 +47,11 @@ function process_csv(fn)
             if row_no > 1
                 row_ = @. collect(row)
                 row = row_[1]
-                row = edit_row(row)
-                @show row
+                talker = row[4]
+                if talker != "N/A"
+                    run_params.previous_talker = row[4:7]
+                end
+                row = edit_row(row,run_params)
                 write_row_to_io(io,row)
             end
             row_no += 1
