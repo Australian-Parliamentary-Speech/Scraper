@@ -40,7 +40,16 @@ end
 #end
 
 function p_with_a_as_parent(p_node,soup)
-    if p_node.parentnode.path[end] == 'a'
+    function parent_path_check(parent_path)
+        paths = split(parent_path,"/")
+        path_end = paths[end]
+        if path_end == 'a' || path_end == "a" || occursin(r"^a\[\d+\]$", path_end)
+            return true
+        else
+            return false
+        end
+    end
+    if parent_path_check(p_node.parentnode.path)
         p_talkers  = find_in_subsoup(p_node.parentnode.path,soup,"/@type",:first)
         if p_talkers != nothing
             return  p_talkers.content

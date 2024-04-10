@@ -9,6 +9,11 @@ using AndExport
     return inter_nodes
 end
 
+@xport function get_interjection_content(inter_node,soup)
+    inter_content_node = find_in_subsoup(inter_node.path,soup,"//talk.text",:first)
+    return filter_(inter_content_node.content)
+end
+
 @xport function interjector_name(inter_speaker)
     if occursin("interjecting", inter_speaker)
         return remove_the_speaker(string(match(r"(.+?)\s+interjecting—", inter_speaker).captures[1]))

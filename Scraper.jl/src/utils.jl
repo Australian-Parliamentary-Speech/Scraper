@@ -89,7 +89,11 @@ end
     filtered_str = replace(str, "\n" => "")
     # Replace multiple spaces with a single space, excluding spaces between words
     filtered_str = replace(filtered_str, r"\s+" => " ")
-    return filtered_str
+    if all(isspace, filtered_str)
+        return "N/A"
+    else
+        return strip(lstrip(filtered_str))
+    end
 end
 
 

@@ -78,7 +78,7 @@ end
 
     """get node interjection content"""
     inter_nodes = get_interjections(path,soup)
-    inter_contents = [filter_(i.content) for i in inter_nodes]
+    inter_contents = [get_interjection_content(i,soup) for i in inter_nodes]
 
     """get node interjection speakers content"""
     inter_talkers = [get_talker(i.path,soup) for i in inter_nodes]
