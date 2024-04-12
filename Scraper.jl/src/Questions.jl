@@ -32,13 +32,6 @@ end
     return q_dict,a_dict
 end
 
-#@xport function find_q_a_talk_text(node,soup)
-#    text_node = find_in_subsoup(node.path,soup,"/talk.text",:first)
-##    path = node.path
-##    text_node = findfirst("$(path)/talk.text",soup)
-#    return filter_(text_node.content)
-#end
-
 function p_with_a_as_parent(p_node,soup)
     function parent_path_check(parent_path)
         paths = split(parent_path,"/")
@@ -62,11 +55,11 @@ function p_with_a_as_parent(p_node,soup)
 end
 
 
-@xport function separate_talk_p_nodes(node,soup,run_)
+@xport function separate_talk_subdiv_nodes(node,soup,run_)
     @unpack p_option,xpaths = run_
     p_nodes = find_in_subsoup(node.path,soup,xpaths["SUBDIV_1"],:all)
     function find_talker_in_p(p_node)
-        p_talker = find_in_subsoup(p_node.path,soup,xpaths["SUBDIV_TALKER"],:first)
+        p_talker = find_in_subsoup(p_node.path,soup,xpaths["SUBDIV_1_TALKER"],:first)
         if p_talker == nothing
             if p_option["A_ASPARENT"] == true
                 p_talker = p_with_a_as_parent(p_node,soup)
@@ -81,8 +74,8 @@ end
     return p_nodes,p_talker_nodes
 end
 
-@xport function separate_talk_p_content(node,soup,run_)
-    p_nodes,p_talker_nodes = separate_talk_p_nodes(node,soup,run_)
+@xport function separate_talk_subdiv_content(node,soup,run_)
+    p_nodes,p_talker_nodes = separate_talk_subdiv_nodes(node,soup,run_)
     p_talkers = []
     for t in p_talker_nodes
         if typeof(t) == String

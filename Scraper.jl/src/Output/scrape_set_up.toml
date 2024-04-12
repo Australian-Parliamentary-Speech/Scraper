@@ -1,14 +1,21 @@
 [P_OPTION]
-TALKER_NAME_INTO_CONTENT = true
 A_ASPARENT = true
+
+[GENERAL_OPTION]
+INTER_UNDER_NODE = true
+SEP_BY_SUBDIV_1 = true
+TALKER_NAME_INTO_CONTENT = true
 
 [XPATHS]
 QUESTION = "chamber.xscript//question"
+TALK_CONTENT = "//talk.text"
 INTERJECTION = "//interjection"
 SUBDIV_1 = "//p"
-INTERJECTION_CONTENT = "//talk.text"
+TALKER = "//talker"
 ANSWER = "chamber.xscript//answer"
-SUBDIV_TALKER = "//a"
+SUBDIV_1_TALKER = "//a"
+
+[EDIT_OPTION]
 
 [GLOBAL]
 BASE_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/"

@@ -1,22 +1,14 @@
 module utils
 using AndExport
 using RegularExpressions
+using Scraper
+using Parameters
 
 @xport function get_dict(soup,xpath,set_key)
     nodes = find_node(soup,xpath)
     n_ids = [set_key(n.path) for n in nodes]
     n_dict = create_dict_multiple_values(n_ids,nodes)
     return n_dict
-end
-
-@xport function remove_the_speaker(text)
-    # Define regular expression pattern to match "(The SPEAKER)"
-    pattern = r"\(The\s+SPEAKER\)"
-    
-    # Replace the matched pattern with an empty string
-    cleaned_text = replace(text, pattern => "")
-    
-    return cleaned_text
 end
 
 
@@ -28,23 +20,14 @@ end
     return any(x -> x === nothing, lst)
 end
 
-@xport function edit_row(row)
-    edit_row = ""
-    for i in row
-        i = replace(string(i), "\"" => "\'")
-        edit_row = edit_row * "\"$i\","
-    end
-    return edit_row[1:end-1]
-end
-
-
-@xport function get_talker(path,soup)
-    talker_node = talker_from_any(path,soup)
+@xport function get_talker(path,soup,run_)
+    talker_node = talker_from_any(path,soup,run_)
     return talker_content(talker_node)
 end
 
-@xport function talker_from_any(path,soup)
-    talker_node = findfirst("$(path)//talker",soup)
+@xport function talker_from_any(path,soup,run_)
+    @unpack xpaths = run_
+    talker_node = findfirst("$(path)$(xpaths["TALKER"])",soup)
     return talker_node
 end
 
