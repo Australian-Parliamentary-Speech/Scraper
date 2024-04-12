@@ -1,4 +1,5 @@
 [P_OPTION]
+TALKER_NAME_INTO_CONTENT = true
 A_ASPARENT = true
 
 [XPATHS]
@@ -14,4 +15,4 @@ OUTPUT_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/Output"
 
 [METADATA]
 ORIGINAL = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/scrape_set_up.toml"
-DATE = "2024-04-11"
+DATE = "2024-04-12"

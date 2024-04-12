@@ -1,6 +1,9 @@
 [ P_option ]
+#if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
 a_asparent = true
 
+#put talker_name into content if talker name has interjecting in it
+talker_name_into_content = true
 
 [ xpaths ]
  question = "chamber.xscript//question"

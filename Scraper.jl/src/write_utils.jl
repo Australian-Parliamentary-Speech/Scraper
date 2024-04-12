@@ -3,6 +3,7 @@ using AndExport
 using utils
 using Interjections
 using Questions
+using load_set_up
 
 @xport function replace_empty_string(row)
     return map(x -> isempty(x) ? "N/A" : x, row)
@@ -44,14 +45,13 @@ end
     elseif flag == "interjection"
         flags = [0,0,1]
     end
-    talker,inter_to_content = produce_q_a_content(node,soup)
+    talker,inter_to_content = produce_q_a_content(node,soup,run_)
     row_construct_p_content(node,soup,io,flags,talker,run_)
 
    """inter"""            
     for inter in inter_to_content
-        inter_speaker = inter[1]
-        inter_content = inter[2]
-        inter_row = [0,0,1,interjector_name(inter_speaker[1]),inter_speaker[2:end]...,inter_content,node.path]
+        inter_speaker, inter_content = interjection_edit(inter,run_)
+        inter_row = [0,0,1,inter_speaker...,inter_content,node.path]
         write_row_to_io(io,inter_row)
     end
     return io
@@ -62,7 +62,7 @@ end
 #    return [question_flag,answer_flag,interjection_flag,name,name.id,electorate,party,content]
 #end
 
-@xport function produce_q_a_content(node,soup)
+@xport function produce_q_a_content(node,soup,run_)
 #    """get node content"""
 #    content = find_q_a_talk_text(node,soup)
     path = node.path
