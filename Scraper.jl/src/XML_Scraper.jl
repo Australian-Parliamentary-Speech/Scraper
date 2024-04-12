@@ -23,6 +23,7 @@ function test_one_page()
         for key in sorted_keys
             """question"""
             question_node = q_to_a[key][1][1]
+            @show question_node.path
             answer_nodes = q_to_a[key][2]
             """question"""
             io = rows_construct(soup,"question",question_node,io,run_)

@@ -56,7 +56,6 @@ end
     for reg in regs
         m = match(reg, s)
         if m !== nothing
-            @show m
             return replace(s, m.match => "")
         else
             continue

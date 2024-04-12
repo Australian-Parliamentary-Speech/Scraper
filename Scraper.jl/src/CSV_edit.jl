@@ -38,18 +38,15 @@ function process_csv(fn)
     open(fn, "w") do io
         write_row_to_io(io,headers)
         for row in eachrow(csvfile)
-            #            println(io,row)
-            if row_no > 1
-                row_ = @. collect(row)
-                row = row_[1]
-                name_pos = header_to_num["name"]
-                talker = row[name_pos]
-                if talker != "N/A"
-                    run_params.previous_talker = row[name_pos:name_pos+3]
-                end
-                row = edit_row(row,run_params,header_to_num,row_no)
-                write_row_to_io(io,row)
+            row_ = @. collect(row)
+            row = row_[1]
+            name_pos = header_to_num["name"]
+            talker = row[name_pos]
+            if talker != "N/A"
+                run_params.previous_talker = row[name_pos:name_pos+3]
             end
+            row = edit_row(row,run_params,header_to_num,row_no)
+            write_row_to_io(io,row)
             row_no += 1
         end
     end

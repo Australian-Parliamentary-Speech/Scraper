@@ -30,7 +30,7 @@ end
             else
                 inter_content = inter_speaker[1]
             end
-            inter_speaker[1] = remove_the_speaker(string(match(r"(.+?)\s+interjecting—", inter_speaker[1]).captures[1]))
+            inter_speaker[1] = string(match(r"(.+?)\s+interjecting—", inter_speaker[1]).captures[1])
         end
     end
 
