@@ -71,8 +71,8 @@ end
     talker = get_talker(path,soup)
 
     """get node interjection content"""
-    inter_nodes = get_interjections(path,soup)
-    inter_contents = [get_interjection_content(i,soup) for i in inter_nodes]
+    inter_nodes = get_interjections(path,soup,run_)
+    inter_contents = [get_interjection_content(i,soup,run_) for i in inter_nodes]
 
     """get node interjection speakers content"""
     inter_talkers = [get_talker(i.path,soup) for i in inter_nodes]

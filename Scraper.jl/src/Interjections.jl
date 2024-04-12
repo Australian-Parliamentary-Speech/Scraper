@@ -6,14 +6,16 @@ using load_set_up
 using Parameters
 
 
-@xport function get_interjections(path,soup)
-    inter_nodes = find_in_subsoup(path,soup,"//interjection",:all)
+@xport function get_interjections(path,soup,run_)
+    @unpack xpaths = run_
+    inter_nodes = find_in_subsoup(path,soup,xpaths["INTERJECTION"],:all)
 #    inter_nodes = findall("$(path)//interjection",soup)
     return inter_nodes
 end
 
-@xport function get_interjection_content(inter_node,soup)
-    inter_content_node = find_in_subsoup(inter_node.path,soup,"//talk.text",:first)
+@xport function get_interjection_content(inter_node,soup,run_)
+    @unpack xpaths = run_
+    inter_content_node = find_in_subsoup(inter_node.path,soup,xpaths["INTERJECTION_CONTENT"],:first)
     return filter_(inter_content_node.content)
 end
 

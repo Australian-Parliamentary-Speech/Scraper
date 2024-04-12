@@ -63,10 +63,10 @@ end
 
 
 @xport function separate_talk_p_nodes(node,soup,run_)
-    @unpack p_option = run_
-    p_nodes = find_in_subsoup(node.path,soup,"//p",:all)
+    @unpack p_option,xpaths = run_
+    p_nodes = find_in_subsoup(node.path,soup,xpaths["SUBDIV_1"],:all)
     function find_talker_in_p(p_node)
-        p_talker = find_in_subsoup(p_node.path,soup,"//a",:first)
+        p_talker = find_in_subsoup(p_node.path,soup,xpaths["SUBDIV_TALKER"],:first)
         if p_talker == nothing
             if p_option["A_ASPARENT"] == true
                 p_talker = p_with_a_as_parent(p_node,soup)
