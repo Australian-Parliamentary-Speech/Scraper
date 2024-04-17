@@ -8,7 +8,7 @@ using AndExport
 
 @xport function setup()
     input = setup_input("scrape_set_up.toml", true)
-    run_ = Run_Params(input["P_OPTION"],input["GENERAL_OPTION"],input["EDIT_OPTION"],input["XPATHS"])
+    run_ = Run_Params(input["P_OPTION"],input["TALKER_OPTION"],input["GENERAL_OPTION"],input["EDIT_OPTION"],input["XPATHS"])
     return run_
 end
 
@@ -41,7 +41,15 @@ function Question_key_processor(keys)
     return key_final
 end
 
- 
+@xport function Interject_set_key(keys)
+    return keys
+end
+
+ @xport function Continue_set_key(keys)
+    return keys
+end
+
+
 
 end
 

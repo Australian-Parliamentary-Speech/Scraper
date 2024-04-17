@@ -2,6 +2,10 @@
 #if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
 a_asparent = true
 
+[ talker_option]
+#if no talk.text node is found, try scrape everything except talker information
+get_all_text = true
+
 [ general_option ]
 #put talker_name into content if talker name has interjecting in it
 talker_name_into_content = true
@@ -15,11 +19,16 @@ inter_under_node = true
 [ xpaths ]
  question = "chamber.xscript//question"
  answer = "chamber.xscript//answer"
- #under question/answer node
+ #under question/answer node, maybe to talk.text//p???
  subdiv_1 = "//p"
  subdiv_1_talker = "//a"
+
+ #interjections
  interjection = "//interjection"
+ continue = "//continue"
+
  #get talker from any body of texts
+ talk_node = "//talk.start"
  talk_content = "//talk.text"
  talker = "//talker"
 

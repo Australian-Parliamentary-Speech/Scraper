@@ -3,6 +3,7 @@ using AndExport
 using RegularExpressions
 using Scraper
 using Parameters
+using EzXML
 
 @xport function get_dict(soup,xpath,set_key)
     nodes = find_node(soup,xpath)
@@ -99,6 +100,17 @@ end
     end
 end
 
+@xport function get_all_text_minus_nodes(node,minus_node_paths)
+    content = ""
+    path = node.path
+    for child in nodes(node)
+        if !(any(x -> x == child.path, minus_node_paths))
+            content *= child.content
+        end
+    end
+    return filter_(content)
+end
+
 
 @xport function read_csv_columns(filename::AbstractString, column_indice::Int)
     df = CSV.File(filename) |> DataFrame
@@ -124,6 +136,15 @@ end
     return dict_
 end
 
-
+@xport function sort_based_on_order(list_to_sort, order_indices)
+    function by_(ele)
+        if haskey(order_indices, ele) 
+            return order_indices[ele] 
+        else
+            throw(ErrorException("No key is found"))
+        end
+    end
+    return sort(list_to_sort, by=by_)
+end
 
 end

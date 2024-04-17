@@ -72,11 +72,13 @@ end
 
     """inter"""   
     if general_option["INTER_UNDER_NODE"] == true
-        inter_to_content = produce_inter_content(node,soup,run_)
-        for inter in inter_to_content
-            inter_speaker, inter_content = interjection_edit(inter,run_)
-            inter_row = [0,0,1,inter_speaker...,inter_content,node.path]
-            write_row_to_io(io,inter_row)
+        inters = produce_inter_content(node,soup,run_)
+        for inter in inters
+            for inter_talk in inter
+                inter_speaker, inter_content = interjection_edit(inter_talk,run_)
+                inter_row = [0,0,1,inter_speaker...,inter_content,node.path]
+                write_row_to_io(io,inter_row)
+            end
         end
     end
     return io
@@ -86,19 +88,6 @@ end
 #    name,name.id,electorate,party = talker_content
 #    return [question_flag,answer_flag,interjection_flag,name,name.id,electorate,party,content]
 #end
-
-function produce_inter_content(node,soup,run_)
-    path = node.path
-
-    """get node interjection content"""
-    inter_nodes = get_interjections(path,soup,run_)
-    inter_contents = [get_interjection_content(i,soup,run_) for i in inter_nodes]
-
-    """get node interjection speakers content"""
-    inter_talkers = [get_talker(i.path,soup,run_) for i in inter_nodes]
-    """assumption: there is only one speaker for each question or anser"""
-    return collect(zip(inter_talkers,inter_contents))
-end
 
 
 end
