@@ -1,6 +1,3 @@
-[P_OPTION]
-A_ASPARENT = true
-
 [GENERAL_OPTION]
 INTER_UNDER_NODE = true
 SEP_BY_SUBDIV_1 = true
@@ -20,8 +17,6 @@ TALKER = "//talker"
 ANSWER = "chamber.xscript//answer"
 SUBDIV_1_TALKER = "//a"
 
-[EDIT_OPTION]
-
 [GLOBAL]
 BASE_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/"
 INPUT_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src"
@@ -31,4 +26,8 @@ OUTPUT_PATH = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/Output"
 
 [METADATA]
 ORIGINAL = "/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src/scrape_set_up.toml"
-DATE = "2024-04-17"
+DATE = "2024-04-22"
+
+[QUESTION_OPTION]
+QUESTIONS_WITHOUT_NOTICE = true
+A_ASPARENT = true

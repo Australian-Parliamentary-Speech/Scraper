@@ -3,6 +3,7 @@ using AndExport
 using utils
 using Parameters
 using load_set_up
+using EzXML
 
 @xport function question_time_node(soup,run_)
     @unpack xpaths = run_
@@ -14,13 +15,32 @@ using load_set_up
     return q_dict, a_dict
 end 
 
-@xport function scrape_question_time_node(q_dict,a_dict)
+@xport function scrape_question_time_node(q_dict,a_dict,soup,run_)
+    @unpack question_option = run_
+    function is_question_time(q_id)
+        if question_option["QUESTIONS_WITHOUT_NOTICE"] == true
+            question_node = q_dict[q_id][1]
+            debate_node = parentnode(parentnode(question_node))
+            xpath = "/debateinfo/title"
+            title_node = find_in_subsoup(debate_node.path,soup,xpath,:first)
+            if title_node.content == "QUESTIONS WITHOUT NOTICE"
+                return true
+            else
+                return false
+            end
+        else
+            return true
+        end
+    end
+
     q_to_a = Dict()
     for q_id in keys(q_dict)
-        try
-            q_to_a[q_id] = (q_dict[q_id],a_dict[q_id])
-        catch KeyError
-            q_to_a[q_id] = (q_dict[q_id],["NA"])
+        if is_question_time(q_id)
+            try
+                q_to_a[q_id] = (q_dict[q_id],a_dict[q_id])
+            catch KeyError
+                q_to_a[q_id] = (q_dict[q_id],["NA"])
+            end
         end
     end
     return q_to_a
@@ -56,12 +76,12 @@ end
 
 
 @xport function separate_talk_subdiv_nodes(node,soup,run_)
-    @unpack p_option,xpaths = run_
+    @unpack question_option,xpaths = run_
     p_nodes = find_in_subsoup(node.path,soup,xpaths["SUBDIV_1"],:all)
     function find_talker_in_p(p_node)
         p_talker = find_in_subsoup(p_node.path,soup,xpaths["SUBDIV_1_TALKER"],:first)
         if p_talker == nothing
-            if p_option["A_ASPARENT"] == true
+            if question_option["A_ASPARENT"] == true
                 p_talker = p_with_a_as_parent(p_node,soup)
             else
                 p_talker = "N/A"

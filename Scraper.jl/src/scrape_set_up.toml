@@ -1,9 +1,12 @@
-[ p_option ]
+[ question_option ]
 #if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
 a_asparent = true
 
-[ talker_option]
-#if no talk.text node is found, try scrape everything except talker information
+#limit the scope for questions and answers to questions without notice debate
+questions_without_notice = true
+
+[ talker_option ]
+#sometimes talk.text node is not listed as a node, so this is a potential solution. if no talk.text node is found, try scrape everything except talker information
 get_all_text = true
 
 [ general_option ]
@@ -13,8 +16,6 @@ talker_name_into_content = true
 sep_by_subdiv_1 = true
 #is interjection under the node of questions and answers?
 inter_under_node = true
-
-[edit_option]
 
 [ xpaths ]
  question = "chamber.xscript//question"

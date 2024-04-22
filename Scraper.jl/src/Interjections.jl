@@ -68,7 +68,6 @@ end
     all_paths = collect(keys(merged_dict))
     sorted_paths = sort_based_on_order(all_paths,child_to_index)
     sorted_nodes = [merged_dict[path][1] for path in sorted_paths]
-    @show sorted_nodes
     return sorted_nodes
 end
 
