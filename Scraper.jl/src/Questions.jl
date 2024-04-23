@@ -22,12 +22,10 @@ end
     @unpack question_option = run_
     q_to_a = Dict()
     for q_id in keys(q_dict)
-        if is_question_time(q_dict[q_id][1],run_,soup)
-            try
-                q_to_a[q_id] = (q_dict[q_id],a_dict[q_id])
-            catch KeyError
-                q_to_a[q_id] = (q_dict[q_id],["NA"])
-            end
+        try
+            q_to_a[q_id] = (q_dict[q_id],a_dict[q_id])
+        catch KeyError
+            q_to_a[q_id] = (q_dict[q_id],["NA"])
         end
     end
     return q_to_a

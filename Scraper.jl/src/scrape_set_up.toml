@@ -1,3 +1,16 @@
+[ general_option ]
+#put talker_name into content if talker name has interjecting in it
+talker_name_into_content = true
+#do you want to further separate by subdiv_1
+sep_by_subdiv_1 = true
+#is interjection under the node of questions and answers?
+inter_under_node = true
+
+[ which_sections ]
+
+"QUESTIONS WITHOUT NOTICE" = true
+
+
 [ question_option ]
 #if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
 a_asparent = true
@@ -9,19 +22,10 @@ questions_without_notice = true
 #sometimes talk.text node is not listed as a node, so this is a potential solution. if no talk.text node is found, try scrape everything except talker information
 get_all_text = true
 
-[ general_option ]
-#put talker_name into content if talker name has interjecting in it
-talker_name_into_content = true
-#do you want to further separate by subdiv_1
-sep_by_subdiv_1 = true
-#is interjection under the node of questions and answers?
-inter_under_node = true
-
 [ section_xpaths ]
 
 "QUESTIONS WITHOUT NOTICE" = ["/hansard/chamber.xscript/debate[18]", "/hansard/chamber.xscript/debate[20]"]
 
-#<include "section_titles.toml">
 
 [ xpaths ]
 #section_paths_list
