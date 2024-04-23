@@ -2,6 +2,7 @@ union!(LOAD_PATH, ["/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src"])
 using EzXML
 using utils
 using write_utils
+using scrape_utils
 using Questions
 using Scraper
 using Interjections
@@ -66,8 +67,6 @@ function test_matching()
     key = ["debate[14]", "subdebate.1[13]"]
     @show q_to_a[key][1][1].path
     @show [i.path for i in q_to_a[key][2]]
-
- 
 end
 
 

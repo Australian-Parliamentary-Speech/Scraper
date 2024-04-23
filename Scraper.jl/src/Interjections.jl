@@ -1,14 +1,10 @@
 module Interjections
 using EzXML
 using utils
+using scrape_utils
 using AndExport
 using load_set_up
 using Parameters
-
-@xport function children_to_indices_dict(node)
-    children_paths = [element.path for element in elements(node)]
-    return Dict(zip(children_paths,collect(1:length(children_paths))))
-end
 
 @xport function get_continue_dict(path,soup,run_)
     @unpack xpaths = run_

@@ -2,7 +2,7 @@
 #if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
 a_asparent = true
 
-#limit the scope for questions and answers to questions without notice debate
+#limit the scope for questions and answers to questions without notice debate -- to be deleted
 questions_without_notice = true
 
 [ talker_option ]
@@ -17,9 +17,17 @@ sep_by_subdiv_1 = true
 #is interjection under the node of questions and answers?
 inter_under_node = true
 
+[ section_xpaths ]
+
+"QUESTIONS WITHOUT NOTICE" = ["/hansard/chamber.xscript/debate[18]", "/hansard/chamber.xscript/debate[20]"]
+
+#<include "section_titles.toml">
+
 [ xpaths ]
- question = "chamber.xscript//question"
- answer = "chamber.xscript//answer"
+#section_paths_list
+##[...] question = section_path + //question
+ question = "//question"
+ answer = "//answer"
  #under question/answer node, maybe to talk.text//p???
  subdiv_1 = "//p"
  subdiv_1_talker = "//a"
@@ -32,6 +40,9 @@ inter_under_node = true
  talk_node = "//talk.start"
  talk_content = "//talk.text"
  talker = "//talker"
+
+ #what is the title of the section?
+ debate_title = "/debateinfo/title"
 
 
 

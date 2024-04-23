@@ -1,6 +1,7 @@
 module write_utils
 using AndExport 
 using utils
+using scrape_utils
 using Interjections
 using Questions
 using load_set_up

@@ -1,41 +1,28 @@
 module Questions
 using AndExport
 using utils
+using scrape_utils
 using Parameters
 using load_set_up
 using EzXML
 
 @xport function question_time_node(soup,run_)
-    @unpack xpaths = run_
-    question_path, answer_path = xpaths["QUESTION"],xpaths["ANSWER"]
+    @unpack section_xpaths,xpaths = run_
+    section_paths = section_xpaths["QUESTIONS WITHOUT NOTICE"]
+    question_paths = ["$(section_path)$(xpaths["QUESTION"])" for section_path in section_paths]
+    answer_paths = ["$(section_path)$(xpaths["ANSWER"])" for section_path in section_paths]
     """question using question.path for ordering"""
-    q_dict = get_dict(soup,question_path,set_key_question_time)
+    q_dict = get_dict(soup,question_paths,set_key_question_time)
     """answer"""
-    a_dict = get_dict(soup,answer_path,set_key_question_time)
+    a_dict = get_dict(soup,answer_paths,set_key_question_time)
     return q_dict, a_dict
 end 
 
 @xport function scrape_question_time_node(q_dict,a_dict,soup,run_)
     @unpack question_option = run_
-    function is_question_time(q_id)
-        if question_option["QUESTIONS_WITHOUT_NOTICE"] == true
-            question_node = q_dict[q_id][1]
-            debate_node = parentnode(parentnode(question_node))
-            xpath = "/debateinfo/title"
-            title_node = find_in_subsoup(debate_node.path,soup,xpath,:first)
-            if title_node.content == "QUESTIONS WITHOUT NOTICE"
-                return true
-            else
-                return false
-            end
-        else
-            return true
-        end
-    end
-
     q_to_a = Dict()
     for q_id in keys(q_dict)
-        if is_question_time(q_id)
+        if is_question_time(q_dict[q_id][1],run_,soup)
             try
                 q_to_a[q_id] = (q_dict[q_id],a_dict[q_id])
             catch KeyError
@@ -47,7 +34,7 @@ end
 end
 
 @xport function answer_to_questions_node(soup)
-   q_dict = get_dict(soup,"answers.to.questions//question",set_key_answer_to_questions)
+    q_dict = get_dict(soup,"answers.to.questions//question",set_key_answer_to_questions)
     a_dict = get_dict(soup,"answers.to.questions//answer",set_key_answer_to_questions)
     return q_dict,a_dict
 end
@@ -107,7 +94,6 @@ end
     p_talker_contents = [filter_(c.content) for c in p_nodes]
     return collect(zip(p_talkers, p_talker_contents))
 end
-
 
 
 

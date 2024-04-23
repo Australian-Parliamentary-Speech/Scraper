@@ -6,7 +6,15 @@ using Parameters
 using EzXML
 
 @xport function get_dict(soup,xpath,set_key)
-    nodes = find_node(soup,xpath)
+    if typeof(xpath) != Vector{String}
+        nodes = find_node(soup,xpath)
+    else
+        nodes = []
+        for path in xpath
+            nodes_ = find_node(soup,path)
+            nodes = vcat(nodes,nodes_)
+        end
+    end
     n_ids = [set_key(n.path) for n in nodes]
     n_dict = create_dict_multiple_values(n_ids,nodes)
     return n_dict
@@ -19,38 +27,6 @@ end
 
 @xport function has_nothing(lst)
     return any(x -> x === nothing, lst)
-end
-
-@xport function get_talker(path,soup,run_)
-    talker_node = talker_from_any(path,soup,run_)
-    return talker_content(talker_node)
-end
-
-@xport function talker_from_any(path,soup,run_)
-    @unpack xpaths = run_
-    talker_node = findfirst("$(path)$(xpaths["TALKER"])",soup)
-    return talker_node
-end
-
-@xport function talker_content(talker_node)
-    function find_content(xpath)
-        talker_content_node = findfirst("$(talker_node.path)//$(xpath)",talker_node)
-        #        @show talker_content_node.path
-        talker_content = talker_content_node.content
-        return talker_content
-    end
-
-    talker_contents = []
-    for xpath in ["name","name.id","electorate","party"]
-        talker_content = find_content(xpath)
-        if xpath == "name"
-#            @show talker_node.path
-#            @show talker_content
-        end
-        push!(talker_contents,talker_content)
-    end
-    #        @show talker_name.parentnode.path
-    return talker_contents
 end
 
 @xport function find_text(soup,xpath,delim=nothing)

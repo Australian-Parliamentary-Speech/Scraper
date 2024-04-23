@@ -4,11 +4,12 @@ using OrderedCollections
 using ArgParse
 using Scraper
 using utils
+using EzXML
 using AndExport
 
 @xport function setup()
     input = setup_input("scrape_set_up.toml", true)
-    run_ = Run_Params(input["QUESTION_OPTION"],input["TALKER_OPTION"],input["GENERAL_OPTION"],input["XPATHS"])
+    run_ = Run_Params(input["QUESTION_OPTION"],input["TALKER_OPTION"],input["GENERAL_OPTION"],input["SECTION_XPATHS"],input["XPATHS"])
     return run_
 end
 
@@ -49,6 +50,11 @@ end
     return keys
 end
 
+"""key sort for interjections"""
+@xport function children_to_indices_dict(node)
+    children_paths = [element.path for element in elements(node)]
+    return Dict(zip(children_paths,collect(1:length(children_paths))))
+end
 
 
 end
