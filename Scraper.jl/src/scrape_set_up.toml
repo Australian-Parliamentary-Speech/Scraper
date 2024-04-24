@@ -24,7 +24,7 @@ get_all_text = true
 
 [ section_xpaths ]
 
-"QUESTIONS WITHOUT NOTICE" = ["/hansard/chamber.xscript/debate[18]", "/hansard/chamber.xscript/debate[20]"]
+<include section_titles.toml>
 
 
 [ xpaths ]

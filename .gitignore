@@ -6,5 +6,5 @@
 **/*.html
 **/*.xml
 **/Downloader.jl
-**/Scraper.py
+#**/Scraper.py
 .env/
