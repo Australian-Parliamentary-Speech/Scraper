@@ -19,7 +19,7 @@ function test_one_page()
     q_to_a = scrape_question_time_node(q_dict,a_dict,soup,run_)
     fn = "question_to_answers_1.csv"
     open(fn, "w") do io
-        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content"])
+        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         sorted_keys = Question_key_sort(collect(keys(q_to_a)))
         for key in sorted_keys
             """question"""
