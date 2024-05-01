@@ -2,8 +2,6 @@ module write_utils
 using AndExport 
 using utils
 using scrape_utils
-using Interjections
-using Questions
 using load_set_up
 using Parameters
 
@@ -30,65 +28,67 @@ end
     println(io,edit_row_)
 end
 
-function row_construct_p_content(node,soup,io,flags,talker,run_)
-#    talker[1] = remove_the_speaker(talker[1])
-    path_for_debug = node.path
 
-    """separate text into blocks of p"""
-    p_talker_content = separate_talk_subdiv_content(node,soup,run_)
+@xport function separate_talk_subdiv_nodes(node,soup,run_,section)
+    @unpack question_option,xpaths = run_
+    p_nodes = find_in_subsoup(node.path,soup,xpaths["SUBDIV_1"],:all)
+    function find_talker_in_p(p_node)
+        p_talker = find_in_subsoup(p_node.path,soup,xpaths["SUBDIV_1_TALKER"],:first)
+        if p_talker == nothing
+            """if a_asparent shall be different for each section"""
+            a_asparent = if section == :question
+                question_option["A_ASPARENT"]
+            else
+                general_option["A_ASPARENT"]
+            end
 
-    """write q/a row first"""
-    node_row = [flags...,talker...,p_talker_content[1][2],path_for_debug]
-    write_row_to_io(io,node_row)
-  
-    for i in 2:length(p_talker_content)
-        p_talker,p_content = p_talker_content[i]
-        write_row_to_io(io,[0,0,0,p_talker,"N/A","N/A","N/A",p_content,path_for_debug])
-    end
-end
-
-function define_flags(flag)
-    if flag == "question"
-        flags = [1,0,0]
-    elseif flag == "answer"
-        flags = [0,1,0]
-    elseif flag == "interjection"
-        flags = [0,0,1]
-    end
-    return flags 
-end
-
-@xport function rows_construct(soup,flag,node,io,run_)
-    @unpack general_option = run_
-    flags = define_flags(flag)
-    """get node speaker content"""
-    talker = get_talker(node.path,soup,run_)
-
-    if general_option["SEP_BY_SUBDIV_1"] == true
-        row_construct_p_content(node,soup,io,flags,talker,run_)
-    else
-        node_row = [flags...,talker...,filter_(node.content),node.path]
-        write_row_to_io(io,node_row)
-    end
-
-    """inter"""   
-    if general_option["INTER_UNDER_NODE"] == true
-        inters = produce_inter_content(node,soup,run_)
-        for inter in inters
-            for inter_talk in inter
-                inter_speaker, inter_content = interjection_edit(inter_talk,run_)
-                inter_row = [0,0,1,inter_speaker...,inter_content,node.path]
-                write_row_to_io(io,inter_row)
+            p_talker = if a_asparent
+                p_with_a_as_parent(p_node,soup)
+            elseif !a_asparent
+                "N/A"
+            else
+                @assert false "a_asparent not loaded corretly"
             end
         end
+       return p_talker
     end
-    return io
+    p_talker_nodes = [find_talker_in_p(p_node) for p_node in p_nodes]
+    return p_nodes,p_talker_nodes
 end
 
-#@xport function write_row(question_flag,answer_flag,interjection_flag,content,talker_content)
-#    name,name.id,electorate,party = talker_content
-#    return [question_flag,answer_flag,interjection_flag,name,name.id,electorate,party,content]
-#end
+@xport function separate_talk_subdiv_content(node,soup,run_,section)
+    p_nodes,p_talker_nodes = separate_talk_subdiv_nodes(node,soup,run_,section)
+    p_talkers = []
+    for t in p_talker_nodes
+        if typeof(t) == String
+            push!(p_talkers,t)
+        else
+            push!(p_talkers, filter_(t.content))
+        end
+    end
+    p_talker_contents = [filter_(c.content) for c in p_nodes]
+    return collect(zip(p_talkers, p_talker_contents))
+end
 
-
+@xport function p_with_a_as_parent(p_node,soup)
+    function parent_path_check(parent_path)
+        paths = split(parent_path,"/")
+        path_end = paths[end]
+        if path_end == 'a' || path_end == "a" || occursin(r"^a\[\d+\]$", path_end)
+            return true
+        else
+            return false
+        end
+    end
+    if parent_path_check(p_node.parentnode.path)
+        p_talkers  = find_in_subsoup(p_node.parentnode.path,soup,"/@type",:first)
+        if p_talkers != nothing
+            return  p_talkers.content
+        else
+            return "N/A"
+        end
+    else
+        return "N/A"
+    end
+end
 end

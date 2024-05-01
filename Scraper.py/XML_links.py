@@ -7,15 +7,18 @@ import os
 import re
 import certifi
 import urllib3
+from selenium import webdriver
 
 
-def get_soup(url):
-    http = urllib3.PoolManager(
-    cert_reqs='CERT_REQUIRED',
-    ca_certs=certifi.where()
-)
-    source = requests.get(url).text    
-    soup = BeautifulSoup(source, 'lxml')
+def get_soup(url,sele):
+    if sele == True:
+        driver = webdriver.Chrome() 
+        driver.get(url)
+        source = driver.page_source
+    else:
+        source = requests.get(url).text 
+
+    soup = BeautifulSoup(source,'lxml')
     return soup
 
 def get_table_soup(soup):
@@ -36,7 +39,7 @@ def import_to_dict(dict_,keys,values):
     return dict_
 
 def get_xml(link):
-    xml_soup = get_soup(link)
+    xml_soup = get_soup(link,True)
     xml_subsoup = xml_soup.find('div',class_ = "hide-for-print medium-3 column")
     print(xml_subsoup)
 #    xml_link = xml_soup.find('a',title="View/Save XML")
@@ -45,7 +48,7 @@ def get_xml(link):
 
 def XML_link():
     url = "https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansreps_2011"
-    soup = get_soup(url)
+    soup = get_soup(url,False)
     table_soups = get_table_soup(soup)
     date_to_link = {}
     for table_soup in table_soups:

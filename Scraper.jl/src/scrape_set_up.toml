@@ -11,12 +11,11 @@ inter_under_node = true
 "QUESTIONS WITHOUT NOTICE" = true
 
 
+#option for question time
 [ question_option ]
 #if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
 a_asparent = true
 
-#limit the scope for questions and answers to questions without notice debate -- to be deleted
-questions_without_notice = true
 
 [ talker_option ]
 #sometimes talk.text node is not listed as a node, so this is a potential solution. if no talk.text node is found, try scrape everything except talker information
@@ -47,6 +46,9 @@ get_all_text = true
 
  #what is the title of the section?
  debate_title = "/debateinfo/title"
+
+ #what is the title of the subdebate of the questions?
+ subdebate_title = "/subdebateinfo/title"
 
 
 

@@ -1,4 +1,5 @@
-union!(LOAD_PATH, ["/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src"])
+module XML_Scraper
+using AndExport 
 using EzXML
 using utils
 using write_utils
@@ -9,10 +10,7 @@ using Interjections
 using CSV
 using load_set_up
 
-
-function test_one_page()
-#    run_ = Run_Struct(Dict("a_asparent" => true),Dict("question_path" => "question"))
-    run_ = setup()
+@xport function question_time_main(run_,fn)
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
     q_dict,a_dict=question_time_node(soup,run_)
@@ -35,41 +33,6 @@ function test_one_page()
     end
 end
 
-function test_interjection()
-    xdoc = readxml("urls/test_files/2023-12-07.xml")
-    soup = root(xdoc)
-    q_dict,a_dict=question_time(soup)
-    for value in collect(values(a_dict))[1:2]
-        for node in value
-            node_path = node.path
-            inter_nodes = get_interjections(node_path,soup)
-            for inter_node in inter_nodes
-#                @show filter_(inter_node.content)
-                inter_node_path = inter_node.path
-                @show inter_node_path
-                talker_nodes = talker_from_any(inter_node_path,soup)
-                talkers_contents = talker_content(talker_nodes)
-                @show talkers_contents
-            end
-        end
-    end
+
 end
-
-
-function test_matching()
-    xdoc = readxml("urls/test_files/check.xml")
-    soup = root(xdoc)
-#    inter = find_node(soup,"chamber.xscript//interjection")
-    qs = find_node(soup,"chamber.xscript//question")
-    as = find_node(soup,"chamber.xscript//answer")
-    q_dict,a_dict = question_time(soup)
-    q_to_a = scrape_question_time(q_dict,a_dict)
-    key = ["debate[14]", "subdebate.1[13]"]
-    @show q_to_a[key][1][1].path
-    @show [i.path for i in q_to_a[key][2]]
-end
-
-
- 
-
 
