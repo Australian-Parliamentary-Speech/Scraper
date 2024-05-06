@@ -1,10 +1,12 @@
 [ general_option ]
-#put talker_name into content if talker name has interjecting in it
+#for interjecting: put talker_name into content if talker name has interjecting in it
 talker_name_into_content = true
 #do you want to further separate by subdiv_1
 sep_by_subdiv_1 = true
 #is interjection under the node of questions and answers?
 inter_under_node = true
+#same as in question time, but this is for everything but question time, such as speeches
+a_asparent = true
 
 [ which_sections ]
 
@@ -18,7 +20,7 @@ a_asparent = true
 
 
 [ talker_option ]
-#sometimes talk.text node is not listed as a node, so this is a potential solution. if no talk.text node is found, try scrape everything except talker information
+#used in interjection right now: sometimes talk.text node is not listed as a node, so this is a potential solution. if no talk.text node is found, try scrape everything except talker information
 get_all_text = true
 
 [ section_xpaths ]
@@ -47,8 +49,14 @@ get_all_text = true
  #what is the title of the section?
  debate_title = "/debateinfo/title"
 
- #what is the title of the subdebate of the questions?
- subdebate_title = "/subdebateinfo/title"
+ #what is the title of the subdebate of all subdebates in debate nodes?
+ subdebate_title = "//subdebateinfo/title"
+
+ ##speeches###
+#speeches
+subdebate = "//subdebateinfo"
+title = "/title"
+speech = "/speech"
 
 
 

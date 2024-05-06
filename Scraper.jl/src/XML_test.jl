@@ -6,11 +6,27 @@ using scrape_utils
 using Questions
 using Scraper
 using Interjections
+using Speeches
 using CSV
 using load_set_up
+using Parameters
+
+function test_speeches()
+    run_ = setup()
+    @unpack section_xpaths = run_
+    xdoc = readxml("urls/test_files/2023-12-07.xml")
+    soup = root(xdoc)
+    debate_keys = get_all_speech_debate_keys(run_)
+    for debate_key in debate_keys[1:6]
+        debate_paths = section_xpaths[debate_key]
+        for debate_path in debate_paths
+            get_speech_subdebate_nodes(debate_path,soup,run_)
+        end
+    end
+end
 
 
-function test_one_page()
+function test_one_page_question_time()
 #    run_ = Run_Struct(Dict("a_asparent" => true),Dict("question_path" => "question"))
     run_ = setup()
     xdoc = readxml("urls/test_files/2023-12-07.xml")

@@ -62,6 +62,7 @@ end
 @xport function question_time_rows_construct(soup,flag,node,io,run_)
     @unpack general_option = run_
     subdebateinfo = find_subdebateinfo(soup,node,run_)
+
     flags = define_flags(flag)
     """get node speaker content"""
     talker = get_talker(node.path,soup,run_)
