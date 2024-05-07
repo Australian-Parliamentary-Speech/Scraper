@@ -4,6 +4,15 @@ using utils
 using scrape_utils
 using load_set_up
 using Parameters
+using EzXML
+
+@xport function find_subdebateinfo(soup,node,run_)
+    @unpack xpaths = run_
+    xpath = xpaths["SUBDEBATE_TITLE"]
+    debate_node = parentnode(node)
+    subdebatenode = find_in_subsoup(debate_node.path,soup,xpath,:first)
+    return subdebatenode.content
+end
 
 @xport function edit_row(row)
     edit_row = ""
@@ -30,7 +39,7 @@ end
 
 
 @xport function separate_talk_subdiv_nodes(node,soup,run_,section)
-    @unpack question_option,xpaths = run_
+    @unpack general_option,question_option,xpaths = run_
     p_nodes = find_in_subsoup(node.path,soup,xpaths["SUBDIV_1"],:all)
     function find_talker_in_p(p_node)
         p_talker = find_in_subsoup(p_node.path,soup,xpaths["SUBDIV_1_TALKER"],:first)

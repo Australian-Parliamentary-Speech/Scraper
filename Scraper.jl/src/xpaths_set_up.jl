@@ -9,6 +9,7 @@ function gather_topics(soup)
     titles = []
     debate_paths = []
     for debate_node in debate_nodes
+        @show debate_node.path
         title_node = find_in_subsoup(debate_node.path,soup,debate_title,:first)
         push!(titles,title_node.content)
         push!(debate_paths,debate_node.path)

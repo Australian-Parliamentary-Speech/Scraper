@@ -16,11 +16,22 @@ function test_speeches()
     @unpack section_xpaths = run_
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
-    debate_keys = get_all_speech_debate_keys(run_)
-    for debate_key in debate_keys[1:6]
-        debate_paths = section_xpaths[debate_key]
-        for debate_path in debate_paths
-            get_speech_subdebate_nodes(debate_path,soup,run_)
+    fn = "speeches.csv"
+    open(fn, "w") do io
+        write_row_to_io(io,["name","name.id","electorate","party","content","subdebateinfo","path"])
+        debate_keys = get_all_speech_debate_keys_ordered(run_)
+        for debate_key in debate_keys[1:6]
+            debate_paths = section_xpaths[debate_key]
+            for debate_path in debate_paths
+                subdebate_nodes = get_speech_subdebate_nodes(debate_path,soup,run_)
+                for subdebate_node in subdebate_nodes
+                    speech_nodes,other_nodes = get_wanted_nodes(subdebate_node,soup,run_)
+                    all_nodes = vcat(speech_nodes,other_nodes)
+                    for node in all_nodes
+                        io = speech_rows_construct(soup,node,io,run_)
+                    end
+                end
+            end
         end
     end
 end

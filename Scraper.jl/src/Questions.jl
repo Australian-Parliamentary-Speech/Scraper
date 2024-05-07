@@ -50,14 +50,6 @@ function define_flags(flag)
     return flags 
 end
 
-function find_subdebateinfo(soup,node,run_)
-    @unpack xpaths = run_
-    xpath = xpaths["SUBDEBATE_TITLE"]
-    debate_node = parentnode(node)
-    subdebatenode = find_in_subsoup(debate_node.path,soup,xpath,:first)
-    return subdebatenode.content
-end
-
 
 @xport function question_time_rows_construct(soup,flag,node,io,run_)
     @unpack general_option = run_
