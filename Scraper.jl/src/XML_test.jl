@@ -1,5 +1,7 @@
 union!(LOAD_PATH, ["/home/eve/Desktop/Parlinfo_text_project/Scraper.jl/src"])
 using EzXML
+using CSV
+using Parameters
 using utils
 using write_utils
 using scrape_utils
@@ -7,9 +9,8 @@ using Questions
 using Scraper
 using Interjections
 using Speeches
-using CSV
+using write_to_file_shared
 using load_set_up
-using Parameters
 
 function test_speeches()
     run_ = setup()
@@ -18,7 +19,7 @@ function test_speeches()
     soup = root(xdoc)
     fn = "speeches.csv"
     open(fn, "w") do io
-        write_row_to_io(io,["name","name.id","electorate","party","content","subdebateinfo","path"])
+        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         debate_keys = get_all_speech_debate_keys_ordered(run_)
         for debate_key in debate_keys[1:6]
             debate_paths = section_xpaths[debate_key]
@@ -28,7 +29,7 @@ function test_speeches()
                     speech_nodes,other_nodes = get_wanted_nodes(subdebate_node,soup,run_)
                     all_nodes = vcat(speech_nodes,other_nodes)
                     for node in all_nodes
-                        io = speech_rows_construct(soup,node,io,run_)
+                        io = rows_construct(soup,:speech,node,io,run_,separate_talk_subdiv_content_speech)
                     end
                 end
             end
@@ -46,7 +47,7 @@ function test_one_page_question_time()
     q_to_a = scrape_question_time_node(q_dict,a_dict,soup,run_)
     fn = "question_to_answers_1.csv"
     open(fn, "w") do io
-        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
+        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         sorted_keys = Question_key_sort(collect(keys(q_to_a)))
         for key in sorted_keys
             """question"""
@@ -54,9 +55,9 @@ function test_one_page_question_time()
             @show question_node.path
             answer_nodes = q_to_a[key][2]
             """question"""
-            io = question_time_rows_construct(soup,"question",question_node,io,run_)
+            io = rows_construct(soup,:question,question_node,io,run_,separate_talk_subdiv_content_question)
             for answer_node in answer_nodes
-                io = question_time_rows_construct(soup,"answer",answer_node,io,run_)
+                io = rows_construct(soup,:answer,answer_node,io,run_,separate_talk_subdiv_content_question)
             end
         end
     end
