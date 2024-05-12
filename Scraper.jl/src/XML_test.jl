@@ -21,7 +21,7 @@ function test_speeches()
     open(fn, "w") do io
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         debate_keys = get_all_speech_debate_keys_ordered(run_)
-        for debate_key in debate_keys[1:6]
+        for debate_key in debate_keys
             debate_paths = section_xpaths[debate_key]
             for debate_path in debate_paths
                 subdebate_nodes = get_speech_subdebate_nodes(debate_path,soup,run_)

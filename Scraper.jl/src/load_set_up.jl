@@ -9,7 +9,15 @@ using AndExport
 
 @xport function setup()
     input = setup_input("scrape_set_up.toml", true)
-    run_ = Run_Params(input["GENERAL_OPTION"],input["WHICH_SECTIONS"],input["QUESTION_OPTION"],input["TALKER_OPTION"],input["SECTION_XPATHS"],input["XPATHS"])
+    general_option = input["GENERAL_OPTION"]
+    section_xpaths_ = input["SECTION_XPATHS"]
+    if general_option["WHICH_CHAMBER"] == "fedchamb"
+        section_xpaths = section_xpaths_["FEDCHAMB_SECTION_XPATHS"]
+    elseif general_option["WHICH_CHAMBER"] == "chamber"
+        section_xpaths = section_xpaths_["CHAMBER_SECTION_XPATHS"]
+    end
+
+    run_ = Run_Params(general_option,input["WHICH_SECTIONS"],input["QUESTION_OPTION"],input["TALKER_OPTION"],section_xpaths,input["XPATHS"])
     return run_
 end
 

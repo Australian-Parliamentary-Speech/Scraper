@@ -9,7 +9,7 @@ using load_set_up
 using Interjections
 
 @xport function get_all_speech_debate_keys_ordered(run_)
-    @unpack section_xpaths = run_
+    @unpack section_xpaths, general_option = run_
     function by_(ele)
         path = section_xpaths[ele][1]
         num = parse(Int, match(r"\[(\d+)\]", path).captures[end])

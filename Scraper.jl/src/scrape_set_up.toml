@@ -8,6 +8,9 @@ inter_under_node = true
 #same as in question time, but this is for everything but question time, such as speeches
 a_asparent = true
 
+#fedchamb or chamber
+which_chamber = "chamber"
+
 [ which_sections ]
 
 "QUESTIONS WITHOUT NOTICE" = true
@@ -25,8 +28,13 @@ get_all_text = true
 
 [ section_xpaths ]
 
-<include section_titles.toml>
+[ section_xpaths.fedchamb_section_xpaths ]
 
+<include fedchamb_section_titles.toml>
+
+[ section_xpaths.chamber_section_xpaths ]
+
+<include chamber_section_titles.toml>
 
 [ xpaths ]
 #section_paths_list

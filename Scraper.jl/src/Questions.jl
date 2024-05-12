@@ -9,10 +9,10 @@ using write_utils
 using load_set_up
 
 @xport function question_time_node(soup,run_)
-    @unpack section_xpaths,xpaths = run_
-    section_paths = section_xpaths["QUESTIONS WITHOUT NOTICE"]
-    question_paths = ["$(section_path)$(xpaths["QUESTION"])" for section_path in section_paths]
-    answer_paths = ["$(section_path)$(xpaths["ANSWER"])" for section_path in section_paths]
+    @unpack section_xpaths,xpaths,general_option = run_
+    section_paths_ = section_xpaths["QUESTIONS WITHOUT NOTICE"]
+    question_paths = ["$(section_path)$(xpaths["QUESTION"])" for section_path in section_paths_]
+    answer_paths = ["$(section_path)$(xpaths["ANSWER"])" for section_path in section_paths_]
     """question using question.path for ordering"""
     q_dict = get_dict(soup,question_paths,set_key_question_time)
     """answer"""

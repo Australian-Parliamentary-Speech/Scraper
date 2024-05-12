@@ -3,8 +3,9 @@ using EzXML
 using utils
 using TOML
 
-function gather_topics(soup)
-    debate_nodes = findall("chamber.xscript/debate",soup)
+"""which_chamber: chamber or fedchamb"""
+function gather_topics(soup,which_chamber)
+    debate_nodes = findall("$(which_chamber).xscript/debate",soup)
     debate_title = "/debateinfo/title"
     titles = []
     debate_paths = []
@@ -22,9 +23,11 @@ function xpaths_run()
     date = "2023-12-07"
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
-    title_to_paths = gather_topics(soup)
-    open("section_titles.toml", "w") do io
-           TOML.print(io, title_to_paths)
+    for which_chamber in ["chamber","fedchamb"]
+        title_to_paths = gather_topics(soup,which_chamber)
+        open("$(which_chamber)_section_titles.toml", "w") do io
+            TOML.print(io, title_to_paths)
+        end
     end
 end
 
