@@ -29,13 +29,12 @@ end
 
 
 function process_csv(fn)
-    headers = ["question_flag","answer_flag","interjection_flag","name","name.id","electorate","party","content","path","content_1","content_2"]
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","path","content_1","content_2"]
     header_to_num = edit_set_up(headers)
     csvfile = CSV.File(fn)
-    fn = "question_to_answers_edited.csv"
     row_no = 0
     run_params = Edit_Params([" "])
-    open(fn, "w") do io
+    open("$(fn)_edit.csv", "w") do io
         write_row_to_io(io,headers)
         for row in eachrow(csvfile)
             row_ = @. collect(row)
@@ -53,6 +52,7 @@ function process_csv(fn)
 end
 
 function edit_()
-    fn = "question_to_answers_1.csv"
-    process_csv(fn)
+    for fn in ["question_to_answers_1.csv","speeches.csv"]
+        process_csv(fn)
+    end
 end
