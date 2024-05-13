@@ -14,11 +14,12 @@ using load_set_up
 
 function test_speeches()
     run_ = setup()
-    @unpack section_xpaths = run_
+    @unpack section_xpaths,general_option = run_
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
-    fn = "speeches.csv"
+    fn = "csvs/$(general_option["WHICH_CHAMBER"])speeches.csv"
     open(fn, "w") do io
+        ###only line that needs to be updated in terms of change in columns
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         debate_keys = get_all_speech_debate_keys_ordered(run_)
         for debate_key in debate_keys
@@ -41,11 +42,12 @@ end
 function test_one_page_question_time()
 #    run_ = Run_Struct(Dict("a_asparent" => true),Dict("question_path" => "question"))
     run_ = setup()
+    @unpack general_option = run_
     xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
     q_dict,a_dict=question_time_node(soup,run_)
     q_to_a = scrape_question_time_node(q_dict,a_dict,soup,run_)
-    fn = "question_to_answers_1.csv"
+    fn = "csvs/$(general_option["WHICH_CHAMBER"])question_to_answers_1.csv"
     open(fn, "w") do io
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         sorted_keys = Question_key_sort(collect(keys(q_to_a)))

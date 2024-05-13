@@ -8,8 +8,14 @@ end
 
 @xport function remove_the_speaker(row,header_to_num)
     name_num = header_to_num["name"]
+    ##test
+#    test = row[name_num]
+    ##
     pattern = r"\(The\s+SPEAKER\)"
     row[name_num] = replace(row[name_num], pattern => "")
+#    if row[name_num] != test
+#        @show test
+#    end
     return row
 end
 
@@ -72,7 +78,7 @@ end
     return row
 end
 
-@xport function delete_comma(row,header_to_num)
+@xport function delete_semicolon(row,header_to_num)
     name = row[header_to_num["name"]]
     name = replace(name, ":" => "")
     row[header_to_num["name"]] = name

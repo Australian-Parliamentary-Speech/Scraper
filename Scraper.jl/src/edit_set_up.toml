@@ -1,0 +1,23 @@
+[ question_time_option ]
+
+#if the speaker is unknown, adopt previous speaker as its own
+adopt_previous_speaker = true
+#remove (THE SPEAKER) from the name
+remove_the_speaker = true
+#remove the semicolon at the end of the names
+delete_semicolon = true
+#if the content is someine interjecting, get the talker name and put it in the name column: it will overwrite the original name
+edit_interjections = true
+#delete the talker information from content
+delete_talker_from_content = true
+
+
+[ speech_option ]
+
+adopt_previous_speaker = true
+remove_the_speaker = true
+delete_semicolon = true
+edit_interjections = true
+delete_talker_from_content = true
+
+
