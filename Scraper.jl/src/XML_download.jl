@@ -26,49 +26,114 @@ function read_csv(file_path::AbstractString)
     return file_names,urls[1:end]
 end
 
-function download_xml(url,f)
-    response = HTTP.get(url, ["User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"])
-    open("$f", "w") do file
+function get_response(url)
+    response = HTTP.get(url, ["User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"]) 
+    return response
+end
+
+function download_xml(url,fname)
+    response = get_response(url)
+    open("$fname", "w") do file
         write(file, String(response.body))
     end
 end
 
-function download_run()
-    file_names,urls = read_csv("urls/201022.csv")
-    destination = "urls/xml_files"
+function download_all_xml_from_file(fn)
+    file_names,urls = read_csv(fn)
+    destination = "urls/xml_files_2024"
     Threads.@threads for n in 1:length(urls)
-        @show n
-        f = "urls/xml_files/$(file_names[n])"
+        fname = "urls/xml_files_2024/$(file_names[n])"
         url = urls[n]
-        download_xml(url,f)
+        year = split(file_names[n],"_")[1]
+        if year == "2024"
+            @show url
+            download_xml(url,fname)
+        end
     end
 end
 
-function download_single()
-    url = "https://parlinfo.aph.gov.au/parlInfo/download/chamber/hansardr/27533/toc_unixml/House%20of%20Representatives_2023_12_07_Official.xml;fileType=text%2Fxml"
-    f = "urls/test_files/2023-12-07.xml"
-    download_xml(url,f)
+function month_to_no(month)
+    print(month)
+    if month == "Jan"
+        return "01"
+    elseif month == "Feb"
+        return "02"
+    elseif month == "Dec"
+        return "12"
+    else
+        return month
+    end
 end
 
+function date_process(date)
+    list_ = split(date,"-")
+    new_date = "$(list_[end])_$(month_to_no(list_[2]))_$(list_[1])"
+    return new_date
+end
 
+function produce_xml_url(a)
+    attributes = a.attributes
+    date = attributes["aria-label"]
+    date = date_process(date)
+    @show date
+    link_ = attributes["href"]
+    no = split(link_,"/")[end-1]
+    link = "https://parlinfo.aph.gov.au/parlInfo/download/chamber/hansardr/$(no)/toc_unixml/House%20of%20Representatives_$(date).xml;fileType=text%2Fxml"
+    return date,link
+end
 
-function main()
-    link = "https://parlinfo.aph.gov.au/parlInfo/search/display/display.w3p;query=Id%3A%22chamber%2Fhansards%2Fff07e01d-cd6d-4be6-bff6-f867d1054a78%2F0103%22;src1=sm1"
-#
-    #url = "https://www.example.com" # Make sure you use the full url with https and everything
-
-    response = HTTP.request("GET", link)
-
+function write_xml_url(link)
+    response = get_response(link)
     doc = Gumbo.parsehtml(String(response))
-    subsoup = eachmatch(sel".twoBoxForm",doc.root)
-    for ele in subsoup
-       metapaddings = eachmatch(sel".metaPadding",ele)
-       label = [eachmatch(sel".mdLabel",metapadding) for metapadding in metapaddings]
-       value = [eachmatch(sel".mdValue",metapadding) for metapadding in metapaddings]
-       #@show label[1][2][1].text
-       @show label[1][2] value[1][2]
+    soup = doc.root
+    subsoups = eachmatch(sel"table",soup)
+    xml_links = []
+    dates = []
+    for subsoup in subsoups
+        as = eachmatch(sel"a",subsoup) 
+        for a in as
+            try
+                date,link = produce_xml_url(a)
+                push!(xml_links, link)
+                push!(dates,date)
+            catch
+                nothing
+            end
+        end
+    end
+    open("urls/xml_urls.csv", "w") do io
+        for i in 1:length(dates)
+            println(io, join([dates[i], xml_links[i]], ","))
+        end
+    end
+end
+
+
+
+function test()
+    if false
+        link = "https://www.aph.gov.au/Parliamentary_Business/Hansard/Hansreps_2011"
+    write_xml_url(link)
+    else
+        download_all_xml_from_file("urls/xml_urls.csv")
     end
 
+end
+
+function find_xml_url_from_page(link)
+    response = get_response(link)
+    doc = Gumbo.parsehtml(String(response))
+    soup = doc.root
+#    a = eachmatch(sel"img[title~='XML']",soup)[1].parent
+#    @show a
+#    link_ = a.attributes["href"]
+    a = eachmatch(sel"a[title~='XML']",soup)[1]
+    @show a
+    date_node = eachmatch(sel"span.HPS-SODJobDate",soup)
+    @show date_node
+    date = eachmatch(sel"a",date_node[1])[1]
+    @show date
+    return link_
 end
 
 

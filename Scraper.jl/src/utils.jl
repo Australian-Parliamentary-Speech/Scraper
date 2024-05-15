@@ -21,10 +21,6 @@ using EzXML
 end
 
 
-@xport function Float_(value)
-    return parse(Float64, value)
-end
-
 @xport function has_nothing(lst)
     return any(x -> x === nothing, lst)
 end
