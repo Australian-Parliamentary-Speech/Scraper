@@ -43,7 +43,7 @@ function Question_key_processor(keys)
         if num == nothing 
             num = 0
         else
-            num = parse(Float64, num.match[2:end-1])
+            num = Float_((num.match[2:end-1]))
         end
         push!(key_final,num)
     end

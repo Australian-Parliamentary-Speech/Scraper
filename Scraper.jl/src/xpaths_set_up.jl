@@ -20,9 +20,8 @@ function gather_topics(soup,which_chamber)
 end
 
 function xpaths_run()
-#    date = "1909-12-08"  
     date = "2023-12-07"
-    xdoc = readxml("urls/test_files/$(date).xml")
+    xdoc = readxml("urls/test_files/2023-12-07.xml")
     soup = root(xdoc)
     for which_chamber in ["chamber","fedchamb"]
         title_to_paths = gather_topics(soup,which_chamber)

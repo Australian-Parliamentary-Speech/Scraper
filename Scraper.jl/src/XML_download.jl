@@ -42,7 +42,7 @@ function download_all_xml_from_file(fn)
     file_names,urls = read_csv(fn)
     destination = "urls/xml_files_2024"
     Threads.@threads for n in 1:length(urls)
-        fname = "urls/xml_files_2024/$(file_names[n])"
+        fname = "urls/xml_files_2024/$(file_names[n]).xml"
         url = urls[n]
         year = split(file_names[n],"_")[1]
         if year == "2024"
@@ -58,6 +58,10 @@ function month_to_no(month)
         return "01"
     elseif month == "Feb"
         return "02"
+    elseif month == "Mar"
+        return "03"
+    elseif month == "May"
+        return "05"
     elseif month == "Dec"
         return "12"
     else
@@ -75,7 +79,6 @@ function produce_xml_url(a)
     attributes = a.attributes
     date = attributes["aria-label"]
     date = date_process(date)
-    @show date
     link_ = attributes["href"]
     no = split(link_,"/")[end-1]
     link = "https://parlinfo.aph.gov.au/parlInfo/download/chamber/hansardr/$(no)/toc_unixml/House%20of%20Representatives_$(date).xml;fileType=text%2Fxml"
