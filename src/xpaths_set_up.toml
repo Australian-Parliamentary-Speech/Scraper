@@ -1,0 +1,26 @@
+[ question_time ]
+
+#if for each p, look for the parent a node and scrape the talker from a, if off, the edit_ function will tribute the unknown speaker to the one above after edit_. But in the raw material it would be N/A
+a_asparent = true
+
+[question_time.xpaths]
+
+ question = ["//question"]
+ answer = ["//answer"]
+ #under question/answer node, maybe to talk.text//p???
+ subdiv_1 = ["//p"]
+ subdiv_1_talker = ["//a"]
+
+
+[ talker ]
+
+#used in interjection right now: sometimes talk.text node is not listed as a node, so this is a potential solution. if no talk.text node is found, try scrape everything except talker information
+get_all_text = true
+
+[ talker.xpaths ]
+
+ talk_node = ["//talk.start"]
+ talk_content = ["//talk.text"]
+ talker = ["//talker"]
+
+

@@ -1,0 +1,8 @@
+name = "ParlinfoSpeechScraper"
+uuid = "3fb2ed58-985e-428b-9a27-55663dc902eb"
+authors = ["Eve <evecheng999@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+BetterInputFiles = "c0b1955d-4702-4680-a946-720482e78a48"

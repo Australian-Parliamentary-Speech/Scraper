@@ -1,0 +1,42 @@
+[GENERAL_OPTION]
+INTER_UNDER_NODE = true
+SEP_BY_SUBDIV_1 = true
+WHICH_CHAMBER = "chamber"
+TALKER_NAME_INTO_CONTENT = true
+A_ASPARENT = true
+
+[WHICH_SECTIONS]
+"QUESTIONS WITHOUT NOTICE" = true
+
+[TALKER_OPTION]
+GET_ALL_TEXT = true
+
+[XPATHS]
+TALK_CONTENT = "//talk.text"
+TITLE = "/title"
+ANSWER = "//answer"
+QUESTION = "//question"
+DEBATE_TITLE = "/debateinfo/title"
+CONTINUE = "//continue"
+INTERJECTION = "//interjection"
+SUBDEBATE_TITLE = "//subdebateinfo/title"
+TALK_NODE = "//talk.start"
+TALKER = "//talker"
+SPEECH = "/speech"
+SUBDIV_1_TALKER = "//a"
+SUBDEBATE = "//subdebateinfo"
+SUBDIV_1 = "//p"
+
+[GLOBAL]
+BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/"
+INPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper"
+LOG_FILE = "/home/eve/Development/ParlinfoSpeechScraper/Output/log.txt"
+LOGGING = true
+OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Output"
+
+[METADATA]
+ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/scrape_set_up.toml"
+DATE = "2024-05-18"
+
+[QUESTION_OPTION]
+A_ASPARENT = true
