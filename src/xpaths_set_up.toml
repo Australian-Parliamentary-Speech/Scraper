@@ -5,11 +5,15 @@ a_asparent = true
 
 [question_time.xpaths]
 
- question = ["//question"]
- answer = ["//answer"]
- #under question/answer node, maybe to talk.text//p???
- subdiv_1 = ["//p"]
- subdiv_1_talker = ["//a"]
+question_time_node_names = ["question","answer"]
+div_1 = ["p"]
+subdiv_1_talker = ["a"]
+
+[ speech ]
+
+[ speech.xpaths ]
+
+speech_node_names = ["speech","question","answer"]
 
 
 [ talker ]

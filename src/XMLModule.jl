@@ -1,7 +1,7 @@
 module XMLModule
 using Reexport
+using AndExport
 @reexport using EzXML
-@reexport using AndExport
 
 using ..Utils
 

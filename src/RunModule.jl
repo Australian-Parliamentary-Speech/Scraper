@@ -25,7 +25,6 @@ end
 
 
 function run_ParlinfoSpeechScraper(toml)
-    input = setup_input(toml, true)
     for fn in readdir("xml_dir/", join=false)
         time = get_time(fn)
         toml_fn = which_toml(time)
