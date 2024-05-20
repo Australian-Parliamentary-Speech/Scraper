@@ -1,0 +1,8 @@
+.env/
+**/*.csv
+**/*.png
+**/*.pdf
+**/*.txt
+**/*.pyc
+**/*.html
+**/*.xml

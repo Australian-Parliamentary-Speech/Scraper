@@ -1,4 +1,8 @@
 module NodeModule
+using InteractiveUtils
+
+export detect_node_type
+export Node
 
 abstract type Node end
 
@@ -29,25 +33,16 @@ function find_debate_title(node)
     return title
 end
  
-function (name,node_tree)
-    # check the debate node
-    if name in ["question","answer"]
-        debate_parent = reverse_find_first_node(node_tree, "debate")
 
-        if parent == 
-            return QuestionNode(:speech)
-        elseif parent == 
-            return QustionNode(:qt)
-        end
-end
-
-function is_nodetype(node,node_tree,::Node)
+function is_nodetype(node,node_tree,::Node,args...;kwargs...)
+    @info typeof(node)
     return false
 end
 
-function detect_node_type(node, node_tree)
+function detect_node_type(node, node_tree,year)
     for NodeType in get_all_subtypes(Node)
-        if is_nodetype(node, node_tree, NodeType)
+        @info NodeType
+        if is_nodetype(node, node_tree, NodeType;year=year)
             return NodeType
         end
     end

@@ -4,5 +4,10 @@ authors = ["Eve <evecheng999@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+AndExport = "4484d908-372d-4f90-b90b-0ec97f005b8c"
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
 BetterInputFiles = "c0b1955d-4702-4680-a946-720482e78a48"
+EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"

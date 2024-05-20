@@ -1,4 +1,4 @@
-module Util
+module Utils
 
 function create_dict_multiple_values(keys,values)
     d = Dict()
