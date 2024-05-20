@@ -1,5 +1,6 @@
 module RunModule
-
+using InteractiveUtils
+using Reexport
 
 export run_ParlinfoSpeechScraper
 
@@ -10,8 +11,7 @@ include("XMLModule.jl")
 using .XMLModule
 
 include("NodeModule.jl")
-using .NodeModule
-
+@reexport using .NodeModule
 
 struct Run_
     year::Int64
@@ -43,7 +43,7 @@ function run_ParlinfoSpeechScraper(toml="")
 end
 
 function parse_node(node,node_tree)
-    @show nodename(node)
+    nothing
 end
 
 function if_defined(node)
@@ -56,15 +56,15 @@ function recurse(scrape_run,node,depth=1,node_tree=[])
     #    @show nodename(node)
     node_tree_names = [nodename(n) for n in node_tree]
     for subnode in elements(node)
-        #        NodeType = detect_node_type(node,node_tree,scrape_run.year)
-        #        if NodeType != nothing
-        #            @info NodeType
-        #            node_tree = vcat(node_tree,node)
-        #        end
-        if nodename(subnode) in  ["p","speech","talk.text"]
-            node_tree = vcat(node_tree,nodename(subnode))
+        NodeType = detect_node_type(node,node_tree,scrape_run.year)
+        if NodeType != nothing
+            @info NodeType
+            if NodeType == DebateNode
+                @info node.path
+            end
+            node_tree = push!(node_tree,node)
         end
-        content = recurse(scrape_run,subnode,depth+1,vcat(node_tree,add))
+        content = recurse(scrape_run,subnode,depth+1,vcat(node_tree,node))
     end
     parse_node(node,node_tree)
 end

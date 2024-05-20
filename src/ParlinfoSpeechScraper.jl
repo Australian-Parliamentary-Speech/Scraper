@@ -1,4 +1,5 @@
 module ParlinfoSpeechScraper
+using Reexport
 
 # External packages
 using BetterInputFiles
@@ -6,7 +7,7 @@ using ArgParse
 
 # Internal packages
 include("RunModule.jl")
-using .RunModule
+@reexport using .RunModule
 
 function get_args()
     s = ArgParseSettings()
