@@ -43,7 +43,9 @@ function run_ParlinfoSpeechScraper(toml="")
 end
 
 function parse_node(node,node_tree)
-    nothing
+#    @show nodename(node)
+    nodes = [nodename(n) for n in node_tree]
+#    @show nodes
 end
 
 function if_defined(node)
@@ -52,21 +54,24 @@ function if_defined(node)
     node_struct = getfield(NodeModule,node_struct_symbol)
 end
 
-function recurse(scrape_run,node,depth=1,node_tree=[])
+function recurse(soup,scrape_run,node,depth,node_tree=[])
     #    @show nodename(node)
-    node_tree_names = [nodename(n) for n in node_tree]
+    if depth <= 0
+        return nothing
+    end
+
     for subnode in elements(node)
-        NodeType = detect_node_type(node,node_tree,scrape_run.year)
+        NodeType = detect_node_type(subnode,node_tree,scrape_run.year,soup)
         if NodeType != nothing
             @info NodeType
             if NodeType == DebateNode
-                @info node.path
+#                @info subnode.path
             end
-            node_tree = push!(node_tree,node)
+            node_tree = push!(node_tree,subnode)
         end
-        content = recurse(scrape_run,subnode,depth+1,vcat(node_tree,node))
+        parse_node(subnode,node_tree)
+        content = recurse(soup,scrape_run,subnode,depth-1,node_tree)
     end
-    parse_node(node,node_tree)
 end
 
 

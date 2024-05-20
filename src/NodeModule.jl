@@ -4,6 +4,7 @@
 module NodeModule
 using InteractiveUtils
 using EzXML
+using ..XMLModule
 
 export detect_node_type
 export Node
@@ -27,15 +28,26 @@ end
 
 function reverse_find_first_node(node_tree,name)
     reverse_node_tree = reverse(node_tree)
-    node = findfirst(n -> nodename(n) == name,reverse_node_tree)
-    return node
+    index = findfirst(n -> nodename(n) == name,reverse_node_tree)
+    if isnothing(index)
+        return nothing
+    else
+        return reverse_node_tree[index]
+    end
 end
 
-function find_debate_title(node,node_tree)
+function find_debate_title(node,node_tree,soup)
     debate_title = "/debateinfo/title"
     debate_node = reverse_find_first_node(node_tree,"debate")
-    title = find_in_subsoup(debate_node.path,soup,debate_title,:first).content
-    return title
+    if isnothing(debate_node)
+        return "N/A"
+    end
+    title = findfirst_in_subsoup(debate_node.path,debate_title,soup)
+    if isnothing(title)
+        return "N/A"
+    else
+        return title.content
+    end
 end
  
 
@@ -43,9 +55,9 @@ function is_nodetype(node,node_tree,::Node,args...;kwargs...)
     return false
 end
 
-function detect_node_type(node, node_tree,year)
+function detect_node_type(node, node_tree,year,soup)
     for NodeType in get_all_subtypes(Node)
-        if is_nodetype(node, node_tree, NodeType;year=year)
+        if is_nodetype(node, node_tree, NodeType, soup;year=year)
             return NodeType
         end
     end
