@@ -2,7 +2,7 @@ function process_node_phase(node::Node{PNode},node_tree,soup,args...;kwargs...)
     node = node.node
     parent_node = reverse_find_first_node_not_name(node_tree,["p"])
     if is_first_node_type(node_tree,PNode)
-        parent_node_ = node_tree[end]
+        parent_node_ = node_tree[end-1]
         @assert parent_node_ == parent_node
         talker_contents = get_talker_from_parent(parent_node,soup)
     else

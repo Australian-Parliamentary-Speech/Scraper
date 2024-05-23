@@ -44,11 +44,6 @@ function run_ParlinfoSpeechScraper(toml="")
     debate_node = findfirst("//debate",soup) 
 end
 
-function parse_node(node,node_tree,year,soup)
-#    @show nodename(node)
-    process_node(node,node_tree,year,soup)
-#    @show nodes
-end
 
 function if_defined(node)
     node_name = nodename(node)
@@ -69,6 +64,7 @@ function recurse(soup,scrape_run,node,depth,node_tree=[])
             subnode_ = Node{NodeType}(subnode)
             @info NodeType
             node_tree = push!(node_tree,subnode_)
+            @show [typeof(i).parameters[1] for i in node_tree]
             parse_node(subnode_,node_tree,scrape_run.year,soup)
         end
         recurse(soup,scrape_run,subnode,depth-1,node_tree)
