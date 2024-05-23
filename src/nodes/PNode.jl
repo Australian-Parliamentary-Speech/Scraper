@@ -8,7 +8,7 @@ function process_node(node::Node{PNode},node_tree,year,soup)
     if phase == :phase1
 #        include("/home/eve/Development/ParlinfoSpeechScraper/src/nodes/PNode_phase1.jl")
         row = process_node_phase(node,node_tree,soup)
-        @info row
+        @info row[1:end-1]
     else
         @error "Node not processed"
     end

@@ -15,6 +15,7 @@ end
 function get_talker_from_parent(parent_node,soup)
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+    @show talker_node
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
         #        talker_content_node = findfirst("$(talker_node.path)//$(xpath)",talker_node)
@@ -22,7 +23,7 @@ function get_talker_from_parent(parent_node,soup)
     end
 
     talker_contents = []
-    for xpath in ["name","name.id","electorate","party"]
+    for xpath in ["//name","//name.id","//electorate","//party"]
         talker_content = find_content(xpath)
         push!(talker_contents,talker_content)
     end

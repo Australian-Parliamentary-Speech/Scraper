@@ -52,6 +52,8 @@ function reverse_find_first_node_not_name(node_tree,names)
 end
 
 function is_first_node_type(node_tree,NodeType)
+    @show [typeof(i).parameters[1] for i in node_tree]
+    @show typeof(node_tree[end]).parameters[1]
     previous_node_type = typeof(node_tree[end]).parameters[1]
     return !(previous_node_type == NodeType)
 end
