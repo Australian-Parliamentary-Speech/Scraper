@@ -8,8 +8,13 @@ using ..XMLModule
 
 export detect_node_type
 export Node
+export parse_node
 
-abstract type Node end
+abstract type AbstractNode end
+
+struct Node{N <: AbstractNode}
+    node::EzXML.Node
+end
 
 const node_path = joinpath(@__DIR__, "nodes")
 for path in readdir(node_path, join=true)
@@ -28,7 +33,7 @@ end
 
 function reverse_find_first_node(node_tree,name)
     reverse_node_tree = reverse(node_tree)
-    index = findfirst(n -> nodename(n[1]) == name,reverse_node_tree)
+    index = findfirst(n -> nodename(n.node) == name,reverse_node_tree)
     if isnothing(index)
         return nothing
     else
@@ -38,7 +43,7 @@ end
 
 function reverse_find_first_node_not_name(node_tree,names)
     reverse_node_tree = reverse(node_tree)
-    index = findfirst(n -> nodename(n[1]) ∉ names,reverse_node_tree)
+    index = findfirst(n -> nodename(n.node) ∉ names,reverse_node_tree)
     if isnothing(index)
         return nothing
     else
@@ -47,7 +52,7 @@ function reverse_find_first_node_not_name(node_tree,names)
 end
 
 function is_first_node_type(node_tree,NodeType)
-    previous_node_type = node_tree[end][2]
+    previous_node_type = typeof(node_tree[end]).parameters[1]
     return !(previous_node_type == NodeType)
 end
 
@@ -58,7 +63,7 @@ function find_debate_title(node,node_tree,soup)
     if isnothing(debate_node)
         return "N/A"
     end
-    title = findfirst_in_subsoup(debate_node.path,debate_title,soup)
+    title = findfirst_in_subsoup(debate_node.node.path,debate_title,soup)
     if isnothing(title)
         return "N/A"
     else
@@ -72,7 +77,7 @@ function is_nodetype(node,node_tree,::Node,args...;kwargs...)
 end
 
 function detect_node_type(node, node_tree,year,soup)
-    for NodeType in get_all_subtypes(Node)
+    for NodeType in get_all_subtypes(AbstractNode)
         if is_nodetype(node, node_tree, NodeType, soup;year=year)
             return NodeType
         end
@@ -80,7 +85,10 @@ function detect_node_type(node, node_tree,year,soup)
 end
 
 function define_flags(parent_node)
-    name = nodename(parent_node)
+    if isnothing(parent_node)
+        return [0,0,0,0,0]
+    end
+    name = nodename(parent_node.node)
     if name == "question"
         flags = [1,0,0,0,0]
     elseif name == "answer"
@@ -93,6 +101,12 @@ function define_flags(parent_node)
         flags = [0,0,0,0,0]
     end
     return flags 
+end
+
+function parse_node(node,node_tree,year,soup)
+#    @show nodename(node)
+    process_node(node,node_tree,year,soup)
+#    @show nodes
 end
 
 #function detect_node_type(node,node_tree)

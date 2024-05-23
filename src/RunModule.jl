@@ -3,6 +3,7 @@ using InteractiveUtils
 using Reexport
 
 export run_ParlinfoSpeechScraper
+export get_year
 
 include("Utils.jl")
 using .Utils
@@ -18,12 +19,13 @@ struct Run_
 end
 
 
-function get_time(fn)
+function get_year(fn)
     xdoc = readxml(fn)
     soup = root(xdoc)
     time_node = findfirst("//session.header/date",soup)
     time = time_node.content
-    return time   
+    year = split(time,"-")[1]
+    return parse(Int,year)  
 end
 
 function which_toml(time)
@@ -42,9 +44,9 @@ function run_ParlinfoSpeechScraper(toml="")
     debate_node = findfirst("//debate",soup) 
 end
 
-function parse_node(node,node_tree)
+function parse_node(node,node_tree,year,soup)
 #    @show nodename(node)
-    nodes = [nodename(n) for n in node_tree]
+    process_node(node,node_tree,year,soup)
 #    @show nodes
 end
 
@@ -64,11 +66,12 @@ function recurse(soup,scrape_run,node,depth,node_tree=[])
     for subnode in elements(node)
         NodeType = detect_node_type(subnode,node_tree,scrape_run.year,soup)
         if NodeType != nothing
+            subnode_ = Node{NodeType}(subnode)
             @info NodeType
-            node_tree = push!(node_tree,[subnode,NodeType])
+            node_tree = push!(node_tree,subnode_)
+            parse_node(subnode_,node_tree,scrape_run.year,soup)
         end
-        parse_node(subnode,node_tree)
-        content = recurse(soup,scrape_run,subnode,depth-1,node_tree)
+        recurse(soup,scrape_run,subnode,depth-1,node_tree)
     end
 end
 

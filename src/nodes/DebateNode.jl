@@ -1,6 +1,24 @@
 export DebateNode
 
-abstract type DebateNode <: Node end
+abstract type DebateNode <: AbstractNode end
+
+function process_node(node::Node{DebateNode},node_tree,year,soup)
+    phase = year_to_phase(year,PNode)
+    if phase == :phase1
+        nothing
+    else
+        @error "Node not processed"
+    end
+end
+
+
+function year_to_phase(year,::Type{DebateNode})
+    if 2020 < year < 2024
+        return :phase1
+    else
+        @error "No phase was produced in speechnode"
+    end
+end
 
 
 function is_nodetype(node, node_tree, ::Type{DebateNode}, args...; kwargs...)

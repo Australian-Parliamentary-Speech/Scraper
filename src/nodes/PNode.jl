@@ -1,11 +1,14 @@
 export PNode
+export process_node
 
-abstract type PNode <: Node end
+abstract type PNode <: AbstractNode end
 
-function process_node(year,::Type{PNode})
+function process_node(node::Node{PNode},node_tree,year,soup)
     phase = year_to_phase(year,PNode)
     if phase == :phase1
-        include("PNode_phase1.jl")
+#        include("/home/eve/Development/ParlinfoSpeechScraper/src/nodes/PNode_phase1.jl")
+        row = process_node_phase(node,node_tree,soup)
+        @info row
     else
         @error "Node not processed"
     end

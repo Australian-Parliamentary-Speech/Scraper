@@ -1,12 +1,12 @@
 export QuestionNode
 
-abstract type QuestionNode <: Node end
+abstract type QuestionNode <: AbstractNode end
 
 
-function process_node(year,::Type{QuestionNode})
-    phase = year_to_phase(year,PNode)
+function process_node(node::Node{QuestionNode},node_tree,year,soup)
+    phase = year_to_phase(year,QuestionNode)
     if phase == :phase1
-        include("QuestionNode_phase1.jl")
+        nothing
     else
         @error "Node not processed"
     end

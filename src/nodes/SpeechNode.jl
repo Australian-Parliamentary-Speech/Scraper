@@ -1,22 +1,17 @@
 export SpeechNode
 
-abstract type SpeechNode <: Node end
+abstract type SpeechNode <: AbstractNode end
 
 
-function process_node(year,::Type{SpeechNode})
+function process_node(node::Node{SpeechNode},node_tree,year,soup)
     phase = year_to_phase(year,SpeechNode)
     if phase == :phase1
-        include("SpeechNode_phase1.jl")
-        process_speech_node_phase()
+        nothing
     else
         @error "Node not processed"
     end
 end
 
-
-function process_node(node,node_tree,::Type{SpeechNode},args...;kwargs...)
-    nothing
-end
 
 function is_nodetype(node, node_tree,::Type{SpeechNode}, args...; kwargs...)
     year = kwargs[:year]
@@ -39,7 +34,7 @@ end
 function get_xpaths(year,::Type{SpeechNode})
     phase_to_dict = Dict(
                          :phase1 => ["speech","question","answer"]) 
-    return  phase_to_dict[year_to_phase(year)]
+    return  phase_to_dict[year_to_phase(year,SpeechNode)]
 end
 
 function year_to_phase(year,::Type{SpeechNode})

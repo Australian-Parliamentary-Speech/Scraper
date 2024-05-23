@@ -10,12 +10,13 @@ const Node = RunModule.NodeModule.Node
 
     @testset "speech_test" begin
         date = "2023-12-07"
-        xdoc = readxml("xmls/test_files/$date.xml")
+        fn = "xmls/test_files/$date.xml"
+        xdoc = readxml(fn)
+        year = get_year(fn)
         soup = root(xdoc)
         debate_node = findfirst("//chamber.xscript",soup)
-        scrape_run = ParlinfoSpeechScraper.RunModule.Run_(2023)
-        @show subtypes(Node)
-        ParlinfoSpeechScraper.RunModule.recurse(soup,scrape_run,debate_node,-1)
+        scrape_run = ParlinfoSpeechScraper.RunModule.Run_(year)
+        ParlinfoSpeechScraper.RunModule.recurse(soup,scrape_run,debate_node,7)
     end
 
 end

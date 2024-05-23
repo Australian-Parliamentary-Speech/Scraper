@@ -1,4 +1,5 @@
-function process_node_phase(node,node_tree,::Type{PNode},soup,args...;kwargs...)
+function process_node_phase(node::Node{PNode},node_tree,soup,args...;kwargs...)
+    node = node.node
     parent_node = reverse_find_first_node_not_name(node_tree,["p"])
     if is_first_node_type(node_tree,PNode)
         parent_node_ = node_tree[end]
@@ -8,10 +9,11 @@ function process_node_phase(node,node_tree,::Type{PNode},soup,args...;kwargs...)
         talker_contents = find_talker_in_p(node,soup)
     end 
     flags = define_flags(parent_node)
-    return [flags...,talker_contents...,node.content]
+    return [flags...,talker_contents...,clean_text(node.content)]
 end
 
 function get_talker_from_parent(parent_node,soup)
+    parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
@@ -37,7 +39,7 @@ function find_talker_in_p(p_node,soup)
     end
 end
 
-function p_with_a_as_parent(p_node::PNode,soup)
+function p_with_a_as_parent(p_node,soup)
     function parent_path_check(parent_path)
         paths = split(parent_path,"/")
         path_end = paths[end]
