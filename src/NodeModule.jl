@@ -28,13 +28,29 @@ end
 
 function reverse_find_first_node(node_tree,name)
     reverse_node_tree = reverse(node_tree)
-    index = findfirst(n -> nodename(n) == name,reverse_node_tree)
+    index = findfirst(n -> nodename(n[1]) == name,reverse_node_tree)
     if isnothing(index)
         return nothing
     else
         return reverse_node_tree[index]
     end
 end
+
+function reverse_find_first_node_not_name(node_tree,names)
+    reverse_node_tree = reverse(node_tree)
+    index = findfirst(n -> nodename(n[1]) ∉ names,reverse_node_tree)
+    if isnothing(index)
+        return nothing
+    else
+        return reverse_node_tree[index]
+    end
+end
+
+function is_first_node_type(node_tree,NodeType)
+    previous_node_type = node_tree[end][2]
+    return !(previous_node_type == NodeType)
+end
+
 
 function find_debate_title(node,node_tree,soup)
     debate_title = "/debateinfo/title"
@@ -61,6 +77,22 @@ function detect_node_type(node, node_tree,year,soup)
             return NodeType
         end
     end
+end
+
+function define_flags(parent_node)
+    name = nodename(parent_node)
+    if name == "question"
+        flags = [1,0,0,0,0]
+    elseif name == "answer"
+        flags = [0,1,0,0,0]
+    elseif name == "interjection"
+        flags = [0,0,1,0,0]
+    elseif name == "speech"
+        flags = [0,0,0,1,0]
+    else
+        flags = [0,0,0,0,0]
+    end
+    return flags 
 end
 
 #function detect_node_type(node,node_tree)

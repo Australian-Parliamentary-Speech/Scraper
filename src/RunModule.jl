@@ -54,9 +54,10 @@ function if_defined(node)
     node_struct = getfield(NodeModule,node_struct_symbol)
 end
 
+
 function recurse(soup,scrape_run,node,depth,node_tree=[])
     #    @show nodename(node)
-    if depth <= 0
+    if depth == 0
         return nothing
     end
 
@@ -64,10 +65,7 @@ function recurse(soup,scrape_run,node,depth,node_tree=[])
         NodeType = detect_node_type(subnode,node_tree,scrape_run.year,soup)
         if NodeType != nothing
             @info NodeType
-            if NodeType == DebateNode
-#                @info subnode.path
-            end
-            node_tree = push!(node_tree,subnode)
+            node_tree = push!(node_tree,[subnode,NodeType])
         end
         parse_node(subnode,node_tree)
         content = recurse(soup,scrape_run,subnode,depth-1,node_tree)

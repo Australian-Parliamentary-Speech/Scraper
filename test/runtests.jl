@@ -15,7 +15,7 @@ const Node = RunModule.NodeModule.Node
         debate_node = findfirst("//chamber.xscript",soup)
         scrape_run = ParlinfoSpeechScraper.RunModule.Run_(2023)
         @show subtypes(Node)
-        ParlinfoSpeechScraper.RunModule.recurse(soup,scrape_run,debate_node,8)
+        ParlinfoSpeechScraper.RunModule.recurse(soup,scrape_run,debate_node,-1)
     end
 
 end

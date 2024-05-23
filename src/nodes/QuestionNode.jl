@@ -2,6 +2,16 @@ export QuestionNode
 
 abstract type QuestionNode <: Node end
 
+
+function process_node(year,::Type{QuestionNode})
+    phase = year_to_phase(year,PNode)
+    if phase == :phase1
+        include("QuestionNode_phase1.jl")
+    else
+        @error "Node not processed"
+    end
+end
+
 function is_nodetype(node, node_tree,::Type{QuestionNode}, args...; kwargs...)
     year = kwargs[:year]
     soup = args[1]
@@ -21,16 +31,16 @@ end
 
 
 function get_xpaths(year,::Type{QuestionNode})
-    function year_to_phase(year)
-        if 2020 < year < 2024
-            return :phase1
-        else
-            @error "No phase was produced in questionnode"
-        end
-    end
-    phase_to_dict = Dict(
+   phase_to_dict = Dict(
                         :phase1 => ["question","answer"]) 
-    return  phase_to_dict[year_to_phase(year)]
+    return  phase_to_dict[year_to_phase(year,QuestionNode)]
 end
 
+function year_to_phase(year,::Type{QuestionNode})
+    if 2020 < year < 2024
+        return :phase1
+    else
+        @error "No phase was produced in questionnode"
+    end
+end
 
