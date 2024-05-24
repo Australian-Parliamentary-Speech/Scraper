@@ -31,9 +31,9 @@ function get_all_subtypes(type, st=[])
     return st
 end
 
-function reverse_find_first_node(node_tree,name)
+function reverse_find_first_node_name(node_tree,names)
     reverse_node_tree = reverse(node_tree)
-    index = findfirst(n -> nodename(n.node) == name,reverse_node_tree)
+    index = findfirst(n -> nodename(n.node) ∈ names,reverse_node_tree)
     if isnothing(index)
         return nothing
     else
@@ -64,7 +64,7 @@ end
 
 function find_debate_title(node,node_tree,soup)
     debate_title = "/debateinfo/title"
-    debate_node = reverse_find_first_node(node_tree,"debate")
+    debate_node = reverse_find_first_node_name(node_tree,["debate"])
     if isnothing(debate_node)
         return "N/A"
     end

@@ -14,9 +14,9 @@ const Node = RunModule.NodeModule.Node
         xdoc = readxml(fn)
         year = get_year(fn)
         soup = root(xdoc)
-        debate_node = findfirst("//chamber.xscript",soup)
+#        debate_node = findfirst("//chamber.xscript",soup)
         scrape_run = ParlinfoSpeechScraper.RunModule.Run_(year)
-        ParlinfoSpeechScraper.RunModule.recurse(soup,scrape_run,debate_node,7)
+        ParlinfoSpeechScraper.RunModule.recurse(soup,scrape_run,soup,7)
     end
 
 end

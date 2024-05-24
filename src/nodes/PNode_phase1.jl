@@ -1,6 +1,7 @@
 function process_node_phase(node::Node{PNode},node_tree,soup,args...;kwargs...)
+    allowed_names = kwargs[:names]
     node = node.node
-    parent_node = reverse_find_first_node_not_name(node_tree,["p"])
+    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     if is_first_node_type(node_tree,PNode)
         parent_node_ = node_tree[end-1]
         @assert parent_node_ == parent_node
@@ -22,12 +23,16 @@ function get_talker_from_parent(parent_node,soup)
         return talker_content_node.content
     end
 
-    talker_contents = []
-    for xpath in ["//name","//name.id","//electorate","//party"]
-        talker_content = find_content(xpath)
-        push!(talker_contents,talker_content)
+    if isnothing(talker_node)
+        return ["N/A" for i in 1:4]
+    else
+        talker_contents = []
+        for xpath in ["//name","//name.id","//electorate","//party"]
+            talker_content = find_content(xpath)
+            push!(talker_contents,talker_content)
+        end
+        return talker_contents
     end
-    return talker_contents
 end
 
 
