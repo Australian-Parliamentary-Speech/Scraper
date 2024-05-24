@@ -25,7 +25,7 @@ function get_year(fn)
     time_node = findfirst("//session.header/date",soup)
     time = time_node.content
     year = split(time,"-")[1]
-    return parse(Int,year)  
+    return (parse(Int,year),time)
 end
 
 function which_toml(time)
@@ -33,15 +33,19 @@ function which_toml(time)
 end
 
 
-function run_ParlinfoSpeechScraper(toml="")
+function run_ParlinfoSpeechScraper(fn;toml="")
 #    for fn in readdir("xml_dir/", join=false)
 #        time = get_time(fn)
 #        toml_fn = which_toml(time)
-    date = "2023-12-07"
-    @info date
-    xdoc = readxml("xmls/test_files/$date.xml")
+    xdoc = readxml(fn)
     soup = root(xdoc)
-    debate_node = findfirst("//debate",soup) 
+    year,date = get_year(fn)
+    scrape_run = Run_(year) 
+    open("$date.csv", "w") do io
+        #only line that needs to be updated in terms of change in columns
+        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
+        recurse(soup,scrape_run,soup,io,7)
+    end
 end
 
 
@@ -52,7 +56,7 @@ function if_defined(node)
 end
 
 
-function recurse(soup,scrape_run,node,depth,node_tree=[])
+function recurse(soup,scrape_run,node,io,depth,node_tree=[])
     #    @show nodename(node)
     if depth == 0
         return nothing
@@ -64,10 +68,9 @@ function recurse(soup,scrape_run,node,depth,node_tree=[])
             subnode_ = Node{NodeType}(subnode)
             @info NodeType
             node_tree = push!(node_tree,subnode_)
-            @show [typeof(i).parameters[1] for i in node_tree]
-            parse_node(subnode_,node_tree,scrape_run.year,soup)
+            parse_node(subnode_,node_tree,scrape_run.year,soup,io)
         end
-        recurse(soup,scrape_run,subnode,depth-1,node_tree)
+        recurse(soup,scrape_run,subnode,io,depth-1,node_tree)
     end
 end
 

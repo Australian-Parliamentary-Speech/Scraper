@@ -4,13 +4,14 @@ export PNode
 abstract type PNode <: AbstractNode end
 
 function process_node(node::Node{PNode},node_tree,year,soup)
-    phase = year_to_phase(year,PNode)
+    phase = year_to_phase(year)
     if phase == :phase1
 #        include("/home/eve/Development/ParlinfoSpeechScraper/src/nodes/PNode_phase1.jl")
         allowed_names = get_xpaths(year,PNode)
         row = process_node_phase(node,node_tree,soup;names = allowed_names)
         number = minimum([length(row[end]),200])
         @info vcat(row[1:end-1],row[end][1:number])
+        return row
     else
         @error "Node not processed"
     end
@@ -36,22 +37,20 @@ end
 function get_xpaths(year,::Type{PNode})
    phase_to_dict = Dict(
                         :phase1 => ["p"]) 
-    return  phase_to_dict[year_to_phase(year,PNode)]
+    return  phase_to_dict[year_to_phase(year)]
 end
 
 function get_sections_for_p(year,::Type{PNode})
    phase_to_dict = Dict(
                         :phase1 => ["speech","answer","question","business.start"]) 
-    return  phase_to_dict[year_to_phase(year,PNode)]
+    return  phase_to_dict[year_to_phase(year)]
 end
 
 
 
-function year_to_phase(year,::Type{PNode})
-    if 2020 < year < 2024
-        return :phase1
-    else
-        @error "No phase was produced in speechnode"
-    end
+function parse_node(node::Node{PNode},node_tree,year,soup,io)
+    row = process_node(node,node_tree,year,soup)
+    write_row_to_io(io,row)
 end
+
 

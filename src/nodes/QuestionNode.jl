@@ -4,7 +4,7 @@ abstract type QuestionNode <: AbstractNode end
 
 
 function process_node(node::Node{QuestionNode},node_tree,year,soup)
-    phase = year_to_phase(year,QuestionNode)
+    phase = year_to_phase(year)
     if phase == :phase1
         nothing
     else
@@ -33,14 +33,7 @@ end
 function get_xpaths(year,::Type{QuestionNode})
    phase_to_dict = Dict(
                         :phase1 => ["question","answer"]) 
-    return  phase_to_dict[year_to_phase(year,QuestionNode)]
+    return  phase_to_dict[year_to_phase(year)]
 end
 
-function year_to_phase(year,::Type{QuestionNode})
-    if 2020 < year < 2024
-        return :phase1
-    else
-        @error "No phase was produced in questionnode"
-    end
-end
 

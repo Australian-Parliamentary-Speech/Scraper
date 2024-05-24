@@ -5,6 +5,7 @@ module NodeModule
 using InteractiveUtils
 using EzXML
 using ..XMLModule
+using ..Utils
 
 export detect_node_type
 export Node
@@ -108,12 +109,19 @@ function define_flags(parent_node)
     return flags 
 end
 
-function parse_node(node,node_tree,year,soup)
-#    @show nodename(node)
-    process_node(node,node_tree,year,soup)
-#    @show nodes
+
+
+function year_to_phase(year)
+    if 2020 < year < 2024
+        return :phase1
+    else
+        @error "No phase was produced in questionnode"
+    end
 end
 
+function parse_node(node::Node,node_tree,year,soup,io)
+    process_node(node,node_tree,year,soup)
+end
 #function detect_node_type(node,node_tree)
 #    name = nodename(node)
 #    node_struct_name = nodename_to_structname(name)

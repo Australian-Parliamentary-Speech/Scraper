@@ -4,7 +4,7 @@ abstract type SpeechNode <: AbstractNode end
 
 
 function process_node(node::Node{SpeechNode},node_tree,year,soup)
-    phase = year_to_phase(year,SpeechNode)
+    phase = year_to_phase(year)
     if phase == :phase1
         nothing
     else
@@ -34,14 +34,7 @@ end
 function get_xpaths(year,::Type{SpeechNode})
     phase_to_dict = Dict(
                          :phase1 => ["speech","question","answer"]) 
-    return  phase_to_dict[year_to_phase(year,SpeechNode)]
+    return  phase_to_dict[year_to_phase(year)]
 end
 
-function year_to_phase(year,::Type{SpeechNode})
-    if 2020 < year < 2024
-        return :phase1
-    else
-        @error "No phase was produced in speechnode"
-    end
-end
 
