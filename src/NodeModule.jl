@@ -34,6 +34,8 @@ function get_all_subtypes(type, st=[])
     return st
 end
 
+const all_subtypes = get_all_subtypes(AbstractNode)
+
 function reverse_find_first_node_name(node_tree,names)
     reverse_node_tree = reverse(node_tree)
     index = findfirst(n -> nodename(n.node) ∈ names,reverse_node_tree)
@@ -81,7 +83,7 @@ end
  
 
 function detect_node_type(node, node_tree,year,soup)
-    for NodeType in get_all_subtypes(AbstractNode)
+    for NodeType in all_subtypes
         if is_nodetype(node, node_tree, NodeType, soup;year=year)
             return NodeType
         end
