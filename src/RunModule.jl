@@ -65,7 +65,9 @@ function recurse(soup,year,node,io,depth,node_tree=[])
             node_tree = push!(node_tree,subnode_)
             parse_node(subnode_,node_tree,io)
         end
-        recurse(soup,year,subnode,io,depth-1,node_tree)
+        if NodeType ∉ [Node{DivisionNode}]
+            recurse(soup,year,subnode,io,depth-1,node_tree)
+        end
     end
 end
 
