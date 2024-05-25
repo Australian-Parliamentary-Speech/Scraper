@@ -44,6 +44,7 @@ function reverse_find_first_node_name(node_tree,names)
     end
 end
 
+
 function reverse_find_first_node_not_name(node_tree,names)
     reverse_node_tree = reverse(node_tree)
     index = findfirst(n -> nodename(n.node) ∉ names,reverse_node_tree)
@@ -78,10 +79,6 @@ function find_debate_title(node,node_tree,soup)
     end
 end
  
-
-function is_nodetype(node,node_tree,::Node,args...;kwargs...)
-    return false
-end
 
 function detect_node_type(node, node_tree,year,soup)
     for NodeType in get_all_subtypes(AbstractNode)
@@ -124,6 +121,10 @@ function parse_node(node::Node,node_tree,io)
     process_node(node,node_tree)
 end
 
+function parse_node(node::Union{Node{InterTalkNode},Node{PNode}},node_tree,io)
+    row = process_node(node,node_tree)
+    write_row_to_io(io,row)
+end
 
 function process_node(node::Node,node_tree)
     phase = year_to_phase(node.year)
@@ -131,6 +132,19 @@ function process_node(node::Node,node_tree)
         nothing
     else
         @error "Node not processed"
+    end
+end
+
+function is_nodetype(node, node_tree, nodetype::Union{Type{PNode},Type{InterTalkNode}}, args...; kwargs...)
+    year = kwargs[:year]
+    allowed_names = get_xpaths(year,nodetype)
+    name = nodename(node)
+    if name in allowed_names
+        section_names = get_sections(year,nodetype)
+        parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
+        return nodename(parent_node.node) ∈ section_names
+    else
+        return false
     end
 end
 
@@ -142,7 +156,10 @@ function is_nodetype(node, node_tree, nodetype::Type{N}, args...; kwargs...) whe
     return name in allowed_names
 end
 
-
+function construct_row(flags,talker_contents,content)
+    return [flags...,talker_contents...,clean_text(content)]
+end
+ 
 #function detect_node_type(node,node_tree)
 #    name = nodename(node)
 #    node_struct_name = nodename_to_structname(name)

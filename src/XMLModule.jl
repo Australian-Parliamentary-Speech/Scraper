@@ -36,5 +36,26 @@ end
     end
 end
 
+@xport function get_talker_from_parent(parent_node)
+    soup = parent_node.soup
+    parent_node = parent_node.node
+    talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+    function find_content(xpath)
+        talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
+        return talker_content_node.content
+    end
+
+    if isnothing(talker_node)
+        return ["N/A" for i in 1:4]
+    else
+        talker_contents = []
+        for xpath in ["//name","//name.id","//electorate","//party"]
+            talker_content = find_content(xpath)
+            push!(talker_contents,talker_content)
+        end
+        return talker_contents
+    end
+end
+
 
 end
