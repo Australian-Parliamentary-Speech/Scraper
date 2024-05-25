@@ -14,10 +14,6 @@ using .XMLModule
 include("NodeModule.jl")
 @reexport using .NodeModule
 
-struct Run_
-    year::Int64
-end
-
 
 function get_year(fn)
     xdoc = readxml(fn)
@@ -40,11 +36,10 @@ function run_ParlinfoSpeechScraper(fn;toml="")
     xdoc = readxml(fn)
     soup = root(xdoc)
     year,date = get_year(fn)
-    scrape_run = Run_(year) 
     open("$date.csv", "w") do io
         #only line that needs to be updated in terms of change in columns
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
-        recurse(soup,scrape_run,soup,io,7)
+        recurse(soup,year,soup,io,7)
     end
 end
 
@@ -56,21 +51,21 @@ function if_defined(node)
 end
 
 
-function recurse(soup,scrape_run,node,io,depth,node_tree=[])
+function recurse(soup,year,node,io,depth,node_tree=[])
     #    @show nodename(node)
     if depth == 0
         return nothing
     end
 
     for subnode in elements(node)
-        NodeType = detect_node_type(subnode,node_tree,scrape_run.year,soup)
+        NodeType = detect_node_type(subnode,node_tree,year,soup)
         if NodeType != nothing
-            subnode_ = Node{NodeType}(subnode)
+            subnode_ = Node{NodeType}(subnode,year,soup)
             @info NodeType
             node_tree = push!(node_tree,subnode_)
-            parse_node(subnode_,node_tree,scrape_run.year,soup,io)
+            parse_node(subnode_,node_tree,io)
         end
-        recurse(soup,scrape_run,subnode,io,depth-1,node_tree)
+        recurse(soup,year,subnode,io,depth-1,node_tree)
     end
 end
 

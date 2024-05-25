@@ -15,6 +15,8 @@ abstract type AbstractNode end
 
 struct Node{N <: AbstractNode}
     node::EzXML.Node
+    year::Int64
+    soup
 end
 
 const node_path = joinpath(@__DIR__, "nodes")
@@ -54,7 +56,6 @@ end
 
 function is_first_node_type(node_tree,NodeType)
     if length(node_tree) > 1
-        @show typeof(node_tree[end-1]).parameters[1]
         previous_node_type = typeof(node_tree[end-1]).parameters[1]
         return !(previous_node_type == NodeType)
     else
@@ -119,9 +120,29 @@ function year_to_phase(year)
     end
 end
 
-function parse_node(node::Node,node_tree,year,soup,io)
-    process_node(node,node_tree,year,soup)
+function parse_node(node::Node,node_tree,io)
+    process_node(node,node_tree)
 end
+
+
+function process_node(node::Node,node_tree)
+    phase = year_to_phase(node.year)
+    if phase == :phase1
+        nothing
+    else
+        @error "Node not processed"
+    end
+end
+
+function is_nodetype(node, node_tree, nodetype::Type{N}, args...; kwargs...) where {N <: AbstractNode}
+    year = kwargs[:year]
+    soup = args[1]
+    allowed_names = get_xpaths(year,N)
+    name = nodename(node)
+    return name in allowed_names
+end
+
+
 #function detect_node_type(node,node_tree)
 #    name = nodename(node)
 #    node_struct_name = nodename_to_structname(name)

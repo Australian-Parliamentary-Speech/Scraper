@@ -26,7 +26,6 @@ end
 
 function write_row_to_io(io,row)
     row = replace_empty_string(row)
-    @show row
     edit_row_ = edit_row(row)
     println(io,edit_row_)
 end

@@ -3,15 +3,6 @@ export QuestionNode
 abstract type QuestionNode <: AbstractNode end
 
 
-function process_node(node::Node{QuestionNode},node_tree,year,soup)
-    phase = year_to_phase(year)
-    if phase == :phase1
-        nothing
-    else
-        @error "Node not processed"
-    end
-end
-
 function is_nodetype(node, node_tree,::Type{QuestionNode}, args...; kwargs...)
     year = kwargs[:year]
     soup = args[1]

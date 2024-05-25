@@ -3,14 +3,10 @@ export PNode
 
 abstract type PNode <: AbstractNode end
 
-function process_node(node::Node{PNode},node_tree,year,soup)
-    phase = year_to_phase(year)
+function process_node(node::Node{PNode},node_tree)
+    phase = year_to_phase(node.year)
     if phase == :phase1
-#        include("/home/eve/Development/ParlinfoSpeechScraper/src/nodes/PNode_phase1.jl")
-        allowed_names = get_xpaths(year,PNode)
-        row = process_node_phase(node,node_tree,soup;names = allowed_names)
-        number = minimum([length(row[end]),200])
-        @info vcat(row[1:end-1],row[end][1:number])
+        row = process_node_phase(node,node_tree)
         return row
     else
         @error "Node not processed"
@@ -20,7 +16,6 @@ end
 #args is a list, kwargs is a dictionary
 function is_nodetype(node, node_tree, ::Type{PNode}, args...; kwargs...)
     year = kwargs[:year]
-
     allowed_names = get_xpaths(year,PNode)
     name = nodename(node)
     if name in allowed_names
@@ -48,8 +43,8 @@ end
 
 
 
-function parse_node(node::Node{PNode},node_tree,year,soup,io)
-    row = process_node(node,node_tree,year,soup)
+function parse_node(node::Node{PNode},node_tree,io)
+    row = process_node(node,node_tree)
     write_row_to_io(io,row)
 end
 

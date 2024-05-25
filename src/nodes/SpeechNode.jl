@@ -3,15 +3,6 @@ export SpeechNode
 abstract type SpeechNode <: AbstractNode end
 
 
-function process_node(node::Node{SpeechNode},node_tree,year,soup)
-    phase = year_to_phase(year)
-    if phase == :phase1
-        nothing
-    else
-        @error "Node not processed"
-    end
-end
-
 
 function is_nodetype(node, node_tree,::Type{SpeechNode}, args...; kwargs...)
     year = kwargs[:year]
