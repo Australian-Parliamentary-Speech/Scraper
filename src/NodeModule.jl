@@ -61,10 +61,6 @@ function reverse_find_first_node_not_name(node_tree,names)
     end
 end
 
-function is_first_node_type(node)
-    return node.index == 1
-end
-
 
 function find_debate_title(node,node_tree,soup)
     debate_title = "/debateinfo/title"
