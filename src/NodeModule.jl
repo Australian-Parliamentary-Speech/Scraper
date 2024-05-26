@@ -9,12 +9,16 @@ using ..Utils
 
 export detect_node_type
 export Node
+export GenericNode
 export parse_node
 
 abstract type AbstractNode end
 
+abstract type GenericNode <: AbstractNode end
+
 struct Node{N <: AbstractNode}
     node::EzXML.Node
+    index::Int64
     year::Int64
     soup
 end
@@ -57,13 +61,8 @@ function reverse_find_first_node_not_name(node_tree,names)
     end
 end
 
-function is_first_node_type(node_tree,NodeType)
-    if length(node_tree) > 1
-        previous_node_type = typeof(node_tree[end-1]).parameters[1]
-        return !(previous_node_type == NodeType)
-    else
-        return false
-    end
+function is_first_node_type(node)
+    return node.index == 1
 end
 
 
@@ -162,6 +161,9 @@ function construct_row(flags,talker_contents,content)
     return [flags...,talker_contents...,clean_text(content)]
 end
  
+function get_xpaths(year, ::Type{N}) where {N <: AbstractNode}
+    return []
+end
 #function detect_node_type(node,node_tree)
 #    name = nodename(node)
 #    node_struct_name = nodename_to_structname(name)

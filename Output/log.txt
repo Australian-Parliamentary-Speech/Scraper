@@ -1,3 +1,0 @@
-BetterInputFiles.SetupModule | [Info] Logging to /home/eve/Development/ParlinfoSpeechScraper/Output/log.txt
-Main.ParlinfoSpeechScraper | [Info] This is an info: ["GENERAL_OPTION", "WHICH_SECTIONS", "TALKER_OPTION", "XPATHS", "GLOBAL", "METADATA", "QUESTION_OPTION"]
-Main.ParlinfoSpeechScraper | [Debug] This is an debug: ["GENERAL_OPTION", "WHICH_SECTIONS", "TALKER_OPTION", "XPATHS", "GLOBAL", "METADATA", "QUESTION_OPTION"]

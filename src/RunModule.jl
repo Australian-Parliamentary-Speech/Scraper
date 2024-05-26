@@ -39,7 +39,7 @@ function run_ParlinfoSpeechScraper(fn;toml="")
     open("$date.csv", "w") do io
         #only line that needs to be updated in terms of change in columns
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
-        recurse(soup,year,soup,io,7)
+        recurse(soup,year,soup,io)
     end
 end
 
@@ -50,27 +50,44 @@ function if_defined(node)
     node_struct = getfield(NodeModule,node_struct_symbol)
 end
 
-
-function recurse(soup,year,node,io,depth,node_tree=[])
-    #    @show nodename(node)
-    if depth == 0
+function recurse(soup, year, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
+    # If max_depth is defined, and depth has surpassed, don't do anything
+    if (max_depth > 0) && (depth > max_depth)
         return nothing
     end
 
-    for subnode in elements(node)
-        NodeType = detect_node_type(subnode,node_tree,year,soup)
-        if NodeType != nothing
-            subnode_ = Node{NodeType}(subnode,year,soup)
-            @info NodeType
-            node_tree = push!(node_tree,subnode_)
-            parse_node(subnode_,node_tree,io)
+    # Debug statements indented by depth
+    ins = ' '^depth
+    @debug "$(ins)depth: $depth"
+    @debug "$(ins)max_depth: $max_depth"
+    @debug "$(ins)node_tree has $(length(node_tree)) elements"
+
+    # First parse the current node, if it is parsable
+
+    # First get nodetype of this node
+    NodeType = detect_node_type(xml_node, node_tree, year, soup)
+    # If NodeType is not nothing, then we can parse this node
+    if !isnothing(NodeType)
+        @info "NodeType: $NodeType"
+        node = Node{NodeType}(xml_node, index,year, soup)
+        parse_node(node, node_tree, io)
+    else
+        @debug "$(ins)NodeType: GenericNode"
+        node = Node{GenericNode}(xml_node,index,year,soup)
+    end
+    # Next, recurse into any subnodes
+    subnodes = elements(xml_node)
+    @debug"$(ins)num_subnodes: $(length(subnodes))"
+    if length(subnodes) > 0
+        # Add node to subnode tree
+        subnode_tree = copy(node_tree)
+        #subnode_tree = node_tree
+        if !(node isa Node{GenericNode})
+            push!(subnode_tree, node)
         end
-        if NodeType ∉ [Node{DivisionNode}]
-            recurse(soup,year,subnode,io,depth-1,node_tree)
+        for (i,subnode) in enumerate(subnodes)
+            recurse(soup,year,subnode,io,i,depth+1,max_depth,subnode_tree)
         end
     end
 end
-
-
-
 end
