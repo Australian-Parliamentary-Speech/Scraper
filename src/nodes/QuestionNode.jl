@@ -1,12 +1,11 @@
 export QuestionNode
 
-abstract type QuestionNode <: AbstractNode end
+abstract type QuestionNode{P} <: AbstractNode{P} end
 
 
-function is_nodetype(node, node_tree,::Type{QuestionNode}, args...; kwargs...)
-    year = kwargs[:year]
-    soup = args[1]
-    allowed_names = get_xpaths(year,QuestionNode)
+function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...)
+    nodetype = nodetype{phase}
+    allowed_names = get_xpaths(nodetype)
     name = nodename(node)
     try
         title = find_debate_title(node,node_tree,soup)
@@ -21,10 +20,8 @@ function is_nodetype(node, node_tree,::Type{QuestionNode}, args...; kwargs...)
 end
 
 
-function get_xpaths(year,::Type{QuestionNode})
-   phase_to_dict = Dict(
-                        :phase1 => ["question","answer"]) 
-    return  phase_to_dict[year_to_phase(year)]
+function get_xpaths(::Type{<:QuestionNode})
+   return ["question","answer"]
 end
 
 

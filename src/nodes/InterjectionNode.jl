@@ -1,11 +1,9 @@
 export InterjectionNode
 
-abstract type InterjectionNode <: AbstractNode end
+abstract type InterjectionNode{P} <: AbstractNode{P} end
 
 
-function get_xpaths(year,::Type{InterjectionNode})
-    phase_to_dict = Dict(
-                        :phase1 => ["interjection","continue"]) 
-    return  phase_to_dict[year_to_phase(year)]
+function get_xpaths(::Type{<:InterjectionNode})
+    return ["interjection","continue"]
 end
 

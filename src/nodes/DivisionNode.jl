@@ -1,11 +1,9 @@
 export DivisionNode
 
-abstract type DivisionNode <: AbstractNode end
+abstract type DivisionNode{P} <: AbstractNode{P} end
 
 
-function get_xpaths(year,::Type{DivisionNode})
-    phase_to_dict = Dict(
-                        :phase1 => ["division"]) 
-    return  phase_to_dict[year_to_phase(year)]
+function get_xpaths(::Type{<:DivisionNode})
+    return ["division"]
 end
 

@@ -1,11 +1,9 @@
 export SubdebateNode
 
-abstract type SubdebateNode <: AbstractNode end
+abstract type SubdebateNode{P} <: AbstractNode{P} end
 
 
-function get_xpaths(year,::Type{SubdebateNode})
-    phase_to_dict = Dict(
-                        :phase1 => ["subdebate.text"]) 
-    return  phase_to_dict[year_to_phase(year)]
+function get_xpaths(::Type{<:SubdebateNode})
+    return ["subdebate.text"]
 end
 

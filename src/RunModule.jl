@@ -14,7 +14,6 @@ using .XMLModule
 include("NodeModule.jl")
 @reexport using .NodeModule
 
-
 function get_year(fn)
     xdoc = readxml(fn)
     soup = root(xdoc)
@@ -62,10 +61,11 @@ function run_xml(fn,output_path)
     xdoc = readxml(fn)
     soup = root(xdoc)
     year,date = get_year(fn)
+    PhaseType = detect_phase(year)
     open(joinpath(output_path,"$date.csv"), "w") do io
         #only line that needs to be updated in terms of change in columns
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
-        recurse(soup,year,soup,io)
+        recurse(soup,year,PhaseType,soup,io)
     end
 end
 
@@ -76,7 +76,7 @@ function if_defined(node)
     node_struct = getfield(NodeModule,node_struct_symbol)
 end
 
-function recurse(soup, year, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
+function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
     # If max_depth is defined, and depth has surpassed, don't do anything
     if (max_depth > 0) && (depth > max_depth)
         return nothing
@@ -91,15 +91,15 @@ function recurse(soup, year, xml_node, io, index=1,depth=0, max_depth=0, node_tr
     # First parse the current node, if it is parsable
 
     # First get nodetype of this node
-    NodeType = detect_node_type(xml_node, node_tree, year, soup)
+    NodeType = detect_node_type(xml_node, node_tree, year,soup,PhaseType)
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
         @info "NodeType: $NodeType"
-        node = Node{NodeType}(xml_node, index,year, soup)
+        node = Node{NodeType{PhaseType}}(xml_node,index,year, soup)
         parse_node(node, node_tree, io)
     else
         @debug "$(ins)NodeType: GenericNode"
-        node = Node{GenericNode}(xml_node,index,year,soup)
+        node = Node{GenericNode{GenericPhase}}(xml_node,index,year,soup)
     end
     # Next, recurse into any subnodes
     subnodes = elements(xml_node)
@@ -109,11 +109,11 @@ function recurse(soup, year, xml_node, io, index=1,depth=0, max_depth=0, node_tr
         subnode_tree = copy(node_tree)
         #subnode_tree = node_tree
         #subnode_tree = (node_tree..., node)
-        if !(node isa Node{GenericNode})
+        if !(node isa Node{<:GenericNode})
             push!(subnode_tree, node)
         end
         for (i,subnode) in enumerate(subnodes)
-            recurse(soup,year,subnode,io,i,depth+1,max_depth,subnode_tree)
+            recurse(soup,year,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
         end
     end
 end

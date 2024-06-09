@@ -11,10 +11,17 @@ export detect_node_type
 export Node
 export GenericNode
 export parse_node
+export detect_phase
+export GenericPhase
+export AbstractPhase
 
-abstract type AbstractNode end
+abstract type AbstractPhase end
 
-abstract type GenericNode <: AbstractNode end
+abstract type GenericPhase <: AbstractPhase end
+
+abstract type AbstractNode{P <: AbstractPhase} end
+
+abstract type GenericNode{P} <: AbstractNode{P} end
 
 struct Node{N <: AbstractNode}
     node::EzXML.Node
@@ -23,12 +30,26 @@ struct Node{N <: AbstractNode}
     soup
 end
 
+# Get Default Nodes
 const node_path = joinpath(@__DIR__, "nodes")
 for path in readdir(node_path, join=true)
     if isfile(path)
         include(path)
     end
 end
+
+# Get Phase Overwrites
+const phase_path = joinpath(node_path, "Phases")
+for dir in readdir(phase_path, join=true)
+    for path in readdir(dir, join=true)
+        include(path)
+    end
+end
+
+function detect_phase(year)
+    return AbstractPhase
+end
+
 
 function get_all_subtypes(type, st=[])
     for subt in subtypes(type)
@@ -39,6 +60,7 @@ function get_all_subtypes(type, st=[])
 end
 
 const all_subtypes = get_all_subtypes(AbstractNode)
+
 
 function reverse_find_first_node_name(node_tree,names)
     reverse_node_tree = reverse(node_tree)
@@ -61,12 +83,9 @@ function reverse_find_first_node_not_name(node_tree,names)
     end
 end
 
-
-
-
-function detect_node_type(node, node_tree,year,soup)
+function detect_node_type(node, node_tree,year,soup,PhaseType)
     for NodeType in all_subtypes
-        if is_nodetype(node, node_tree, NodeType, soup;year=year)
+        if is_nodetype(node, node_tree, NodeType, PhaseType,soup)
             return NodeType
         end
     end
@@ -95,37 +114,20 @@ function parse_node(node::Node,node_tree,io)
     process_node(node,node_tree)
 end
 
-function parse_node(node::Union{Node{InterTalkNode},Node{PNode}},node_tree,io)
+
+function parse_node(node::Union{Node{<:InterTalkNode},Node{<:PNode}},node_tree,io)
     row = process_node(node,node_tree)
     write_row_to_io(io,row)
 end
 
-function is_nodetype(node, node_tree, nodetype::Union{Type{PNode},Type{InterTalkNode}}, args...; kwargs...)
-    year = kwargs[:year]
-    allowed_names = get_xpaths(year,nodetype)
-    name = nodename(node)
-    if name in allowed_names
-        section_names = get_sections(year,nodetype)
-        parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
-        return nodename(parent_node.node) ∈ section_names
-    else
-        return false
-    end
-end
-
-function is_nodetype(node, node_tree, nodetype::Type{N}, args...; kwargs...) where {N <: AbstractNode}
-    year = kwargs[:year]
-    soup = args[1]
-    allowed_names = get_xpaths(year,N)
+function is_nodetype(node, node_tree, nodetype::Type{<:AbstractNode}, phase::Type{<:AbstractPhase}, soup, args...; kwargs...)
+    NP = nodetype{phase}
+    allowed_names = get_xpaths(NP)
     name = nodename(node)
     return name in allowed_names
 end
 
-function construct_row(flags,talker_contents,content)
-    return [flags...,talker_contents...,clean_text(content)]
-end
- 
-function get_xpaths(year, ::Type{N}) where {N <: AbstractNode}
+function get_xpaths(::Type{<:N}) where {N <: AbstractNode}
     return []
 end
 
@@ -134,13 +136,10 @@ function process_node(node::Node,node_tree)
     nothing
 end
 
-function year_to_phase(year)
-    if 2020 < year < 2024
-        return :phase1
-    else
-        @error "No phase was produced in questionnode"
-    end
+function construct_row(flags,talker_contents,content)
+    return [flags...,talker_contents...,clean_text(content)]
 end
+ 
 
 function find_debate_title(node,node_tree,soup)
     debate_title = "/debateinfo/title"
