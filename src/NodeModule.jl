@@ -62,20 +62,7 @@ function reverse_find_first_node_not_name(node_tree,names)
 end
 
 
-function find_debate_title(node,node_tree,soup)
-    debate_title = "/debateinfo/title"
-    debate_node = reverse_find_first_node_name(node_tree,["debate"])
-    if isnothing(debate_node)
-        return "N/A"
-    end
-    title = findfirst_in_subsoup(debate_node.node.path,debate_title,soup)
-    if isnothing(title)
-        return "N/A"
-    else
-        return title.content
-    end
-end
- 
+
 
 function detect_node_type(node, node_tree,year,soup)
     for NodeType in all_subtypes
@@ -104,16 +91,6 @@ function define_flags(parent_node)
     return flags 
 end
 
-
-
-function year_to_phase(year)
-    if 2020 < year < 2024
-        return :phase1
-    else
-        @error "No phase was produced in questionnode"
-    end
-end
-
 function parse_node(node::Node,node_tree,io)
     process_node(node,node_tree)
 end
@@ -121,15 +98,6 @@ end
 function parse_node(node::Union{Node{InterTalkNode},Node{PNode}},node_tree,io)
     row = process_node(node,node_tree)
     write_row_to_io(io,row)
-end
-
-function process_node(node::Node,node_tree)
-    phase = year_to_phase(node.year)
-    if phase == :phase1
-        nothing
-    else
-        @error "Node not processed"
-    end
 end
 
 function is_nodetype(node, node_tree, nodetype::Union{Type{PNode},Type{InterTalkNode}}, args...; kwargs...)
@@ -160,15 +128,34 @@ end
 function get_xpaths(year, ::Type{N}) where {N <: AbstractNode}
     return []
 end
-#function detect_node_type(node,node_tree)
-#    name = nodename(node)
-#    node_struct_name = nodename_to_structname(name)
-#    parent_node = node_tree[end-1]
-#    node_struct_symbol = Symbol("$(uppercasefirst(node_struct_name))Node")
-#    node_struct = getfield(NodeModule,node_struct_symbol)
-#    return node_struct
-#end
-#
+
+
+function process_node(node::Node,node_tree)
+    nothing
+end
+
+function year_to_phase(year)
+    if 2020 < year < 2024
+        return :phase1
+    else
+        @error "No phase was produced in questionnode"
+    end
+end
+
+function find_debate_title(node,node_tree,soup)
+    debate_title = "/debateinfo/title"
+    debate_node = reverse_find_first_node_name(node_tree,["debate"])
+    if isnothing(debate_node)
+        return "N/A"
+    end
+    title = findfirst_in_subsoup(debate_node.node.path,debate_title,soup)
+    if isnothing(title)
+        return "N/A"
+    else
+        return title.content
+    end
+end
+
 
 end
 

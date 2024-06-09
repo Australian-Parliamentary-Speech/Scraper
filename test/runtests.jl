@@ -7,15 +7,8 @@ const RunModule = ParlinfoSpeechScraper.RunModule
 
 @testset verbose = true "ParlinfoSpeechScraper.jl" begin
 
-    @testset "speech_test" begin
-        date = "2023-12-07"
-        fn = "xmls/test_files/$date.xml"
-        if false
-            xdoc = readxml(fn)
-            soup = root(xdoc) 
-            debate_node = findfirst("//subdebate.1",soup)
-        end
-        RunModule.run_ParlinfoSpeechScraper(fn)
+    @testset "2023" begin
+        RunModule.run_xml("xmls/2023-12-07.xml",dirname(@__FILE__))
     end
 
 end

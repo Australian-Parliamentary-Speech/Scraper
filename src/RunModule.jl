@@ -24,19 +24,45 @@ function get_year(fn)
     return (parse(Int,year),time)
 end
 
-function which_toml(time)
-    return "xpaths_set_up.toml"
+function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
+    global_options = toml["GLOBAL"]
+    input_path = global_options["INPUT_PATH"]
+    output_path = global_options["OUTPUT_PATH"]
+
+    xml_paths = [] 
+
+    # Get single xml path
+    single_xmls = get(toml, "XML", [])
+    for single_xml in single_xmls
+        filename = single_xml["FILENAME"]
+        if ! isabspath(filename)
+            filename = joinpath(input_path, filename)
+        end
+        push!(xml_paths, filename)
+    end
+
+    # Get all xml paths in a directory
+    xml_dirs = get(toml,"XML_DIR",[])
+    for xml_dir in xml_dirs
+         path = xml_dir["PATH"]
+         if ! isabspath(path)
+             path = joinpath(input_path,path)
+         end
+         for filename in readdir(path)
+             push!(xml_paths,joinpath(path,filename))
+         end
+    end
+
+    for fn in xml_paths
+        run_xml(fn,output_path)
+    end
 end
 
-
-function run_ParlinfoSpeechScraper(fn;toml="")
-#    for fn in readdir("xml_dir/", join=false)
-#        time = get_time(fn)
-#        toml_fn = which_toml(time)
+function run_xml(fn,output_path)
     xdoc = readxml(fn)
     soup = root(xdoc)
     year,date = get_year(fn)
-    open("$date.csv", "w") do io
+    open(joinpath(output_path,"$date.csv"), "w") do io
         #only line that needs to be updated in terms of change in columns
         write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
         recurse(soup,year,soup,io)
@@ -82,6 +108,7 @@ function recurse(soup, year, xml_node, io, index=1,depth=0, max_depth=0, node_tr
         # Add node to subnode tree
         subnode_tree = copy(node_tree)
         #subnode_tree = node_tree
+        #subnode_tree = (node_tree..., node)
         if !(node isa Node{GenericNode})
             push!(subnode_tree, node)
         end

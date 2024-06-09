@@ -1,17 +1,3 @@
-function process_node_phase(node::Node{PNode},node_tree,args...;kwargs...)
-    allowed_names = get_xpaths(node.year,PNode)
-    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
-    if is_first_node_type(node,parent_node,allowed_names)
-        parent_node_ = node_tree[end]
-        @assert parent_node_ == parent_node
-        talker_contents = get_talker_from_parent(parent_node)
-    else
-        talker_contents = find_talker_in_p(node)
-    end 
-    flags = define_flags(parent_node)
-    return construct_row(flags,talker_contents,node.node.content)
-end
-
 function is_first_node_type(node::Node{PNode},parent_node,allowed_names)
     if node.index == 1
         for name in allowed_names
