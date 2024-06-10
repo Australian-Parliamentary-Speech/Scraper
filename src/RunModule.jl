@@ -94,8 +94,8 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
     NodeType = detect_node_type(xml_node, node_tree, year,soup,PhaseType)
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
-        @info "NodeType: $NodeType"
         node = Node{NodeType{PhaseType}}(xml_node,index,year, soup)
+        @info "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
     else
         @debug "$(ins)NodeType: GenericNode"

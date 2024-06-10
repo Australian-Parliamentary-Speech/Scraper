@@ -1,2 +1,5 @@
+[ global ]
+    output_path = "../../Outputs/test_2023"
+
 [[ XML ]]
     filename = "2023-12-07.xml"

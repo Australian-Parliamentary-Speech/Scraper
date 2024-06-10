@@ -38,18 +38,46 @@ for path in readdir(node_path, join=true)
     end
 end
 
+# Included phases can add to this dictionary
+year_to_phase = Dict()
+
+# Included phases can add to this dictionary
+range_to_phase = Dict()
+
 # Get Phase Overwrites
 const phase_path = joinpath(node_path, "Phases")
 for dir in readdir(phase_path, join=true)
     for path in readdir(dir, join=true)
-        include(path)
+        if isfile(path)
+            include(path)
+        end
     end
+end
+
+function detect_phase(year::Int64)
+    # See if year has specific phase
+    phase = get(year_to_phase, year, nothing)
+    if ! isnothing(phase)
+        return phase
+    end
+
+    # See if year in range with phase
+    for year_range in keys(range_to_phase)
+        min_year, max_year = year_range
+        if min_year <= year <= max_year
+            return range_to_phase[year_range]
+        end
+    end
+
+    # Any other logic you want can go here
+
+    # No specific phase for this year
+    return AbstractPhase
 end
 
 function detect_phase(year)
     return AbstractPhase
 end
-
 
 function get_all_subtypes(type, st=[])
     for subt in subtypes(type)

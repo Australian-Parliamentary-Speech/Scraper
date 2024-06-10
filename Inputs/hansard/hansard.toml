@@ -1,2 +1,5 @@
+[ global ]
+output_path = "../../Outputs/hansard"
+
 [[ XML_DIR ]]
     path = "xmls"

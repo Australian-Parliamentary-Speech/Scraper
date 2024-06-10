@@ -9,6 +9,9 @@ using ArgParse
 include("RunModule.jl")
 @reexport using .RunModule
 
+# Exports
+export main
+
 function get_args()
     s = ArgParseSettings()
 
