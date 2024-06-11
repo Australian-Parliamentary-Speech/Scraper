@@ -96,20 +96,23 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
         @debug "$(ins)NodeType: GenericNode"
         node = Node{GenericNode{GenericPhase}}(xml_node,index,year,soup)
     end
-    # Next, recurse into any subnodes
-    subnodes = elements(xml_node)
-    @debug"$(ins)num_subnodes: $(length(subnodes))"
-#    @show node_tree
-    if length(subnodes) > 0
-        # Add node to subnode tree
-        subnode_tree = copy(node_tree)
-        #subnode_tree = node_tree
-        #subnode_tree = (node_tree..., node)
-        if !(node isa Node{<:GenericNode})
-            push!(subnode_tree, node)
-        end
-        for (i,subnode) in enumerate(subnodes)
-            recurse(soup,year,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
+
+    if !(node isa Node{<:SkipNode})
+        # Next, recurse into any subnodes
+        subnodes = elements(xml_node)
+        @debug"$(ins)num_subnodes: $(length(subnodes))"
+        #       @show node_tree
+        if length(subnodes) > 0
+            # Add node to subnode tree
+            subnode_tree = copy(node_tree)
+            #subnode_tree = node_tree
+            #subnode_tree = (node_tree..., node)
+            if !(node isa Node{<:GenericNode})
+                push!(subnode_tree, node)
+            end
+            for (i,subnode) in enumerate(subnodes)
+                recurse(soup,year,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
+            end
         end
     end
 end
