@@ -7,4 +7,10 @@ function get_xpaths(::Type{<:DebateNode})
     return ["debate"]
 end
 
+function get_section_title_path(::Type{<:DebateNode})
+    return "/debateinfo/title"
+end
+
+
+
 

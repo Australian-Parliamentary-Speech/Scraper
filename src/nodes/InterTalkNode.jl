@@ -24,8 +24,8 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
     end
 
     talker_contents = get_talker_from_parent(parent_node)
-    flags = define_flags(node,parent_node)
-    return construct_row(flags,talker_contents,content)
+    flags = define_flags(node,parent_node,node_tree)
+    return construct_row(node,node_tree,flags,talker_contents,content)
 end
 
 

@@ -64,18 +64,12 @@ function run_xml(fn,output_path)
     PhaseType = detect_phase(year)
     @debug PhaseType
     open(joinpath(output_path,"$date.csv"), "w") do io
-        #only line that needs to be updated in terms of change in columns
-        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","path"])
+        headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+        write_row_to_io(io,headers)
         recurse(soup,year,PhaseType,soup,io)
     end
 end
 
-
-function if_defined(node)
-    node_name = nodename(node)
-    node_symbol = Symbol("$(uppercasefirst(node_name))Node")
-    node_struct = getfield(NodeModule,node_struct_symbol)
-end
 
 function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
     # If max_depth is defined, and depth has surpassed, don't do anything
@@ -95,7 +89,7 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
     NodeType = detect_node_type(xml_node, node_tree, year,soup,PhaseType)
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
-        node = Node{NodeType{PhaseType}}(xml_node,index,year, soup)
+        node = Node{NodeType{PhaseType}}(xml_node,index,year,soup)
         @info "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
     else
@@ -105,6 +99,7 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
     # Next, recurse into any subnodes
     subnodes = elements(xml_node)
     @debug"$(ins)num_subnodes: $(length(subnodes))"
+#    @show node_tree
     if length(subnodes) > 0
         # Add node to subnode tree
         subnode_tree = copy(node_tree)

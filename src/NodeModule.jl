@@ -119,33 +119,18 @@ function detect_node_type(node, node_tree,year,soup,PhaseType)
     end
 end
 
-#function define_flags(parent_node,node=nothing)
-#    if isnothing(parent_node)
-#        return [0,0,0,0,0]
+#all style has direction in it so does not work
+#function detect_stage_direction(node::Node)
+#    for atnode in attributes(node.node)
+#        if nodename(atnode) == "style"
+#            if occursin("direction",atnode.content)
+#                return true
+#            end
+#        end
 #    end
-#    name = nodename(parent_node.node)
-#    if name == "question"
-#        flags = [1,0,0,0,0]
-#    elseif name == "answer"
-#        flags = [0,1,0,0,0]
-#    elseif name == "interjection"
-#        flags = [0,0,1,0,0]
-#    elseif name == "speech"
-#        flags = [0,0,0,1,0]
-#    else
-#        flags = [0,0,0,0,0]
-#    end
-#    return flags 
+#    return false  
 #end
 #
-function define_flags(node,parent_node)
-#    ParentTypes = [Type{Node{<:QuestionNode}},Type{Node{<:AnswerNode}},Type{Node{<:InterjectionNode}},Type{Node{SpeechNode}}]
-    ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
- 
-    flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
-    return flags
-end
-
 function parse_node(node::Node,node_tree,io)
     process_node(node,node_tree)
 end
@@ -165,13 +150,13 @@ function get_xpaths(::Type{<:N}) where {N <: AbstractNode}
     return []
 end
 
-function find_debate_title(node,node_tree,soup)
-    debate_title = "/debateinfo/title"
-    debate_node = reverse_find_first_node_name(node_tree,["debate"])
-    if isnothing(debate_node)
+function find_section_title(node,node_tree,soup,section_type)
+    section_title_path = get_section_title_path(section_type)
+    section_node = reverse_find_first_node_name(node_tree,get_xpaths(section_type))
+    if isnothing(section_node)
         return "N/A"
     end
-    title = findfirst_in_subsoup(debate_node.node.path,debate_title,soup)
+    title = findfirst_in_subsoup(section_node.node.path,section_title_path,soup)
     if isnothing(title)
         return "N/A"
     else
@@ -179,8 +164,31 @@ function find_debate_title(node,node_tree,soup)
     end
 end
 
-function construct_row(flags,talker_contents,content)
-    row = [flags...,talker_contents...,clean_text(content)]
+#Fedchamber - 2 Chamber - 1
+function find_chamber(node,node_tree)
+    chamber_node = reverse_find_first_node_name(node_tree,vcat(get_xpaths(ChamberNode),get_xpaths(FedChamberNode)))
+    if chamber_node isa Node{<:FedChamberNode}
+        return 2
+    elseif chamber_node isa Node{<:ChamberNode}
+        return 1
+    else
+        @error "no chamber is found"
+    end
+end
+
+function define_flags(node,parent_node,node_tree)
+    ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
+    flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
+    chamber = find_chamber(node,node_tree)
+    push!(flags,chamber)
+    return flags
+end
+
+
+function construct_row(node,node_tree,flags,talker_contents,content)
+    debateinfo =  find_section_title(node,node_tree,node.soup,DebateNode)
+    subdebateinfo =  find_section_title(node,node_tree,node.soup,SubdebateNode)
+    row = [flags...,talker_contents...,clean_text(content),subdebateinfo,debateinfo,node.node.path]
 #    @assert length(row) == 12
     return row
 end

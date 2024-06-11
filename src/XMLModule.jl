@@ -49,11 +49,12 @@ end
         end
     end
 
+    talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
     if isnothing(talker_node)
-        return ["N/A" for i in 1:6]
+        return ["N/A" for i in 1:length(talker_xpaths)]
     else
         talker_contents = []
-        for xpath in ["//name","//name.id","//electorate","//party","//role","//page.no"]
+        for xpath in talker_xpaths
             talker_content = find_content(xpath)
             push!(talker_contents,talker_content)
         end

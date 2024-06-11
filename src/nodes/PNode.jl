@@ -14,8 +14,8 @@ function process_node(node::Node{<:PNode},node_tree)
     else
         talker_contents = find_talker_in_p(node)
     end 
-    flags = define_flags(node,parent_node)
-    return construct_row(flags,talker_contents,node.node.content)
+    flags = define_flags(node,parent_node,node_tree)
+    return construct_row(node,node_tree,flags,talker_contents,node.node.content)
 end
 
 function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names)
@@ -69,11 +69,6 @@ function get_xpaths(::Type{<:PNode})
    return ["p"]
 end
 
-# In nodes/phases/2012/PNode.jl
-#function get_xpaths(::Type{<:PNode}, ::Type{Phase2012})
-#   return ["p"]
-#end
-
 
 
 function get_sections(::Type{<:PNode})
@@ -94,16 +89,10 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:Abst
     end
 end
 
-
-
 function parse_node(node::Node{<:PNode},node_tree,io)
     row = process_node(node,node_tree)
     write_row_to_io(io,row)
 end
-
-#function detect_stage_direction(node::Node{<:PNode})
-
-#end
 
 
 

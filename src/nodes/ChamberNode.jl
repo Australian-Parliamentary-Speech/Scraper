@@ -4,6 +4,6 @@ abstract type ChamberNode{P} <: AbstractNode{P} end
 
 
 function get_xpaths(::Type{<:ChamberNode})
-    return ["chamber.xscript","fedchamb.xscript"]
+    return ["chamber.xscript"]
 end
 
