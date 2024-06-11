@@ -14,7 +14,7 @@ function process_node(node::Node{<:PNode},node_tree)
     else
         talker_contents = find_talker_in_p(node)
     end 
-    flags = define_flags(parent_node)
+    flags = define_flags(node,parent_node)
     return construct_row(flags,talker_contents,node.node.content)
 end
 
@@ -35,9 +35,9 @@ end
 function find_talker_in_p(p_node)
     p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker)
-        return [clean_text(p_with_a_as_parent(p_node)),"N/A","N/A","N/A"]
+        return [clean_text(p_with_a_as_parent(p_node)),"N/A","N/A","N/A","N/A","N/A"]
     else
-        return [clean_text(p_talker.content),"N/A","N/A","N/A"]
+        return [clean_text(p_talker.content),"N/A","N/A","N/A","N/A","N/A"]
     end
 end
 
@@ -93,6 +93,17 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:Abst
         return false
     end
 end
+
+
+
+function parse_node(node::Node{<:PNode},node_tree,io)
+    row = process_node(node,node_tree)
+    write_row_to_io(io,row)
+end
+
+#function detect_stage_direction(node::Node{<:PNode})
+
+#end
 
 
 

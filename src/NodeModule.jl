@@ -119,33 +119,39 @@ function detect_node_type(node, node_tree,year,soup,PhaseType)
     end
 end
 
-function define_flags(parent_node)
-    if isnothing(parent_node)
-        return [0,0,0,0,0]
-    end
-    name = nodename(parent_node.node)
-    if name == "question"
-        flags = [1,0,0,0,0]
-    elseif name == "answer"
-        flags = [0,1,0,0,0]
-    elseif name == "interjection"
-        flags = [0,0,1,0,0]
-    elseif name == "speech"
-        flags = [0,0,0,1,0]
-    else
-        flags = [0,0,0,0,0]
-    end
-    return flags 
+#function define_flags(parent_node,node=nothing)
+#    if isnothing(parent_node)
+#        return [0,0,0,0,0]
+#    end
+#    name = nodename(parent_node.node)
+#    if name == "question"
+#        flags = [1,0,0,0,0]
+#    elseif name == "answer"
+#        flags = [0,1,0,0,0]
+#    elseif name == "interjection"
+#        flags = [0,0,1,0,0]
+#    elseif name == "speech"
+#        flags = [0,0,0,1,0]
+#    else
+#        flags = [0,0,0,0,0]
+#    end
+#    return flags 
+#end
+#
+function define_flags(node,parent_node)
+#    ParentTypes = [Type{Node{<:QuestionNode}},Type{Node{<:AnswerNode}},Type{Node{<:InterjectionNode}},Type{Node{SpeechNode}}]
+    ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
+ 
+    flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
+    return flags
 end
 
 function parse_node(node::Node,node_tree,io)
     process_node(node,node_tree)
 end
 
-
-function parse_node(node::Union{Node{<:InterTalkNode},Node{<:PNode}},node_tree,io)
-    row = process_node(node,node_tree)
-    write_row_to_io(io,row)
+function process_node(node::Node,node_tree)
+    nothing
 end
 
 function is_nodetype(node, node_tree, nodetype::Type{<:AbstractNode}, phase::Type{<:AbstractPhase}, soup, args...; kwargs...)
@@ -158,16 +164,6 @@ end
 function get_xpaths(::Type{<:N}) where {N <: AbstractNode}
     return []
 end
-
-
-function process_node(node::Node,node_tree)
-    nothing
-end
-
-function construct_row(flags,talker_contents,content)
-    return [flags...,talker_contents...,clean_text(content)]
-end
- 
 
 function find_debate_title(node,node_tree,soup)
     debate_title = "/debateinfo/title"
@@ -183,6 +179,12 @@ function find_debate_title(node,node_tree,soup)
     end
 end
 
+function construct_row(flags,talker_contents,content)
+    row = [flags...,talker_contents...,clean_text(content)]
+#    @assert length(row) == 12
+    return row
+end
+ 
 
 end
 

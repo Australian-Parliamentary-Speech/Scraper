@@ -24,7 +24,7 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
     end
 
     talker_contents = get_talker_from_parent(parent_node)
-    flags = define_flags(parent_node)
+    flags = define_flags(node,parent_node)
     return construct_row(flags,talker_contents,content)
 end
 
@@ -47,5 +47,11 @@ function is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Typ
         return false
     end
 end
+
+function parse_node(node::Node{<:InterTalkNode},node_tree,io)
+    row = process_node(node,node_tree)
+    write_row_to_io(io,row)
+end
+
 
 

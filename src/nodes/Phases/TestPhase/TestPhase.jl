@@ -11,4 +11,4 @@ for path in readdir(testphase_node_path, join=true)
 end
 
 # Uncomment to test
-year_to_phase[2023] = TestPhase
+year_to_phase[1909] = TestPhase

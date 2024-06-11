@@ -7,7 +7,7 @@ OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Outputs/hansard"
 
 [METADATA]
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
-DATE = "2024-06-09"
+DATE = "2024-06-11"
 
 [[XML_DIR]]
 PATH = "xmls"

@@ -62,9 +62,10 @@ function run_xml(fn,output_path)
     soup = root(xdoc)
     year,date = get_year(fn)
     PhaseType = detect_phase(year)
+    @debug PhaseType
     open(joinpath(output_path,"$date.csv"), "w") do io
         #only line that needs to be updated in terms of change in columns
-        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","content","subdebateinfo","path"])
+        write_row_to_io(io,["question_flag","answer_flag","interjection_flag","speech_flag","others_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","path"])
         recurse(soup,year,PhaseType,soup,io)
     end
 end

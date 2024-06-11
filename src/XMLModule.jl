@@ -42,14 +42,18 @@ end
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
-        return talker_content_node.content
+        if isnothing(talker_content_node)
+            return "N/A"
+        else
+            return talker_content_node.content
+        end
     end
 
     if isnothing(talker_node)
-        return ["N/A" for i in 1:4]
+        return ["N/A" for i in 1:6]
     else
         talker_contents = []
-        for xpath in ["//name","//name.id","//electorate","//party"]
+        for xpath in ["//name","//name.id","//electorate","//party","//role","//page.no"]
             talker_content = find_content(xpath)
             push!(talker_contents,talker_content)
         end

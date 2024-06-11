@@ -1,9 +1,9 @@
-export QuestionNode
+export AnswerNode
 
-abstract type QuestionNode{P} <: AbstractNode{P} end
+abstract type AnswerNode{P} <: AbstractNode{P} end
 
 
-function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...)
+function is_nodetype(node, node_tree,nodetype::Type{<:AnswerNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...)
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
@@ -20,8 +20,7 @@ function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{
 end
 
 
-function get_xpaths(::Type{<:QuestionNode})
-   return ["question"]
+function get_xpaths(::Type{<:AnswerNode})
+   return ["answer"]
 end
-
 
