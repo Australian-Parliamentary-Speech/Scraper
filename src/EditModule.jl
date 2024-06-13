@@ -4,11 +4,6 @@ using ..NodeModule
 using ..Utils
 export edit_csv
 
-mutable struct Edit_Params
-    previous_talker::Vector{String}
-    row_no::Int64
-end
-
 
 function edit_set_up(headers)
     return Dict(zip(headers,collect(1:length(headers)))) 
@@ -22,49 +17,97 @@ function edit_csv(fn,::Type{<:AbstractPhase})
     for header in [:Speaker,:Time]
         push!(headers_,header)
     end
-    run_params = Edit_Params([" "],1)
+    is_written = Dict(number => false for number in 1:length(eachrow(csvfile)))
+    row_index = 1
+    rows = eachrow(csvfile)
     open("$(fn[1:end-4])_edit.csv", "w") do io
-        @show headers_
         write_row_to_io(io,string.(headers_))
-        for row in eachrow(csvfile)
-            @show row
-            row_ = @. collect(row)
-            row = row_[1]
-            @show row
-            name_pos = header_to_num[:name]
-            talker = row[name_pos]
-            @show talker
-            if talker != "N/A"
-                run_params.previous_talker = row[name_pos:name_pos+5]
+        for row in rows
+            if !is_written[row_index]
+                row_ = @. collect(row)
+                row = row_[1]
+                name_pos = header_to_num[:name]
+                content_pos = header_to_num[:content]
+                talker = row[name_pos]
+                row_content = row[content_pos]
+                children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
+                row[content_pos] = row_content*children_content
+                row = edit_row(row,header_to_num)
+                write_row_to_io(io,row)
             end
-            row = edit_row(row,run_params,header_to_num)
-            write_row_to_io(io,row)
-            run_params.row_no += 1
+            row_index += 1
         end
     end
 end
 
-function adopt_last_talker(row,run_params,header_to_num)
-    function process_flag(flag)
-        if typeof(flag) <: Int
-            return flag
-        else
-            return parse(Int,flag)
-        end
+function find_all_child_speeches(row_no,rows,header_to_num,is_written)
+    content = ""
+    while !stop_before_next_talker(row_no,rows,header_to_num)
+        row = rows[row_no+1]
+        row_ = @. collect(row)
+        row = row_[1]
+        content_ = row[header_to_num[:content]]
+        content *= content_
+        row_no += 1
+        is_written[row_no] = true
     end
-    name_pos = header_to_num[:name]
-    all_flags = [process_flag(row[header_to_num[k]]) for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))]
-    if row[name_pos] == "N/A"
-        if !(all(==(0), all_flags)) && (length(run_params.previous_talker) > 1)
-            row[name_pos:name_pos+5] = run_params.previous_talker
-        end  
-    end
-    return row
+    return content,is_written
 end
+
+function stop_before_next_talker(row_no,rows,header_to_num)
+    if is_stage_direction(rows[row_no],header_to_num) || row_no == length(rows)
+        return true
+    else
+        next_row = rows[row_no + 1]
+        next_row_ = @. collect(next_row)
+        next_row = next_row_[1]
+        name_pos = header_to_num[:name]
+
+        if next_row[name_pos] != "N/A"
+            return true
+        end 
+    end
+    return false
+end
+
+function is_stage_direction(row,header_to_num)
+    row_ = @. collect(row)
+    row = row_[1] 
+    all_flags = [process_flag(row[header_to_num[k]]) for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))]
+    if all(==(0), all_flags)
+        return true
+    end  
+    return false 
+end
+
+function process_flag(flag)
+    if typeof(flag) <: Int
+        return flag
+    else
+        return parse(Int,flag)
+    end
+end
+
+#function check_adopt_last_talker(row,header_to_num,talker_tree)
+#    function process_flag(flag)
+#        if typeof(flag) <: Int
+#            return flag
+#        else
+#            return parse(Int,flag)
+#        end
+#    end
+#    name_pos = header_to_num[:name]
+#    all_flags = [process_flag(row[header_to_num[k]]) for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))]
+#    if row[name_pos] == "N/A"
+#        if !(all(==(0), all_flags)) && (length(talker_tree) > 1)
+#            return true
+#        end  
+#    end
+#    return false
+#end
  
-function edit_row(row,run_params,header_to_num)
+function edit_row(row,header_to_num)
     row = edit_out_time_content_row(row,header_to_num)
-    row = adopt_last_talker(row,run_params,header_to_num)
     row = remove_the_speaker(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
