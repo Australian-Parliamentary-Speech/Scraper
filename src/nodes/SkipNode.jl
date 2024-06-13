@@ -14,7 +14,7 @@ function is_nodetype(node,node_tree,nodetype::Type{<:SkipNode},phase::Type{<:Abs
     if name in allowed_names
         debateinfo_path = get_section_title_path(DebateNode)
         title = findfirst_in_subsoup(node.path,debateinfo_path,soup)
-        return title.content == "BILLS"
+        return title.content in ["BILLS"]
     else
         return false
     end

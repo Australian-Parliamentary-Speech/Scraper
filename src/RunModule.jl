@@ -14,6 +14,11 @@ using .XMLModule
 include("NodeModule.jl")
 @reexport using .NodeModule
 
+include("EditModule.jl")
+using .EditModule
+
+
+
 function get_year(fn)
     xdoc = readxml(fn)
     soup = root(xdoc)
@@ -51,23 +56,28 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
              push!(xml_paths,joinpath(path,filename))
          end
     end
-
+    csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
     for fn in xml_paths
-        run_xml(fn,output_path)
+        run_xml(fn,output_path,csv_exist)
     end
 end
 
-function run_xml(fn,output_path)
+function run_xml(fn,output_path,csv_exist)
     xdoc = readxml(fn)
     soup = root(xdoc)
     year,date = get_year(fn)
     PhaseType = detect_phase(year)
     @debug PhaseType
-    open(joinpath(output_path,"$date.csv"), "w") do io
-        headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
-        write_row_to_io(io,headers)
-        recurse(soup,year,PhaseType,soup,io)
+    outputcsv = joinpath(output_path,"$date.csv")
+    if !(csv_exist) 
+        open(outputcsv, "w") do io
+            headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+            write_row_to_io(io,headers)
+            recurse(soup,year,PhaseType,soup,io)
+        end
     end
+    ###Edit
+    edit_csv(outputcsv,PhaseType)
 end
 
 

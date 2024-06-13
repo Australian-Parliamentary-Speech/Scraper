@@ -3,3 +3,6 @@
 
 [[ XML ]]
     filename = "2023-12-07.xml"
+
+[ general_options ]
+    csv_exist = true

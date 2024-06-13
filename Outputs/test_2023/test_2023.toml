@@ -1,6 +1,9 @@
 [[XML]]
 FILENAME = "2023-12-07.xml"
 
+[GENERAL_OPTIONS]
+CSV_EXIST = true
+
 [GLOBAL]
 BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/test_2023/"
 INPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/test_2023"
@@ -10,4 +13,4 @@ OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Outputs/test_2023"
 
 [METADATA]
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/test_2023/test_2023.toml"
-DATE = "2024-06-11"
+DATE = "2024-06-13"
