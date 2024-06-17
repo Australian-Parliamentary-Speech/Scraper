@@ -17,10 +17,23 @@ function edit_csv(fn,::Type{<:AbstractPhase})
     for header in [:Speaker,:Time]
         push!(headers_,header)
     end
-    is_written = Dict(number => false for number in 1:length(eachrow(csvfile)))
-    row_index = 1
     rows = eachrow(csvfile)
-    open("$(fn[1:end-4])_edit.csv", "w") do io
+    step1fn = "$(fn[1:end-4])_edit_step1.csv"
+    open(step1fn, "w") do io
+        write_row_to_io(io,string.(headers_))
+        for row in rows
+            row_ = @. collect(row)
+            row = row_[1]
+            row = edit_row(row,header_to_num)
+            write_row_to_io(io,row)
+        end
+    end
+    
+    csvfilestep1 = CSV.File(step1fn)
+    rows = eachrow(csvfilestep1)
+    row_index = 1
+    is_written = Dict(number => false for number in 1:length(eachrow(csvfile)))
+    open("$(fn[1:end-4])_edit_step2.csv", "w") do io
         write_row_to_io(io,string.(headers_))
         for row in rows
             if !is_written[row_index]
@@ -32,7 +45,6 @@ function edit_csv(fn,::Type{<:AbstractPhase})
                 row_content = row[content_pos]
                 children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
                 row[content_pos] = row_content*children_content
-                row = edit_row(row,header_to_num)
                 write_row_to_io(io,row)
             end
             row_index += 1
@@ -118,8 +130,10 @@ end
 
 function remove_the_speaker(row,header_to_num)
     name_num = header_to_num[:name]
-    pattern = r"\(The\s+SPEAKER\)"
-    row[name_num] = replace(row[name_num], pattern => "")
+    patterns = [r"\(The\s+SPEAKER\)",r"\(The\s+DEPUTY\s+SPEAKER\)"]
+    for pattern in patterns
+        row[name_num] = replace(row[name_num], pattern => "")
+    end
 #    if row[name_num] != test
 #        @show test
 #    end
@@ -155,12 +169,23 @@ function edit_interjections(row,header_to_num)
     content = row[header_to_num[:content]]
     if content != "N/A"
         m = match(r"[iI]nterjecting—", content)
-        if m != nothing
+        if m != nothing && length(split(content," "))<5
             split_content = split(content,m.match)
             talker = split_content[1]
             row[header_to_num[:name]] = talker
         end
+    elseif content == "N/A"
+        talker = row[header_to_num[:name]]
+        m = match(r"[iI]nterjecting—", talker)
+        if m != nothing 
+            split_content = split(talker,m.match)
+            row[header_to_num[:name]] = split_content[1]
+            row[header_to_num[:content]] = talker
+        end
+ 
+ 
     end
+
     return row
 end
 
