@@ -6,4 +6,4 @@
 **/*.pyc
 **/*.html
 **/*.xml
-XML_download.jl
+Inputs/XML_download.jl

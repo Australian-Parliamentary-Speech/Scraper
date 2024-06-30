@@ -1,6 +1,14 @@
 module Utils
 
 export write_row_to_io
+export create_dir
+
+function create_dir(directory_path::String)
+    if !isdir(directory_path)
+        mkpath(directory_path)
+    end
+end
+
 
 function create_dict_multiple_values(keys,values)
     d = Dict()
