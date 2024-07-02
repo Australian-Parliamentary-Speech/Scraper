@@ -30,7 +30,7 @@ end
 
 
 function get_sections(::Type{<:InterTalkNode})
-    return ["interjection","continue"]
+    return [Node{<:InterjectionNode}]
 end
 
 
@@ -40,9 +40,9 @@ function is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Typ
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
     if name in allowed_names
-        section_names = get_sections(nodetype)
-        parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
-        return nodename(parent_node.node) ∈ section_names
+        section_types = get_sections(nodetype)
+        parent_node = node_tree[end]
+        return any(section_node -> (typeof(parent_node) <: section_node), section_types)
     else
         return false
     end

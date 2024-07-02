@@ -67,13 +67,14 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
          end
     end
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
+    edit_opt = toml["GENERAL_OPTIONS"]["EDIT"]
     for fn in xml_paths
         @show fn
-        run_xml(fn,output_path,csv_exist)
+        run_xml(fn,output_path,csv_exist,edit_opt)
     end
 end
 
-function run_xml(fn,output_path,csv_exist)
+function run_xml(fn,output_path,csv_exist,edit_opt)
     xdoc = readxml(fn)
     soup = root(xdoc)
     year,date = get_year(fn)
@@ -88,7 +89,9 @@ function run_xml(fn,output_path,csv_exist)
         end
     end
     ###Edit
-    edit_csv(outputcsv,PhaseType)
+    if edit_opt
+        edit_csv(outputcsv,PhaseType)
+    end
 end
 
 
@@ -111,29 +114,27 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
         node = Node{NodeType{PhaseType}}(xml_node,index,year,soup)
-#        @info "NodeType: $(typeof(node))"
+        #        @info "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
     else
         @debug "$(ins)NodeType: GenericNode"
         node = Node{GenericNode{GenericPhase}}(xml_node,index,year,soup)
     end
 
-    if !(node isa Node{<:SkipNode})
-        # Next, recurse into any subnodes
-        subnodes = elements(xml_node)
-        @debug"$(ins)num_subnodes: $(length(subnodes))"
-        #       @show node_tree
-        if length(subnodes) > 0
-            # Add node to subnode tree
-            subnode_tree = copy(node_tree)
-            #subnode_tree = node_tree
-            #subnode_tree = (node_tree..., node)
-            if !(node isa Node{<:GenericNode})
-                push!(subnode_tree, node)
-            end
-            for (i,subnode) in enumerate(subnodes)
-                recurse(soup,year,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
-            end
+    # Next, recurse into any subnodes
+    subnodes = elements(xml_node)
+    @debug"$(ins)num_subnodes: $(length(subnodes))"
+    #       @show node_tree
+    if length(subnodes) > 0
+        # Add node to subnode tree
+        subnode_tree = copy(node_tree)
+        #subnode_tree = node_tree
+        #subnode_tree = (node_tree..., node)
+        if !(node isa Node{<:GenericNode})
+            push!(subnode_tree, node)
+        end
+        for (i,subnode) in enumerate(subnodes)
+            recurse(soup,year,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
         end
     end
 end

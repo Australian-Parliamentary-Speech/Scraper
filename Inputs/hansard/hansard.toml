@@ -6,4 +6,5 @@
 
 [ general_options ]
     csv_exist = false
-    year = 2024
+    edit = true
+    year = 2012

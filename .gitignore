@@ -6,4 +6,6 @@
 **/*.pyc
 **/*.html
 **/*.xml
+**/*.zip
+**/*.tar.gz
 Inputs/hansard/XML_download.jl

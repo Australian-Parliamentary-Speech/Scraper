@@ -172,7 +172,8 @@ function find_chamber(node,node_tree)
     elseif chamber_node isa Node{<:ChamberNode}
         return 1
     else
-        @error "no chamber is found"
+#        @error "no chamber is found"
+        return 0
     end
 end
 
