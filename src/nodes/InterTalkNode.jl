@@ -23,7 +23,7 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
         @assert parent_node_ == parent_node.node
     end
 
-    talker_contents = get_talker_from_parent(parent_node)
+    talker_contents = get_talker_from_parent(InterTalkNode,parent_node)
     flags = define_flags(node,parent_node,node_tree)
     return construct_row(node,node_tree,flags,talker_contents,content)
 end
@@ -53,5 +53,31 @@ function parse_node(node::Node{<:InterTalkNode},node_tree,io)
     write_row_to_io(io,row)
 end
 
+
+function get_talker_from_parent(::Type{InterTalkNode},parent_node)
+    soup = parent_node.soup
+    parent_node = parent_node.node
+    talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+    function find_content(xpath)
+        talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
+        if isnothing(talker_content_node)
+            return "N/A"
+        else
+            return talker_content_node.content
+        end
+    end
+
+    talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
+    if isnothing(talker_node)
+        return ["N/A" for i in 1:length(talker_xpaths)]
+    else
+        talker_contents = []
+        for xpath in talker_xpaths
+            talker_content = find_content(xpath)
+            push!(talker_contents,talker_content)
+        end
+        return talker_contents
+    end
+end
 
 

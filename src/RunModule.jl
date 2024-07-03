@@ -105,8 +105,6 @@ function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth
     @debug "$(ins)depth: $depth"
     @debug "$(ins)max_depth: $max_depth"
     @debug "$(ins)node_tree has $(length(node_tree)) elements"
-    @info [nodename(node.node) for node in node_tree]
-
     # First parse the current node, if it is parsable
 
     # First get nodetype of this node

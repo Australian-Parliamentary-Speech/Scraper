@@ -18,12 +18,16 @@ function test()
     fn = "../Inputs/hansard/xmls/2011/2011-02-08.xml"
     xdoc = readxml(fn)
     soup = root(xdoc)
-    speech_node = findfirst("//speech",soup)
-    talk_node = findfirst("$(speech_node.path)//talk.start",soup)
-    @show talk_node.content
+    speech_node = findfirst("//speech/talk.start",soup)
+    @show [nodename(i) for i in elements(speech_node)]
+    para_node = findfirst("$(speech_node.path)//para",soup)
+    @show para_node.content
+    @show nodename(prevnode(para_node))
+    @show nodename(prevnode(prevnode(para_node)))
 
-    node = Node(talk_node,1,1.0,soup)
-    talker = get_talker_from_parent(node)
-    @show talker
+
+#    node = Node(talk_node,1,1.0,soup)
+#    talker = get_talker_from_parent(node)
+#    @show talker
 end
  

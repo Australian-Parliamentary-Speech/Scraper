@@ -5,11 +5,12 @@ export PNode
 abstract type PNode{P} <: AbstractNode{P} end
 
 function process_node(node::Node{<:PNode},node_tree)
-    allowed_names = get_xpaths(PNode)
+    nodetype = typeof(node).parameters[1]
+    allowed_names = get_xpaths(nodetype)
 #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     parent_node = node_tree[end]
-    if is_first_node_type(node,parent_node,allowed_names)
-        talker_contents = get_talker_from_parent(parent_node)
+    if is_first_node_type(node,parent_node,allowed_names,node_tree)
+        talker_contents = get_talker_from_parent(nodetype,parent_node)
     else
         talker_contents = find_talker_in_p(node)
     end 
@@ -17,12 +18,13 @@ function process_node(node::Node{<:PNode},node_tree)
     return construct_row(node,node_tree,flags,talker_contents,node.node.content)
 end
 
-function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names)
+function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_tree)
     if node.index == 1
         for name in allowed_names
             first_p = findfirst_in_subsoup(parent_node.node.path,"//$name",parent_node.soup)
             if !isnothing(first_p)
-                return first_p.path == node.node.path
+                is_type = (first_p.path == node.node.path)
+                return is_type
             end
         end
         return false
@@ -95,4 +97,30 @@ function parse_node(node::Node{<:PNode},node_tree,io)
 end
 
 
+
+function get_talker_from_parent(::Type{<:PNode},parent_node)
+    soup = parent_node.soup
+    parent_node = parent_node.node
+    talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+    function find_content(xpath)
+        talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
+        if isnothing(talker_content_node)
+            return "N/A"
+        else
+            return talker_content_node.content
+        end
+    end
+
+    talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
+    if isnothing(talker_node)
+        return ["N/A" for i in 1:length(talker_xpaths)]
+    else
+        talker_contents = []
+        for xpath in talker_xpaths
+            talker_content = find_content(xpath)
+            push!(talker_contents,talker_content)
+        end
+        return talker_contents
+    end
+end
 
