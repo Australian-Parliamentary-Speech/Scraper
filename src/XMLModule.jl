@@ -37,6 +37,7 @@ end
 end
 
 @xport function get_talker_from_parent(parent_node)
+    @info parent_node.node.path
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)

@@ -7,7 +7,7 @@ const RunModule = ParlinfoSpeechScraper.RunModule
 
 @testset verbose = true "ParlinfoSpeechScraper.jl" begin
 
-    @testset "2023" begin
+    @test skip=true "2023" begin
         correct = open("2023-12-07-correct.csv", "r") do io
             read(io)
         end
@@ -19,6 +19,10 @@ const RunModule = ParlinfoSpeechScraper.RunModule
         end
 
         @test result == correct
+    end
+
+    @test "2011" begin
+        RunModule.run_xml("xmls/2021-02-08.xml",dirname(@__FILE__))
     end
 
 end

@@ -1,3 +1,6 @@
+[[XML]]
+FILENAME = "xmls/2011/2011-02-08.xml"
+
 [GENERAL_OPTIONS]
 YEAR = 2011
 CSV_EXIST = false
@@ -13,6 +16,3 @@ OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Outputs/hansard"
 [METADATA]
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
 DATE = "2024-07-03"
-
-[[XML_DIR]]
-PATH = "xmls"

@@ -79,8 +79,6 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     soup = root(xdoc)
     date_float,date = get_date(fn)
     PhaseType = detect_phase(date_float)
-    @info PhaseType
-    @info date_float
     outputcsv = joinpath(output_path,"$date.csv")
     if !(csv_exist) 
         open(outputcsv, "w") do io
@@ -107,6 +105,7 @@ function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth
     @debug "$(ins)depth: $depth"
     @debug "$(ins)max_depth: $max_depth"
     @debug "$(ins)node_tree has $(length(node_tree)) elements"
+    @info [nodename(node.node) for node in node_tree]
 
     # First parse the current node, if it is parsable
 
@@ -115,7 +114,7 @@ function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
         node = Node{NodeType{PhaseType}}(xml_node,index,date,soup)
-        @info "NodeType: $(typeof(node))"
+        @debug "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
     else
         @debug "$(ins)NodeType: GenericNode"
