@@ -19,13 +19,14 @@ using .EditModule
 
 
 
-function get_year(fn)
+function get_date(fn)
     xdoc = readxml(fn)
     soup = root(xdoc)
     time_node = findfirst("//session.header/date",soup)
     time = time_node.content
-    year = split(time,"-")[1]
-    return (parse(Int,year),time)
+    year,month,day = split(time,"-")
+    #turns dates into a float for comparison
+    return date_to_float(parse(Int,year),parse(Int,month),parse(Int,day)),time
 end
 
 function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
@@ -69,7 +70,6 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
     edit_opt = toml["GENERAL_OPTIONS"]["EDIT"]
     for fn in xml_paths
-        @show fn
         run_xml(fn,output_path,csv_exist,edit_opt)
     end
 end
@@ -77,15 +77,16 @@ end
 function run_xml(fn,output_path,csv_exist,edit_opt)
     xdoc = readxml(fn)
     soup = root(xdoc)
-    year,date = get_year(fn)
-    PhaseType = detect_phase(year)
-    @debug PhaseType
+    date_float,date = get_date(fn)
+    PhaseType = detect_phase(date_float)
+    @info PhaseType
+    @info date_float
     outputcsv = joinpath(output_path,"$date.csv")
     if !(csv_exist) 
         open(outputcsv, "w") do io
             headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
             write_row_to_io(io,headers)
-            recurse(soup,year,PhaseType,soup,io)
+            recurse(soup,date_float,PhaseType,soup,io)
         end
     end
     ###Edit
@@ -95,7 +96,7 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
 end
 
 
-function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
+function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
     # If max_depth is defined, and depth has surpassed, don't do anything
     if (max_depth > 0) && (depth > max_depth)
         return nothing
@@ -110,15 +111,15 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
     # First parse the current node, if it is parsable
 
     # First get nodetype of this node
-    NodeType = detect_node_type(xml_node, node_tree, year,soup,PhaseType)
+    NodeType = detect_node_type(xml_node, node_tree, date,soup,PhaseType)
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
-        node = Node{NodeType{PhaseType}}(xml_node,index,year,soup)
-        #        @info "NodeType: $(typeof(node))"
+        node = Node{NodeType{PhaseType}}(xml_node,index,date,soup)
+        @info "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
     else
         @debug "$(ins)NodeType: GenericNode"
-        node = Node{GenericNode{GenericPhase}}(xml_node,index,year,soup)
+        node = Node{GenericNode{GenericPhase}}(xml_node,index,date,soup)
     end
 
     # Next, recurse into any subnodes
@@ -134,7 +135,7 @@ function recurse(soup, year, PhaseType, xml_node, io, index=1,depth=0, max_depth
             push!(subnode_tree, node)
         end
         for (i,subnode) in enumerate(subnodes)
-            recurse(soup,year,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
+            recurse(soup,date,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
         end
     end
 end

@@ -2,6 +2,11 @@ module Utils
 
 export write_row_to_io
 export create_dir
+export date_to_float
+
+function date_to_float(year,month,day)
+    return round(year + month/120 + day/3100,digits=6)
+end
 
 function create_dir(directory_path::String)
     if !isdir(directory_path)

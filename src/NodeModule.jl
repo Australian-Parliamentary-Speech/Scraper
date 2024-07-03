@@ -26,7 +26,7 @@ abstract type GenericNode{P} <: AbstractNode{P} end
 struct Node{N <: AbstractNode}
     node::EzXML.Node
     index::Int64
-    year::Int64
+    date::Float64
     soup
 end
 
@@ -39,7 +39,7 @@ for path in readdir(node_path, join=true)
 end
 
 # Included phases can add to this dictionary
-year_to_phase = Dict()
+date_to_phase = Dict()
 
 # Included phases can add to this dictionary
 range_to_phase = Dict()
@@ -54,28 +54,24 @@ for dir in readdir(phase_path, join=true)
     end
 end
 
-function detect_phase(year::Int64)
+function detect_phase(date)
     # See if year has specific phase
-    phase = get(year_to_phase, year, nothing)
+    phase = get(date_to_phase, date, nothing)
     if ! isnothing(phase)
         return phase
     end
 
-    # See if year in range with phase
-    for year_range in keys(range_to_phase)
-        min_year, max_year = year_range
-        if min_year <= year <= max_year
-            return range_to_phase[year_range]
+    # See if date in range with phase
+    for (date_range,phase) in date_to_phase
+        min_date, max_date = date_range
+        if min_date <= date <= max_date
+            return phase
         end
     end
 
     # Any other logic you want can go here
 
-    # No specific phase for this year
-    return AbstractPhase
-end
-
-function detect_phase(year)
+    # No specific phase for this date
     return AbstractPhase
 end
 
@@ -111,7 +107,7 @@ function reverse_find_first_node_not_name(node_tree,names)
     end
 end
 
-function detect_node_type(node, node_tree,year,soup,PhaseType)
+function detect_node_type(node, node_tree,date,soup,PhaseType)
     for NodeType in all_subtypes
         if is_nodetype(node, node_tree, NodeType, PhaseType,soup)
             return NodeType

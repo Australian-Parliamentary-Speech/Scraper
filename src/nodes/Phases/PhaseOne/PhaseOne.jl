@@ -11,4 +11,5 @@ for path in readdir(testphase_node_path, join=true)
 end
 
 # Uncomment to test
-year_to_phase[2022] = PhaseOne
+upperbound = date_to_float(2011,4,0)
+date_to_phase[(1901.0,upperbound)] = PhaseOne
