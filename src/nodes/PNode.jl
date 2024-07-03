@@ -7,10 +7,17 @@ abstract type PNode{P} <: AbstractNode{P} end
 function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
-#    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
+    #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     parent_node = node_tree[end]
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         talker_contents = get_talker_from_parent(nodetype,parent_node)
+        if all(i->(i=="N/A"), talker_contents)
+            name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
+            if !isnothing(name)
+                talker_contents[1] = name.content
+            end
+        end
+
     else
         talker_contents = find_talker_in_p(node)
     end 

@@ -152,7 +152,7 @@ end
 function edit_out_time_content(cell)
     pattern = r"\(\d{2}:\d{2}\):"
     match_ = match(pattern,cell)
-    if match_ == nothing
+    if isnothing(match_) 
         return [cell,"N/A","N/A"]
     else
         match_ = match_.match
