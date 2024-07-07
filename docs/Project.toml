@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+ParlinfoSpeechScraper = "3fb2ed58-985e-428b-9a27-55663dc902eb"
