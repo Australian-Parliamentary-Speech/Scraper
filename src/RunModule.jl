@@ -33,13 +33,8 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     global_options = toml["GLOBAL"]
     general_options = toml["GENERAL_OPTIONS"]
     input_path = global_options["INPUT_PATH"]
-    output_path = global_options["OUTPUT_PATH"]
+    output_path = global_options["OUTPUT_PATH"] 
     year_ = general_options["YEAR"]
-    if typeof(year_) <: Int
-        output_path = joinpath(output_path,"$year_/")
-        create_dir(output_path)
-    end
-
     xml_paths = [] 
 
     # Get single xml path
@@ -55,23 +50,27 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     # Get all xml paths in a directory with years being the subdirectory
     xml_dirs = get(toml,"XML_DIR",[])
     for xml_dir in xml_dirs
-         path = xml_dir["PATH"]
-         if ! isabspath(path)
-             path = joinpath(input_path,path)
-         end
-         for year in readdir(path)
-             if year_[1] <= parse(Int,year) <= year_[2]
+        path = xml_dir["PATH"]
+        if ! isabspath(path)
+            path = joinpath(input_path,path)
+        end
+        for year in readdir(path)
+            if year_[1] <= parse(Int,year) <= year_[2]
                 for filename in readdir(joinpath(path,year))
-                    push!(xml_paths,joinpath(joinpath(path,year),filename))
+                    push!(xml_paths,(year,joinpath(joinpath(path,year),filename)))
                 end
             end
-         end
+        end
     end
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
     edit_opt = toml["GENERAL_OPTIONS"]["EDIT"]
-    for fn in xml_paths
-        @info fn
-        run_xml(fn,output_path,csv_exist,edit_opt)
+    for (year,fn) in xml_paths
+        output_path_ = joinpath(output_path,"$year/")
+        if !(isdir(fn))
+            create_dir(output_path_)
+        end
+
+        run_xml(fn,output_path_,csv_exist,edit_opt)
     end
 end
 
