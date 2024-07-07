@@ -75,6 +75,14 @@ function detect_phase(date)
     return AbstractPhase
 end
 
+"""
+    get_all_subtypes(type, st=[])
+
+Get every subtype of the provided `type` parameter.
+
+Inputs:
+- `type`: ...
+"""
 function get_all_subtypes(type, st=[])
     for subt in subtypes(type)
         push!(st,subt)
@@ -173,13 +181,14 @@ function find_chamber(node,node_tree)
     end
 end
 
-function define_flags(node,parent_node,node_tree)
+function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,node_tree)
     ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
     flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
     chamber = find_chamber(node,node_tree)
     push!(flags,chamber)
     return flags
 end
+
 
 
 function construct_row(node,node_tree,flags,talker_contents,content)

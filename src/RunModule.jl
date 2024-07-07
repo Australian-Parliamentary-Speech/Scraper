@@ -70,6 +70,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
     edit_opt = toml["GENERAL_OPTIONS"]["EDIT"]
     for fn in xml_paths
+        @info fn
         run_xml(fn,output_path,csv_exist,edit_opt)
     end
 end

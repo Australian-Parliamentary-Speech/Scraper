@@ -1,0 +1,5 @@
+```@autodocs
+Modules = [ParlinfoSpeechScraper]
+```
+
+

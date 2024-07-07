@@ -28,6 +28,9 @@ function get_args()
     return parse_args(s)
 end
 
+"""
+    main()
+"""
 function main()
     args = get_args()
     toml_path = args["input"]
