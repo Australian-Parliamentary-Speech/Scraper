@@ -60,7 +60,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
              path = joinpath(input_path,path)
          end
          for year in readdir(path)
-             if parse(Int,year) == year_
+             if year_[1] <= parse(Int,year) <= year_[2]
                 for filename in readdir(joinpath(path,year))
                     push!(xml_paths,joinpath(joinpath(path,year),filename))
                 end
@@ -83,7 +83,8 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     outputcsv = joinpath(output_path,"$date.csv")
     if !(csv_exist) 
         open(outputcsv, "w") do io
-            headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+            headers = find_headers(PhaseType)
+            @debug methods(find_headers)
             write_row_to_io(io,headers)
             recurse(soup,date_float,PhaseType,soup,io)
         end

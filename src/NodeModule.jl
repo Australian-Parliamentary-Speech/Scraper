@@ -14,6 +14,7 @@ export parse_node
 export detect_phase
 export GenericPhase
 export AbstractPhase
+export find_headers
 
 abstract type AbstractPhase end
 
@@ -53,6 +54,11 @@ for dir in readdir(phase_path, join=true)
         end
     end
 end
+
+function find_headers(::Type{<:AbstractPhase})
+    return ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+end
+
 
 function detect_phase(date)
     # See if year has specific phase

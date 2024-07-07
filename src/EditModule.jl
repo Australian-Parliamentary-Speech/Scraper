@@ -18,6 +18,7 @@ function edit_csv(fn,::Type{<:AbstractPhase})
         push!(headers_,header)
     end
     rows = eachrow(csvfile)
+    #name change
     step1fn = "$(fn[1:end-4])_edit_step1.csv"
     open(step1fn, "w") do io
         write_row_to_io(io,string.(headers_))
@@ -53,8 +54,17 @@ function edit_csv(fn,::Type{<:AbstractPhase})
 end
 
 function find_all_child_speeches(row_no,rows,header_to_num,is_written)
+    #debug
+#    content_pos = header_to_num[:content]
+#    row = @. collect(rows[row_no])[1]
+#    log = false
+#    if occursin("On behalf of the Standing Committee on Petitions",row[content_pos])
+#        log = true
+#    end
+
+
     content = ""
-    while !stop_before_next_talker(row_no,rows,header_to_num)
+    while !stop_before_next_talker(row_no,rows,header_to_num,log)
         row = rows[row_no+1]
         row_ = @. collect(row)
         row = row_[1]
@@ -63,10 +73,11 @@ function find_all_child_speeches(row_no,rows,header_to_num,is_written)
         row_no += 1
         is_written[row_no] = true
     end
+
     return content,is_written
 end
 
-function stop_before_next_talker(row_no,rows,header_to_num)
+function stop_before_next_talker(row_no,rows,header_to_num,log)
     if is_stage_direction(rows[row_no],header_to_num) || row_no == length(rows)
         return true
     else
