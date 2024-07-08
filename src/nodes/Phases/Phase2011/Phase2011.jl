@@ -27,7 +27,7 @@ function define_flags(node::Node{<:AbstractNode{Phase2011}},parent_node,node_tre
 end
 
 
-function find_headers(::Type{Phase2011})
+function define_headers(::Type{Phase2011})
     return ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
 end
 

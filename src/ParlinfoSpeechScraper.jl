@@ -12,6 +12,13 @@ include("RunModule.jl")
 # Exports
 export main
 
+"""
+get_args()
+
+Parse command-line arguments
+
+This function sets up and parses command-line arguments using the `ArgParse` package. It defines the arguments that can be passed to the script, including options for verbosity and input file path.
+"""
 function get_args()
     s = ArgParseSettings()
 
@@ -29,7 +36,19 @@ function get_args()
 end
 
 """
-    main()
+main()
+
+Main function to process command-line arguments and run the program
+
+This function serves as the entry point of the script. It processes command-line arguments, retrieves the necessary parameters, and calls the main processing function with those parameters.
+
+Inputs:
+None
+
+Arguments:
+- `args`: A dictionary containing the parsed command-line arguments.
+    - `args["input"]`: Path to the input TOML file.
+    - `args["verbose"]`: Boolean flag indicating if logging verbosity should be increased.
 """
 function main()
     args = get_args()
@@ -38,6 +57,17 @@ function main()
     main(toml_path,verbose)
 end
 
+"""
+main(toml_path, verbose)
+
+Main function to initialize and execute the Parlinfo Speech Scraper
+
+This function initializes the input configuration from a TOML file specified by `toml_path` with optional verbosity controlled by `verbose`. It then runs the ParlinfoSpeechScraper using the configuration.
+
+Inputs:
+- `toml_path`: Path to the TOML configuration file.
+- `verbose`: Boolean flag indicating if logging verbosity should be increased.
+"""
 function main(toml_path,verbose)
     toml = setup_input(toml_path,verbose)
     run_ParlinfoSpeechScraper(toml)

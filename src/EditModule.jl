@@ -4,11 +4,26 @@ using ..NodeModule
 using ..Utils
 export edit_csv
 
+"""
+edit_set_up(headers)
 
+Sets up a dictionary mapping each element in `headers` to its corresponding index.
+
+Inputs:
+- `headers`: An array of header names or keys.
+
+Returns:
+- A dictionary where each header in `headers` is mapped to its index position.
+"""
 function edit_set_up(headers)
     return Dict(zip(headers,collect(1:length(headers)))) 
 end
 
+"""
+edit_csv(fn, ::Type{<:AbstractPhase})
+
+Two steps are implemented here. The first step does mostly regular expression processing. The second step collapses some of the N/As to the previous talker.
+"""
 function edit_csv(fn,::Type{<:AbstractPhase})
     csvfile = CSV.File(fn)
     headers_ = copy(propertynames(csvfile))
@@ -53,6 +68,11 @@ function edit_csv(fn,::Type{<:AbstractPhase})
     end
 end
 
+"""
+function find_all_child_speeches(row_no,rows,header_to_num,is_written)
+
+Find all the speeches that belong to a single talker 
+"""
 function find_all_child_speeches(row_no,rows,header_to_num,is_written)
     #debug
 #    content_pos = header_to_num[:content]
@@ -111,24 +131,7 @@ function process_flag(flag)
     end
 end
 
-#function check_adopt_last_talker(row,header_to_num,talker_tree)
-#    function process_flag(flag)
-#        if typeof(flag) <: Int
-#            return flag
-#        else
-#            return parse(Int,flag)
-#        end
-#    end
-#    name_pos = header_to_num[:name]
-#    all_flags = [process_flag(row[header_to_num[k]]) for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))]
-#    if row[name_pos] == "N/A"
-#        if !(all(==(0), all_flags)) && (length(talker_tree) > 1)
-#            return true
-#        end  
-#    end
-#    return false
-#end
- 
+
 function edit_row(row,header_to_num)
     row = edit_out_time_content_row(row,header_to_num)
     row = remove_the_speaker(row,header_to_num)

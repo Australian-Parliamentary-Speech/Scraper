@@ -4,6 +4,15 @@ export PNode
 
 abstract type PNode{P} <: AbstractNode{P} end
 
+"""
+process_node(node::Node{<:PNode}, node_tree)
+
+It processes node of PNode type. Usually the most scraped node type.
+
+Inputs:
+- `node`: of struct Node with the parameter PNode
+- `node_tree`: A vector representing a tree of nodes for context.
+"""
 function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
@@ -25,6 +34,17 @@ function process_node(node::Node{<:PNode},node_tree)
     return construct_row(node,node_tree,flags,talker_contents,node.node.content)
 end
 
+"""
+is_first_node_type(node::Node{<:PNode}, parent_node, allowed_names, node_tree)
+
+Checks if the given `node` is the first occurrence of its type under `parent_node`..
+
+Inputs:
+- `node`: the current node
+- `parent_node`: The parent node of the node
+- `allowed_names`: An array of allowed names (XPaths) associated with the type of `node`.
+- `node_tree`: A vector representing a tree of nodes for context.
+"""
 function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_tree)
     if node.index == 1
         for name in allowed_names
@@ -40,6 +60,14 @@ function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_t
     end
 end
 
+"""
+find_talker_in_p(p_node)
+
+Finds talker information inside the current node
+
+Inputs:
+- `p_node`: the p_node
+"""
 function find_talker_in_p(p_node)
     p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker)
@@ -49,6 +77,10 @@ function find_talker_in_p(p_node)
     end
 end
 
+"""P_with_a_as_parent(p_node)
+
+Finds talker information inside the parent p_node
+"""
 function p_with_a_as_parent(p_node)
     soup = p_node.soup
     function parent_path_check(parent_path)
@@ -73,17 +105,30 @@ function p_with_a_as_parent(p_node)
 end
 #args is a list, kwargs is a dictionary
 
+"""
+get_xpaths(::Type{<:PNode})
+
+Get the allowed nodenames for specific types
+"""
 function get_xpaths(::Type{<:PNode})
    return ["p"]
 end
 
 
+"""
+get_sections(::Type{<:PNode})
 
+Get the sections where PNodes are scraped
+"""
 function get_sections(::Type{<:PNode})
     return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode}]
 end
 
+"""
+is_nodetype(node, node_tree, nodetype::Type{<:PNode}, phase::Type{<:AbstractPhase}, soup, args...; kwargs...)
 
+Checks if an xml node is PNode.
+"""
 function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
@@ -104,6 +149,12 @@ function parse_node(node::Node{<:PNode},node_tree,io)
 end
 
 
+"""
+get_talker_from_parent(::Type{<:PNode},parent_node)
+
+
+Finds talker information inside the parent node
+"""
 
 function get_talker_from_parent(::Type{<:PNode},parent_node)
     soup = parent_node.soup
