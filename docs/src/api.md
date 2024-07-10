@@ -1,6 +1,6 @@
-#API
+# API
 
-##ParlinfoSpeechScraper
+## ParlinfoSpeechScraper
 
 ```@meta
 CurrentModule = ParlinfoSpeechScraper
@@ -10,7 +10,7 @@ CurrentModule = ParlinfoSpeechScraper
 Modules = [ParlinfoSpeechScraper]
 ```
 
-##RunModule
+## RunModule
 ```@meta
 CurrentModule = ParlinfoSpeechScraper.RunModule
 ```
@@ -19,16 +19,8 @@ CurrentModule = ParlinfoSpeechScraper.RunModule
 Modules = [RunModule]
 ```
 
-##NodeModule
-```@meta
-CurrentModule = ParlinfoSpeechScraper.RunModule.NodeModule
-```
+## XMLModule
 
-```@autodocs
-Modules = [NodeModule]
-```
-
-##XMLModule
 ```@meta
 CurrentModule = ParlinfoSpeechScraper.RunModule.EditModule
 ```

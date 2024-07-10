@@ -5,13 +5,9 @@ export PNode
 abstract type PNode{P} <: AbstractNode{P} end
 
 """
-process_node(node::Node{<:PNode}, node_tree)
+process_node(node::Node{<:PNode},node_tree)
 
-It processes node of PNode type. Usually the most scraped node type.
-
-Inputs:
-- `node`: of struct Node with the parameter PNode
-- `node_tree`: A vector representing a tree of nodes for context.
+If no particular phase is specified, this default version of process node is run. 
 """
 function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
@@ -35,15 +31,9 @@ function process_node(node::Node{<:PNode},node_tree)
 end
 
 """
-is_first_node_type(node::Node{<:PNode}, parent_node, allowed_names, node_tree)
+is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_tree)
 
-Checks if the given `node` is the first occurrence of its type under `parent_node`..
-
-Inputs:
-- `node`: the current node
-- `parent_node`: The parent node of the node
-- `allowed_names`: An array of allowed names (XPaths) associated with the type of `node`.
-- `node_tree`: A vector representing a tree of nodes for context.
+This default function detects if the p_node detected is the first p_node under a parent node. The reason for this is that if the p_node is not the first node, there are alternative checks to see if the talker has changed since the first one.
 """
 function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_tree)
     if node.index == 1
@@ -63,10 +53,7 @@ end
 """
 find_talker_in_p(p_node)
 
-Finds talker information inside the current node
-
-Inputs:
-- `p_node`: the p_node
+If the p_node is not the first p_node, we check if there is a talker inside the p_node.
 """
 function find_talker_in_p(p_node)
     p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
@@ -77,9 +64,10 @@ function find_talker_in_p(p_node)
     end
 end
 
-"""P_with_a_as_parent(p_node)
+"""
+p_with_a_as_parent(p_node)
 
-Finds talker information inside the parent p_node
+If no talker is found for the first node, we look for a "a" as parentnode.
 """
 function p_with_a_as_parent(p_node)
     soup = p_node.soup
@@ -108,26 +96,25 @@ end
 """
 get_xpaths(::Type{<:PNode})
 
-Get the allowed nodenames for specific types
+Find what the p_node is called in xml for default
 """
 function get_xpaths(::Type{<:PNode})
    return ["p"]
 end
 
-
 """
 get_sections(::Type{<:PNode})
 
-Get the sections where PNodes are scraped
+In which sections are the p_node wanted as default.
 """
 function get_sections(::Type{<:PNode})
     return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode}]
 end
 
 """
-is_nodetype(node, node_tree, nodetype::Type{<:PNode}, phase::Type{<:AbstractPhase}, soup, args...; kwargs...)
+is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
 
-Checks if an xml node is PNode.
+This function detects whether the given xml node is PNode. This function takes the phase into account aswell.
 """
 function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
     nodetype = nodetype{phase}
@@ -143,6 +130,11 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:Abst
     end
 end
 
+"""
+parse_node(node::Node{<:PNode},node_tree,io)
+
+The default function to take a p_node and write to the csv
+"""
 function parse_node(node::Node{<:PNode},node_tree,io)
     row = process_node(node,node_tree)
     write_row_to_io(io,row)
@@ -152,10 +144,8 @@ end
 """
 get_talker_from_parent(::Type{<:PNode},parent_node)
 
-
-Finds talker information inside the parent node
+If the p_node is the first p_node, we search in the parent to find the talker.
 """
-
 function get_talker_from_parent(::Type{<:PNode},parent_node)
     soup = parent_node.soup
     parent_node = parent_node.node

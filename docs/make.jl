@@ -16,7 +16,8 @@ makedocs(
     modules = [ParlinfoSpeechScraper],
     pages = [
     "ParlinfoSpeechScraper" => "index.md",
-    "API" => "api.md" 
+    "API" => "api.md",
+    "Nodes" => "nodes.md"
     ]
     )
 

@@ -16,27 +16,14 @@ export GenericPhase
 export AbstractPhase
 export find_headers
 
-"""Abstract type that represent the different phases in processing the xml files"""
 abstract type AbstractPhase end
 
-"""Default phase: 2023"""
 abstract type GenericPhase <: AbstractPhase end
 
-"""Abstract type that represent the xml nodes"""
 abstract type AbstractNode{P <: AbstractPhase} end
 
-"""Default node type"""
 abstract type GenericNode{P} <: AbstractNode{P} end
 
-"""Node
-
-A struct that represents a node in the xml file
-
-node: EzXML node
-index: the index of the node on its own branch
-date: a floating number representation for the date
-soup: EzXML root node
-"""
 struct Node{N <: AbstractNode}
     node::EzXML.Node
     index::Int64

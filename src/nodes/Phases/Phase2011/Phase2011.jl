@@ -15,6 +15,11 @@ upperbound = date_to_float(2011,4,0)
 date_to_phase[(1901.0,upperbound)] = Phase2011
 
 
+"""
+define_flags(node::Node{<:AbstractNode{Phase2011}},parent_node,node_tree)
+
+Added petition and quote nodes on top of the previous flags
+"""
 function define_flags(node::Node{<:AbstractNode{Phase2011}},parent_node,node_tree)
     ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode,PetitionNode]
     if parent_node isa Node{QuoteNode_{Phase2011}} && !(node_tree[end-1] isa Node{DebateNode{Phase2011}})

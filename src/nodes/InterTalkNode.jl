@@ -2,12 +2,20 @@ export InterTalkNode
 
 abstract type InterTalkNode{P} <: AbstractNode{P} end
 
+"""
+get_xpaths(::Type{<:InterTalkNode})
 
+The default setting for what nodenames are allowed for intertalknode.
+"""
 function get_xpaths(::Type{<:InterTalkNode})
     return ["talk.start"]
 end
 
+"""
+process_node(node::Node{<:InterTalkNode},node_tree)
 
+The default setting for processing intertalknodes.
+"""
 function process_node(node::Node{<:InterTalkNode},node_tree)
     text_node = findfirst_in_subsoup(node.node.path,node.soup,"//talk.text")
     if isnothing(text_node)
@@ -28,13 +36,21 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
     return construct_row(node,node_tree,flags,talker_contents,content)
 end
 
+"""
+get_sections(::Type{<:InterTalkNode})
 
+The default setting for the sections where intertalknodes are processed
+"""
 function get_sections(::Type{<:InterTalkNode})
     return [Node{<:InterjectionNode}]
 end
 
 
+"""
+is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
 
+This function checks if the given xml node is of nodetype InterTalkNode
+"""
 function is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
@@ -53,7 +69,11 @@ function parse_node(node::Node{<:InterTalkNode},node_tree,io)
     write_row_to_io(io,row)
 end
 
+"""
+get_talker_from_parent(::Type{InterTalkNode},parent_node)
 
+Get the talker information from the parentnode.
+"""
 function get_talker_from_parent(::Type{InterTalkNode},parent_node)
     soup = parent_node.soup
     parent_node = parent_node.node
