@@ -4,7 +4,7 @@
 **/*.pdf
 **/*.txt
 **/*.pyc
-**/*.html
+#**/*.html
 **/*.xml
 **/*.zip
 **/*.tar.gz
