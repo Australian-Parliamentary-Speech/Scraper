@@ -1,4 +1,4 @@
-#To install and run the package
+# To install and run the package
 git clone git@github.com:Australian-Parliamentary-Speech/Scraper.git
 In the directory where run file is, run:
 ```
