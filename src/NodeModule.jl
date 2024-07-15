@@ -14,7 +14,7 @@ export parse_node
 export detect_phase
 export GenericPhase
 export AbstractPhase
-export find_headers
+export define_headers
 
 abstract type AbstractPhase end
 

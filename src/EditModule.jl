@@ -204,7 +204,12 @@ function edit_interjections(row,header_to_num)
 end
 
 function replace_known_beginning(s,beginning)
-    regs = [Regex("^$(beginning):"),r"The SPEAKER:"]
+    cell = try
+        Regex("^$(beginning):")
+    catch LoadError
+        Regex("^$(beginning)):")
+    end
+    regs = [cell,r"The SPEAKER:"]
     for reg in regs
         m = match(reg, s)
         if m !== nothing

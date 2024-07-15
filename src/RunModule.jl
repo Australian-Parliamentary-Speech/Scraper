@@ -107,11 +107,12 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     xdoc = readxml(fn)
     soup = root(xdoc)
     date_float,date = get_date(fn)
+    @show date
     PhaseType = detect_phase(date_float)
     outputcsv = joinpath(output_path,"$date.csv")
     if !(csv_exist) 
         open(outputcsv, "w") do io
-            headers = find_headers(PhaseType)
+            headers = define_headers(PhaseType)
             @debug methods(find_headers)
             write_row_to_io(io,headers)
             recurse(soup,date_float,PhaseType,soup,io)

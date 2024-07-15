@@ -11,4 +11,4 @@
 [ general_options ]
     csv_exist = false
     edit = true
-    year = [2008,2011]
+    year = [1950,1960]
