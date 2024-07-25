@@ -129,7 +129,7 @@ end
 
 
 """
-reverse_find_first_node_not_name(node_tree, names)
+revers_find_first_node_not_name(node_tree, names)
 
 Inputs:
 - `node_tree`: A vector representing a tree of nodes to search in reverse order.
