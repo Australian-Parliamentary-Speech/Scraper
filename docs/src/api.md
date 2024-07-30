@@ -1,5 +1,7 @@
 # API
 
+Here we start with the description of the user interface regarding inputs and outputs. Details about some structurally important functions are listed after.
+
 ## Inputs
 The input xml files live in the directory src/Inputs/, and specifically where they live is specified in the toml file. For example, as currently stated in Inputs/hansard/hansard.toml, the xmls live in src/Inputs/hansard/xmls. You can define your own toml and your own directory of where the xmls live. To run the program, head to the src/ directory and run:
 
@@ -44,6 +46,10 @@ For a directory of xmls:
     edit = true
     year = [1900,2024]
 ```
+
+## Outputs
+
+Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.
 
 ## ParlinfoSpeechScraper
 
