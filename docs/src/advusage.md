@@ -1,4 +1,4 @@
-# Tutorials
+# Advanced Usage
 
 ## How to introduce a new node to the algorithm
 

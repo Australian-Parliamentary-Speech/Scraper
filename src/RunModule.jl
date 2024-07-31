@@ -104,23 +104,31 @@ Inputs:
 - `edit_opt`: Boolean flag indicating if the CSV file should be edited after creation.
 """
 function run_xml(fn,output_path,csv_exist,edit_opt)
-    xdoc = readxml(fn)
-    soup = root(xdoc)
-    date_float,date = get_date(fn)
-    @show date
-    PhaseType = detect_phase(date_float)
-    outputcsv = joinpath(output_path,"$date.csv")
-    if !(csv_exist) 
-        open(outputcsv, "w") do io
-            headers = define_headers(PhaseType)
-            @debug methods(find_headers)
-            write_row_to_io(io,headers)
-            recurse(soup,date_float,PhaseType,soup,io)
+    error_files = []
+    try
+        xdoc = readxml(fn)
+        soup = root(xdoc)
+        date_float,date = get_date(fn)
+        @show date
+        PhaseType = detect_phase(date_float)
+        outputcsv = joinpath(output_path,"$date.csv")
+        if !(csv_exist) 
+            open(outputcsv, "w") do io
+                headers = define_headers(PhaseType)
+                @debug methods(find_headers)
+                write_row_to_io(io,headers)
+                recurse(soup,date_float,PhaseType,soup,io)
+            end
         end
+        ###Edit
+        if edit_opt
+            edit_csv(outputcsv,PhaseType)
+        end
+    catch
+        push!(error_files,fn)
     end
-    ###Edit
-    if edit_opt
-        edit_csv(outputcsv,PhaseType)
+    open("Outputs/hansard/log_failed_files.txt", "w") do file
+        println(file, error_files)
     end
 end
 

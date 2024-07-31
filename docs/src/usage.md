@@ -1,4 +1,4 @@
-# API
+# Usage
 
 Here we start with the description of the user interface regarding inputs and outputs. Details about some structurally important functions are listed after.
 
@@ -50,38 +50,5 @@ For a directory of xmls:
 ## Outputs
 
 Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.
-
-## ParlinfoSpeechScraper
-
-The ParlinfoSpeechScraper processes the xml files iteratively down the node tree. It reads the xml file from top down and processes one node at a time until it exhausts all content in the xml file. 
-
-```@meta
-CurrentModule = ParlinfoSpeechScraper
-```
-
-```@autodocs
-Modules = [ParlinfoSpeechScraper]
-```
-
-## RunModule
-```@meta
-CurrentModule = ParlinfoSpeechScraper.RunModule
-```
-
-```@autodocs
-Modules = [RunModule]
-```
-
-## XMLModule
-
-```@meta
-CurrentModule = ParlinfoSpeechScraper.RunModule.EditModule
-```
-
-```@autodocs
-Modules = [EditModule]
-```
-
-
 
 

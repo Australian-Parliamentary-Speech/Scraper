@@ -15,13 +15,14 @@ makedocs(
     sitename = "ParlinfoSpeechScraper Documentation",
     modules = [ParlinfoSpeechScraper],
     pages = [
-    "API" => "api.md",
     "ParlinfoSpeechScraper" => "index.md",
+    "Usage" => "usage.md",
+    "Advanced Usage" => "advusage.md",
     "Nodes" => "nodes.md",
-    "Tutorials" => "tute.md"
+    "Function references" => "functionreference.md"
     ]
     )
 
 deploydocs(repo = "github.com/Australian-Parliamentary-Speech/Scraper.git")
 
-
+#python3 -m http.server --bind localhost
