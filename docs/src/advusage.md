@@ -1,4 +1,4 @@
-# Advanced Usage
+# Advanced usage
 
 ## How to introduce a new node to the algorithm
 
