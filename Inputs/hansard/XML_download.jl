@@ -130,17 +130,22 @@ end
 
 #############################################
 function sitemap_run()
-    #where to start?
-    year_to_start = 2024
+    #set up
+    year_to_start = 1901
+    dir_step1 = "sitemap_xmls_step1"
+    dir_step2 = "sitemap_htmls_step2"
+    create_dir("$(dir_step1)/")
+    create_dir("$(dir_step2)/")
     #what is the path of the csv file containing all xml links?
     fn = "xml_urls_sitemap.csv" 
+ 
 
     #first step
     print("Starting the first step to get the xml files...")
-    get_xml_files_sitemap_step1()
+#    get_xml_files_sitemap_step1(dir_step1)
     #second step
     print("Starting the second step to download all html files ...")
-    step2_run(year_to_start)
+    step2_run(year_to_start,dir_step1,dir_step2)
     #third step
     print("Starting the third step to write xml links into a csv...")
     sitemap_get_xml_links_step3(fn)
@@ -149,7 +154,7 @@ function sitemap_run()
     download_xml_from_file(fn="xml_urls_final.csv","-","\t")
 end
 
-function get_xml_files_sitemap_step1()
+function get_xml_files_sitemap_step1(dir)
     url = "https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml"
     download_xml(url,"xml_for_step1.xml")
     xdoc = readxml("xml_for_step1.xml")
@@ -159,16 +164,16 @@ function get_xml_files_sitemap_step1()
     fn = 1
     for ele in eles
         link = elements(ele)[1].content
-        download_xml(link,"pat_xmls_step1/$fn.xml")
+        download_xml(link,"$dir/$fn.xml")
         fn+=1
         @show fn
     end
 end
 
-function step2_run(year_to_start)
+function step2_run(year_to_start,dir1,dir2)
     file_count = 0
     n_total = 0
-    filelist = readdir("pat_xmls_step1/")
+    filelist = readdir("$dir1/")
     filelist_len = length(filelist)
     for index in 1:filelist_len
         continue_ = true
@@ -176,7 +181,7 @@ function step2_run(year_to_start)
             xml_file = filelist[index]
             @show xml_file
             try
-                file_count, n_total = download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start)
+                file_count, n_total = download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start,dir1,dir2)
                 continue_ = false
             catch e
                 print("Waiting for Internet to respond...") 
@@ -189,7 +194,7 @@ function step2_run(year_to_start)
 end
 
 #956477 -- n_total
-function download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start)
+function download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start,dir1,dir2)
     function if_link_hansard(link)
         return occursin("hansardr80",link) || occursin("hansardr",link)
     end
@@ -202,7 +207,7 @@ function download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start)
     end
 
     dates = []
-    xdoc = readxml("pat_xmls_step1/$xml_file")
+    xdoc = readxml("$(dir1)/$xml_file")
     soup = root(xdoc)
     eles = elements(soup)
     prev_link = " "
@@ -221,9 +226,9 @@ function download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start)
                 date = find_date_subsoup(dsoup)
                 if date != "N/A"
                     year = split(date,"-")[3]
-                    if year >= year_to_start
+                    if parse(Int,year) >= year_to_start
 
-                        filename = "pat_htmls_step2/$(date)_number$(n_total).html"
+                        filename = "$(dir2)/$(date)_number$(n_total).html"
                         open(filename, "w") do file
                             write(file,html_content)
                         end
@@ -238,7 +243,7 @@ function download_html_roadmap_step2(xml_file,file_count,n_total,year_to_start)
 end
 
 function find_date_subsoup(soup)
-    try
+    date = try
         subsoup = eachmatch(sel"div.twoBoxForm",soup)[2]
         div = eachmatch(sel"div.metaPadding",subsoup)[1]
         date_soup = eachmatch(sel"p.mdItem",div)[1]
@@ -249,13 +254,13 @@ function find_date_subsoup(soup)
     return date
 end
 
-function sitemap_get_xml_links_step3(xmlcsvfn)
-    filelist = readdir("pat_htmls_step2/")
+function sitemap_get_xml_links_step3(xmlcsvfn,dir2)
+    filelist = readdir("$(dir2)/")
     open(xmlcsvfn, "w") do io
         println(io,join(["date","xml_link","pdf_link"],"\t"))
         for file in filelist
             @show file
-            text = read("pat_htmls_step2/$file", String)
+            text = read("$(dir2)/$file", String)
             doc = Gumbo.parsehtml(text)
             soup = doc.root
             date = find_date_subsoup(soup)
