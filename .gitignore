@@ -4,8 +4,8 @@
 **/*.pdf
 **/*.txt
 **/*.pyc
-#**/*.html
+**/*.html
 **/*.xml
 **/*.zip
 **/*.tar.gz
-Inputs/hansard/XML_download.jl
+Inputs/hansard/download_utils.jl
