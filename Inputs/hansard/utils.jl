@@ -1,7 +1,16 @@
 using HTTP
 using DataFrames
 using Gumbo
+using CSV
 include("download_utils.jl")
+
+#overwrites csv2
+function csv_concatenate(fn1,fn2)
+    csv1 = CSV.File(fn1) |> DataFrame
+    csv2 = CSV.File(fn2) |> DataFrame
+    csv_combined = reduce(vcat,(csv1,csv2))
+    CSV.write(csv_combined,csv2)
+end
 
 function create_dir(directory::AbstractString)
     if !isdir(directory)

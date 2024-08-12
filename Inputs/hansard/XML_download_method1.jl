@@ -18,19 +18,21 @@ include("utils.jl")
 #step7: add the xml links into the existing file if exists.
 function sitemap_run()
     today_ = today()
+    previous_exist = false
     url = "https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml"
-    inter_csv_path = "inter_csvs"
+    inter_csv_path = "sitemap_inter_csvs"
     create_dir(inter_csv_path)
     dir_step1 = "sitemap_xmls_step1"
     step1(url,dir_step1)
 
     step2_html_fn = "$(inter_csv_path)/sitemap_html_step2_$(today_).csv"
     step2_exist_fn = filter(x -> occursin("sitemap_html_step2", x), readdir("$inter_csv_path/"))
-    step2(dir_step1,step2_html_fn)
+    n_total = step2(dir_step1,step2_html_fn)
     step2_missing_fn = "$(inter_csv_path)/sitemap_html_step2_missing.csv"
     step2_final_fn = if length(step2_exist_fn) != 0
         step3("$(inter_csv_path)/$(step2_exist_fn[1])",step2_html_fn,step2_missing_fn)
         step2_missing_fn
+        previous_exist = true
     else
         step2_html_fn
     end
@@ -46,6 +48,22 @@ function sitemap_run()
     dir_step6 = "sitemap_xmls"
     create_dir(dir_step6)
     step6(step5_xml_fn,dir_step6)
+
+    open("n_total.txt","w") do io
+        println(io,n_total)
+    end
+    
+    if previous_exist 
+        previous_html_fn = step2_exist_fn
+        extra_html_fn = step2_missing_fn
+        csv_concatenate(step2_exist_fn,step2_missing_fn)
+        previous_xml_fn = filter(x -> occursin("sitemap_xml_step5", x), readdir("$inter_csv_path/"))[1]
+        extra_xml_fn = step5_xml_fn
+        csv_concatenate(previous_xml_fn,extra_xml_fn)
+    end
+
+ 
+
 end
 
 function step6(step5_xml_fn,dir_step6)
@@ -169,6 +187,7 @@ function step2(dir_step1,step2_html_fn)
             end
         end
     end
+    return n_total
 end
 
 function step1(url,dir_step1)
