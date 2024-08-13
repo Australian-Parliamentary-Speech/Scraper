@@ -5,11 +5,11 @@ using CSV
 include("download_utils.jl")
 
 #overwrites csv2
-function csv_concatenate(fn1,fn2)
-    csv1 = CSV.File(fn1) |> DataFrame
-    csv2 = CSV.File(fn2) |> DataFrame
+function csv_concatenate(fn1,fn2,fn)
+    csv1 = CSV.File(fn1,delim="\t") |> DataFrame
+    csv2 = CSV.File(fn2,delim="\t") |> DataFrame
     csv_combined = reduce(vcat,(csv1,csv2))
-    CSV.write(csv_combined,csv2)
+    CSV.write(fn,csv_combined)
 end
 
 function create_dir(directory::AbstractString)

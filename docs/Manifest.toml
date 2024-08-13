@@ -389,7 +389,7 @@ uuid = "efcefdf7-47ab-520b-bdef-62a2eaa19f15"
 version = "10.42.0+1"
 
 [[deps.ParlinfoSpeechScraper]]
-deps = ["AndExport", "ArgParse", "BetterInputFiles", "CSV", "Cascadia", "DataFrames", "Downloads", "EzXML", "Gumbo", "HTTP", "InteractiveUtils", "Reexport", "Revise"]
+deps = ["AndExport", "ArgParse", "BetterInputFiles", "CSV", "Cascadia", "DataFrames", "Downloads", "EzXML", "Gumbo", "HTTP", "InteractiveUtils", "ProgressMeter", "Reexport", "Revise"]
 path = "/home/eve/Development/ParlinfoSpeechScraper/"
 uuid = "3fb2ed58-985e-428b-9a27-55663dc902eb"
 version = "0.1.0"
@@ -432,6 +432,12 @@ version = "2.3.2"
 [[deps.Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[[deps.ProgressMeter]]
+deps = ["Distributed", "Printf"]
+git-tree-sha1 = "8f6bc219586aef8baf0ff9a5fe16ee9c70cb65e4"
+uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
+version = "1.10.2"
 
 [[deps.REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
