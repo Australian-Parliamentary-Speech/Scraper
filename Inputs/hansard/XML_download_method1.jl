@@ -14,7 +14,7 @@ include("utils.jl")
 function main()
     today_ = today()
     create_dir("sitemap_logfiles/") 
-    io = open("sitemap_logfiles/log_$today_.text","w+")
+    io = open("sitemap_logfiles/log_$today_.txt","w+")
     logger = SimpleLogger(io)
     with_logger(logger) do
         sitemap_run()
@@ -162,13 +162,14 @@ function step3(step2_exist_fn,step2_html_fn,step2_missing_fn)
     html_exist = readlines(step2_exist_fn)
     html_new = readlines(step2_html_fn)
     #performance check
-    html_missing = html_new[html_new .∉ Ref(html_exist)]
-#    html_missing = setdiff(html_new,html_exist)
+#    html_missing = html_new[html_new .∉ Ref(html_exist)]
+    html_missing = setdiff(html_new,html_exist)
     open(step2_missing_fn,"w") do io
         println(io,"html")
+
+        @info "The missing number of html links is $(length(html_missing))"
         for html in html_missing
             println(io,html)
-            @info "The missing number of html links is $(length(html_missing))"
         end
     end
 end

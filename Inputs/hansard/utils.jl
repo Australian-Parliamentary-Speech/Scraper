@@ -6,10 +6,10 @@ include("download_utils.jl")
 
 #overwrites csv2
 function csv_concatenate(fn1,fn2,fn)
-    csv1 = CSV.File(fn1,delim="\t") |> DataFrame
-    csv2 = CSV.File(fn2,delim="\t") |> DataFrame
+    csv1 = CSV.File(fn1,delim='\t') |> DataFrame
+    csv2 = CSV.File(fn2,delim='\t') |> DataFrame
     csv_combined = reduce(vcat,(csv1,csv2))
-    CSV.write(fn,csv_combined)
+    CSV.write(fn,csv_combined; delim='\t')
 end
 
 function create_dir(directory::AbstractString)
