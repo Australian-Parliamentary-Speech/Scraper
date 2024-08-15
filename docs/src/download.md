@@ -1,6 +1,12 @@
 # Downloading the XML files
 
-We use the sitemap provided by <https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml> to download the XML files. The sitemap contains a list of XML links which then provide with the html pages where the links for the debate XML pages were provided. Here we give a brief overlook on the steps the program takes to download the XMLs and the information in the logfile if anything goes wrong. All csv files will be stored in **sitemap\_inter\_csvs/**. All files live in **ParlinfoSpeechScraper/Inputs/hansard/**.
+We use the sitemap provided by <https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml> to download the XML files. The sitemap contains a list of XML links which then provide with the html pages where the links for the debate XML pages were provided. Here we give a brief overlook on the steps the program takes to download the XMLs and the information in the logfile if anything goes wrong. All csv files will be stored in **sitemap\_inter\_csvs/**. All files live in **ParlinfoSpeechScraper/Download/**.
+
+To update or run for the first time, head to the Download/ directory and run
+
+```console
+julia XML_Download_method1.jl
+```
 
 ## Step 1: download the first layer XML pages 
 

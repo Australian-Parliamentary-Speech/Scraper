@@ -9,18 +9,24 @@ using Dates
 using ProgressMeter
 using Logging
 include("utils.jl")
-
+#todo: what is going on with the compare and update. and what is going on with logging
 #this is the function you run
 function main()
     today_ = today()
-    create_dir("sitemap_logfiles/") 
-    io = open("sitemap_logfiles/log_$today_.txt","w+")
-    logger = SimpleLogger(io)
-    with_logger(logger) do
-        sitemap_run()
+    inter_csv_path = "sitemap_inter_csvs"
+    exist_today = filter(x -> occursin("$today_", x), readdir("$inter_csv_path/"))
+    if length(exist_today) != 0
+        @error "today's file already exist, running risk overwriting. pleasde delete them first"
+    else
+        create_dir("sitemap_logfiles/") 
+        logio = open("sitemap_logfiles/log_$today_.txt","w+")
+        logger = SimpleLogger(logio)
+        with_logger(logger) do
+            sitemap_run(inter_csv_path)
+        end
+        flush(logio)
+        close(logio)
     end
-    flush(io)
-    close(io)
 end
 
 #step1: extract all xml links from the first url
@@ -30,11 +36,10 @@ end
 #step5: extract the missing xml links into a new csv
 #step6: download those xmls into their respective folders.
 #step7: add the xml links into the existing file if exists.
-function sitemap_run()
+function sitemap_run(inter_csv_path)
     today_ = today()
     previous_exist = false
     url = "https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml"
-    inter_csv_path = "sitemap_inter_csvs"
     dir_step1 = "sitemap_xmls_step1"
 
     create_dir(inter_csv_path)
@@ -43,6 +48,7 @@ function sitemap_run()
     step2_html_fn = "$(inter_csv_path)/sitemap_html_step2_$(today_).csv"
     step2_exist_fn = filter(x -> occursin("sitemap_html_step2", x), readdir("$inter_csv_path/"))
     n_total = step2(dir_step1,step2_html_fn)
+    @info n_total
     step2_missing_fn = "$(inter_csv_path)/sitemap_html_step2_missing.csv"
     step2_final_fn = if length(step2_exist_fn) != 0
         step3("$(inter_csv_path)/$(step2_exist_fn[1])",step2_html_fn,step2_missing_fn)
@@ -62,7 +68,6 @@ function sitemap_run()
     dir_step6 = "sitemap_xmls"
     create_dir(dir_step6)
     step6(step5_xml_fn,dir_step6)
-    @info n_total
    
     if previous_exist 
         previous_html_fn = "$(inter_csv_path)/$(step2_exist_fn[1])"
