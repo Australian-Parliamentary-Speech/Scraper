@@ -8,6 +8,10 @@ To update or run for the first time, head to the Download/ directory and run
 julia XML_Download_method1.jl
 ```
 
+## logfile
+The logfiles are in sitemap\_logfiles/. It contains information on how many links in total were detected (to compare with the parlinfo website) and how many missing were updated from this run.
+
+
 ## Step 1: download the first layer XML pages 
 
 The first step downloads each XML page provided by the first sitemap. Each of these pages would contain a list of HTML links. This step will run every time regardless if previous runs were conducted. The reason for that is this first link gets updated with overwritten names everytime. 
