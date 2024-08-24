@@ -30,6 +30,8 @@ struct Node{N <: AbstractNode}
     date::Float64
     soup
 end
+get_nodetype(::Node{N}) where {N} = N
+get_phasetype(::Node{N}) where {P <: AbstractPhase, N <: AbstractNode{P}} = P
 
 #Get Default Nodes
 const node_path = joinpath(@__DIR__, "nodes")
@@ -151,6 +153,8 @@ end
 """
 detect_node_type(node, node_tree, date, soup, PhaseType)
 
+default setting:
+
 Inputs:
 - `node`: The XML node to determine the type for.
 - `node_tree`: A vector representing a tree of nodes
@@ -172,6 +176,8 @@ end
 """
 parse_node(node::Node, node_tree, io)
 
+default setting:
+
 Inputs:
 - `node`: xml node of Node struct
 - `node_tree`: A vector representing a tree of nodes for context.
@@ -184,7 +190,7 @@ end
 """
 process_node(node::Node, node_tree)
 
-This function serves as a placeholder or default behavior.
+default setting:
 
 Inputs:
 - `node`: xml node of Node struct
@@ -198,8 +204,84 @@ function process_node(node::Node,node_tree)
     nothing
 end
 
+function get_relink(node)
+    if hasprevnode(node)
+        prev = prevnode(node)
+        return n -> linknext!(prev, n)
+    elseif hasnextnode(node)
+        next = nextnode(node)
+        return n -> linkprev!(next, n)
+    end
+    parent = parentnode(node)
+    return n -> link!(parent, n)
+end
+
+"""
+"""
+function write_test_xml(trigger_node, parent_node, edge_case)
+    log_node = string(nameof(get_nodetype(trigger_node)))
+    log_phase = string(nameof(get_phasetype(trigger_node)))
+    dir_name = joinpath(@__DIR__, "../test/xmls/$log_phase/")
+    create_dir(dir_name)
+    fn = "$(log_node)_$(edge_case).xml"
+    fn_orig_doc = "$(log_node)_$(edge_case)_orig_doc.xml"
+    fn_curr_doc = "$(log_node)_$(edge_case)_curr_doc.xml"
+    fpath = joinpath(dir_name, fn)
+    fpath_orig_doc = joinpath(dir_name, fn_orig_doc)
+    fpath_curr_doc = joinpath(dir_name, fn_curr_doc)
+    if !isfile(fpath)
+        orig_doc = string(document(trigger_node.node))
+        write(fpath_orig_doc, orig_doc)
+
+        doc = XMLDocument()
+        elm = ElementNode("root")
+        setroot!(doc, elm)
+
+        tree_parent = parent_node.node
+        tree_parent_relink! = get_relink(tree_parent)
+        unlink!(tree_parent)
+        link!(elm, tree_parent)
+        
+        parent = parentnode(trigger_node.node)
+        parent_relink! = get_relink(parent)
+        unlink!(parent)
+        link!(tree_parent, parent)
+
+        node = trigger_node.node
+
+        next_siblings = []
+        while (hasnextnode(node))
+            next = nextnode(node)
+            push!(next_siblings, next)
+            unlink!(next)
+        end
+
+        write(fpath, doc)
+
+        unlink!(tree_parent)
+        tree_parent_relink!(tree_parent)
+        
+        unlink!(parent)
+        parent_relink!(parent)
+
+        prior = node
+ 
+        for next in next_siblings
+            unlink!(next)
+            linknext!(prior, next)
+            prior = next
+        end
+
+        curr_doc = string(document(trigger_node.node))
+        write(fpath_curr_doc, curr_doc)
+        @assert orig_doc == curr_doc 
+    end
+end
+
 """
 is_nodetype(node, node_tree, nodetype::Type{<:AbstractNode}, phase::Type{<:AbstractPhase}, soup, args...; kwargs...)
+
+default setting:
 
 Inputs:
 - `node`: The XML node to evaluate.

@@ -14,19 +14,24 @@ function process_node(node::Node{<:PNode},node_tree)
     allowed_names = get_xpaths(nodetype)
     #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     parent_node = node_tree[end]
+    
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         talker_contents = get_talker_from_parent(nodetype,parent_node)
         if all(i->(i=="N/A"), talker_contents)
+            edge_case = "no_talker_block_from_parent"
             name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
             if !isnothing(name)
+                edge_case = "any_name_from_parent"
                 talker_contents[1] = name.content
             end
+        else
+            edge_case = "exist_talker_block_in_parent"
         end
-
     else
-        talker_contents = find_talker_in_p(node)
+        talker_contents,edge_case = find_talker_in_p(node)
     end 
     flags = define_flags(node,parent_node,node_tree)
+    write_test_xml(node, parent_node, edge_case) 
     return construct_row(node,node_tree,flags,talker_contents,node.node.content)
 end
 
@@ -58,9 +63,16 @@ If the p_node is not the first p_node, we check if there is a talker inside the 
 function find_talker_in_p(p_node)
     p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker)
-        return [clean_text(p_with_a_as_parent(p_node)),"N/A","N/A","N/A","N/A","N/A"]
+        content = clean_text(p_with_a_as_parent(p_node))
+        if content != "N/A"
+            edge_case = "p_with_a_as_parent"
+        else
+            edge_case = "found_nothing"
+        end
+        return [content,"N/A","N/A","N/A","N/A","N/A"],edge_case
     else
-        return [clean_text(p_talker.content),"N/A","N/A","N/A","N/A","N/A"]
+        edge_case = "found_a_in_p_block"
+        return [clean_text(p_talker.content),"N/A","N/A","N/A","N/A","N/A"],edge_case
     end
 end
 

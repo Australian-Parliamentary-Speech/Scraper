@@ -5,17 +5,17 @@ using Test
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 
-@testset verbose = true "ParlinfoSpeechScraper.jl" begin
 
-    @test skip=true "Phase2024" begin
-        RunModule.run_xml("xmls/test.xml",dirname(@__FILE__))
+@testset verbose = true "some problem" begin
 
-        result = open("2023-12-07.csv", "r") do io
-            read(io)
-        end
+    @test begin
+        RunModule.run_xml("xmls/test.xml",dirname(@__FILE__),false,true)
+        true
+
+#        result = open("2023-12-07.csv", "r") do io
+#            read(io)
+#        end
     end
-
-
 end
 
 

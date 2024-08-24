@@ -105,29 +105,34 @@ Inputs:
 """
 function run_xml(fn,output_path,csv_exist,edit_opt)
     error_files = []
+    xdoc = nothing
     try
         xdoc = readxml(fn)
-        soup = root(xdoc)
-        date_float,date = get_date(fn)
-        @show date
-        PhaseType = detect_phase(date_float)
-        outputcsv = joinpath(output_path,"$date.csv")
-        if !(csv_exist) 
-            open(outputcsv, "w") do io
-                headers = define_headers(PhaseType)
-                @debug methods(find_headers)
-                write_row_to_io(io,headers)
-                recurse(soup,date_float,PhaseType,soup,io)
-            end
-        end
-        ###Edit
-        if edit_opt
-            edit_csv(outputcsv,PhaseType)
-        end
-    catch
+    catch e
+        @debug e
         push!(error_files,fn)
     end
-    open("Outputs/hansard/log_failed_files.txt", "w") do file
+    if isnothing(xdoc)
+        return
+    end
+    soup = root(xdoc)
+    date_float,date = get_date(fn)
+    @show date
+    PhaseType = detect_phase(date_float)
+    outputcsv = joinpath(output_path,"$date.csv")
+    if !(csv_exist) 
+        open(outputcsv, "w") do io
+            headers = define_headers(PhaseType)
+            @debug methods(define_headers)
+            write_row_to_io(io,headers)
+            recurse(soup,date_float,PhaseType,soup,io)
+        end
+    end
+    ###Edit
+    if edit_opt
+        edit_csv(outputcsv,PhaseType)
+    end
+    open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
 end
