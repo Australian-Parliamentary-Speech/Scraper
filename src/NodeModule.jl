@@ -206,7 +206,7 @@ end
 
 
 """
-Writes the test xmls
+Writes the test xmls for all edge cases
 """
 function write_test_xml(trigger_node, parent_node, edge_case)
     function get_relink(node)
