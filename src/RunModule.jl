@@ -110,6 +110,7 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
         xdoc = readxml(fn)
     catch e
         @debug e
+        @show e
         push!(error_files,fn)
     end
     if isnothing(xdoc)
@@ -135,6 +136,7 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
+    return date
 end
 
 """

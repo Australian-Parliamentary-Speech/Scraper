@@ -233,21 +233,36 @@ function write_test_xml(trigger_node, parent_node, edge_case)
         orig_doc = string(document(trigger_node.node))
         write(fpath_orig_doc, orig_doc)
 
+        #get time block
+        soup = trigger_node.soup
+        time_node = parentnode(findfirst("//session.header/date",soup))
+        time_relink! = get_relink(time_node)
+
         doc = XMLDocument()
         elm = ElementNode("root")
         setroot!(doc, elm)
 
+        unlink!(time_node)
+        link!(elm,time_node)
+
         tree_parent = parent_node.node
         tree_parent_relink! = get_relink(tree_parent)
         unlink!(tree_parent)
-        link!(elm, tree_parent)
-        
+        linknext!(time_node, tree_parent)
+
         parent = parentnode(trigger_node.node)
         parent_relink! = get_relink(parent)
         unlink!(parent)
         link!(tree_parent, parent)
 
         node = trigger_node.node
+
+        prev_siblings = []
+        while (hasprevnode(node))
+            prior = prevnode(node)
+            push!(prev_siblings,prior)
+            unlink!(prior)
+        end
 
         next_siblings = []
         while (hasnextnode(node))
@@ -257,6 +272,8 @@ function write_test_xml(trigger_node, parent_node, edge_case)
         end
 
         write(fpath, doc)
+        unlink!(time_node)
+        time_relink!(time_node)
 
         unlink!(tree_parent)
         tree_parent_relink!(tree_parent)
@@ -264,8 +281,15 @@ function write_test_xml(trigger_node, parent_node, edge_case)
         unlink!(parent)
         parent_relink!(parent)
 
-        prior = node
- 
+        prev_siblings = prev_siblings
+        post = node
+        for prior in prev_siblings
+            unlink!(prior)
+            linkprev!(post,prior)
+            post = prior
+        end
+
+        prior = node 
         for next in next_siblings
             unlink!(next)
             linknext!(prior, next)
@@ -274,7 +298,9 @@ function write_test_xml(trigger_node, parent_node, edge_case)
 
         curr_doc = string(document(trigger_node.node))
         write(fpath_curr_doc, curr_doc)
-        @assert orig_doc == curr_doc 
+        @assert orig_doc == curr_doc
+        rm(fpath_curr_doc)
+        rm(fpath_orig_doc)        
     end
 end
 
