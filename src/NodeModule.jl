@@ -204,21 +204,22 @@ function process_node(node::Node,node_tree)
     nothing
 end
 
-function get_relink(node)
-    if hasprevnode(node)
-        prev = prevnode(node)
-        return n -> linknext!(prev, n)
-    elseif hasnextnode(node)
-        next = nextnode(node)
-        return n -> linkprev!(next, n)
-    end
-    parent = parentnode(node)
-    return n -> link!(parent, n)
-end
 
 """
+Writes the test xmls
 """
 function write_test_xml(trigger_node, parent_node, edge_case)
+    function get_relink(node)
+        if hasprevnode(node)
+            prev = prevnode(node)
+            return n -> linknext!(prev, n)
+        elseif hasnextnode(node)
+            next = nextnode(node)
+            return n -> linkprev!(next, n)
+        end
+        parent = parentnode(node)
+        return n -> link!(parent, n)
+    end
     log_node = string(nameof(get_nodetype(trigger_node)))
     log_phase = string(nameof(get_phasetype(trigger_node)))
     dir_name = joinpath(@__DIR__, "../test/xmls/$log_phase/")
@@ -277,7 +278,7 @@ function write_test_xml(trigger_node, parent_node, edge_case)
 
         unlink!(tree_parent)
         tree_parent_relink!(tree_parent)
-        
+
         unlink!(parent)
         parent_relink!(parent)
 
