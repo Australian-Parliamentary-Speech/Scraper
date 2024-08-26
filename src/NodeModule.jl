@@ -344,6 +344,9 @@ end
 Writes the test xmls for all edge cases
 """
 function write_test_xml(trigger_node, parent_node, edge_case)
+    if isnothing(edge_case)
+        return 
+    end
     function get_relink(node)
         if hasprevnode(node)
             prev = prevnode(node)

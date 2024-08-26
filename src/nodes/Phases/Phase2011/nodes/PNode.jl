@@ -68,6 +68,7 @@ end
 function process_node(node::Node{PNode{Phase2011}},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
+    edge_case = nothing
     #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     if length(node_tree) > 0
         parent_node = node_tree[end]
@@ -81,10 +82,12 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
             end
 
         else
-            talker_contents = find_talker_in_p(node)
+            talker_contents,edge_case = find_talker_in_p(node)
         end
 
         flags = define_flags(node,parent_node,node_tree)
+
+        write_test_xml(node, parent_node, edge_case) 
     else
         talker_contents = ["N/A" for i in 1:6]
         flags = define_flags(node,node,node_tree)
@@ -92,15 +95,5 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     return construct_row(node,node_tree,flags,talker_contents,node.node.content)
 end
 
-
-function find_talker_in_p(p_node::Node{PNode{Phase2011}})
-    p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
-    if isnothing(p_talker)
-        content = clean_text(p_with_a_as_parent(p_node))
-        return [content,"N/A","N/A","N/A","N/A","N/A"]
-    else
-        return [clean_text(p_talker.content),"N/A","N/A","N/A","N/A","N/A"]
-    end
-end
 
 

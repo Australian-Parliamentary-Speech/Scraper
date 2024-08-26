@@ -15,6 +15,7 @@ function process_node(node::Node{<:PNode},node_tree)
     #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     parent_node = node_tree[end]
     
+    edge_case = nothing
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         talker_contents = get_talker_from_parent(nodetype,parent_node)
         if all(i->(i=="N/A"), talker_contents)
@@ -55,12 +56,13 @@ function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_t
     end
 end
 
+
 """
 find_talker_in_p(p_node)
 
 If the p_node is not the first p_node, we check if there is a talker inside the p_node.
 """
-function find_talker_in_p(p_node::Node{<:PNode})
+function find_talker_in_p(p_node)
     p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker)
         content = clean_text(p_with_a_as_parent(p_node))
