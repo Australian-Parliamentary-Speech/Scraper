@@ -337,7 +337,6 @@ function construct_row(node,node_tree,flags,talker_contents,content)
     debateinfo =  find_section_title(node,node_tree,node.soup,DebateNode)
     subdebateinfo =  find_section_title(node,node_tree,node.soup,SubdebateNode)
     row = [flags...,talker_contents...,clean_text(content),subdebateinfo,debateinfo,node.node.path]
-#    @assert length(row) == 12
     return row
 end
 

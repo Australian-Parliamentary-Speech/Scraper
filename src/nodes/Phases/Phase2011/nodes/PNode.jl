@@ -23,11 +23,19 @@ A different method to detect if the pnode is the first pnode for this phase
 """
 function is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_names,node_tree)
     if typeof(parent_node) <: Node{<:MotionnospeechNode}
+        write_test_xml(node,parent_node,"is_first_p_node_motionnospeech")
         return true
     end
-    try
-        return nodename(prevnode(prevnode(node.node))) == "talker"
-    catch
+    
+    if hasprevnode(prevnode(node.node))
+        if nodename(prevnode(prevnode(node.node))) == "talker"
+            write_test_xml(node,parent_node,"is_first_p_node_talker") 
+            return true
+        else
+            write_test_xml(node,parent_node,"do_not_find_talker_in_parent") 
+            return false
+        end
+    else
         return false
     end
 end
@@ -40,6 +48,10 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{Phase2
     if name in allowed_names
         if length(node_tree) == 0
             @info "para without parent detected"
+            dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup)
+            parent_node = Node{AbstractNode{phase}}(soup,1,0.0,soup)
+            edge_case = "para_without_parent" 
+            write_test_xml(dummy_node,parent_node,edge_case) 
             return true
         else
             section_types = get_sections(nodetype)
@@ -80,5 +92,15 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     return construct_row(node,node_tree,flags,talker_contents,node.node.content)
 end
 
+
+function find_talker_in_p(p_node::Node{PNode{Phase2011}})
+    p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
+    if isnothing(p_talker)
+        content = clean_text(p_with_a_as_parent(p_node))
+        return [content,"N/A","N/A","N/A","N/A","N/A"]
+    else
+        return [clean_text(p_talker.content),"N/A","N/A","N/A","N/A","N/A"]
+    end
+end
 
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root><session.header>
+    <date>2023-02-06</date>
+    <parliament.no>2</parliament.no>
+    <session.no>1</session.no>
+    <period.no>0</period.no>
+    <chamber>House of Reps</chamber>
+    <page.no>0</page.no>
+    <proof>0</proof>
+  </session.header><speech>
+            <talk.start>
+              <talker>
+                <page.no>33</page.no>
+                <time.stamp/>
+                <name role="metadata">Bates, Stephen MP</name>
+                <name.id>300246</name.id>
+                <electorate>Brisbane</electorate>
+                <party>AG</party>
+                <in.gov/>
+                <first.speech/>
+              </talker>
+            </talk.start>
+            <talk.text>
+              
+            </talk.text>
+            <interjection>
+              <talk.start>
+                <talker>
+                  <page.no>33</page.no>
+                  <time.stamp/>
+                  <name role="metadata">Dick, Milton MP (The SPEAKER)</name>
+                  <name.id>53517</name.id>
+                  <electorate>Oxley</electorate>
+                  <party>ALP</party>
+                  <in.gov/>
+                  <first.speech/>
+                </talker>
+              </talk.start>
+              <talk.text>
+              </talk.text>
+            </interjection>
+            <interjection>
+              <talk.start>
+                <talker>
+                  <page.no>33</page.no>
+                  <time.stamp/>
+                  <name role="metadata">Chandler-Mather, Max MP</name>
+                  <name.id>300121</name.id>
+                  <electorate>Griffith</electorate>
+                  <party>AG</party>
+                  <in.gov/>
+                  <first.speech/>
+                </talker>
+              </talk.start>
+              <talk.text>
+              </talk.text>
+            </interjection>
+          <body xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" background="" style=""><p class="HPS-Normal" style="direction:ltr;unicode-bidi:normal;">
+                  <span class="HPS-Normal">
+                    <a href="53517" type="MemberInterjecting">
+                      <span class="HPS-MemberInterjecting">The SPEAKER:</span>
+                    </a>  Is the motion seconded?</span>
+                </p></body></speech></root>

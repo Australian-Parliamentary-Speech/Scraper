@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root><session.header>
+    <date>2023-02-06</date>
+    <parliament.no>2</parliament.no>
+    <session.no>1</session.no>
+    <period.no>0</period.no>
+    <chamber>House of Reps</chamber>
+    <page.no>0</page.no>
+    <proof>0</proof>
+  </session.header><speech>
+            <talk.start>
+              <talker>
+                <page.no>1</page.no>
+                <time.stamp/>
+                <name role="metadata">Templeman, Susan MP</name>
+                <name.id>181810</name.id>
+                <electorate>Macquarie</electorate>
+                <party>ALP</party>
+                <in.gov/>
+                <first.speech/>
+              </talker>
+            </talk.start>
+            <talk.text>
+              
+            </talk.text>
+          <body xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" background="" style=""><p class="HPS-Normal" style="direction:ltr;unicode-bidi:normal;">
+                  <span class="HPS-Normal">
+                    <a href="181810" type="MemberSpeech">
+                      <span class="HPS-MemberSpeech" style="&#10;    font-family:;&#10;  ">Ms TEMPLEMAN</span>
+                    </a> (<span class="HPS-Electorate" style="&#10;    font-family:;&#10;  ">Macquarie</span>) (<span class="HPS-Time">10:01</span>):  I present the fourth report of the Petitions Committee for the 47th Parliament.</span>
+                </p></body></speech></root>

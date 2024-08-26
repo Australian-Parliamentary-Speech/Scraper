@@ -1,11 +1,12 @@
 .env/
+Inputs/**/*.xml
+Download/**/*.xml
 **/*.csv
 **/*.png
 **/*.pdf
 **/*.txt
 **/*.pyc
 **/*.html
-**/*.xml
 **/*.zip
 **/*.tar.gz
 Inputs/hansard/download_utils.jl
