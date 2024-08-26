@@ -7,14 +7,20 @@ function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
-    try
-        title = find_section_title(node,node_tree,soup,DebateNode)
+    title = find_section_title(node,node_tree,soup,DebateNode)
+    if name in allowed_names
         if title == "QUESTIONS WITHOUT NOTICE"
-            return name in allowed_names
+            return true
         else
+            if length(node_tree)>0
+                dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup)
+                parent_node = node_tree[end-1]
+                edge_case = "question_node_not_question_time"
+                write_test_xml(dummy_node,parent_node,edge_case)
+            end
             return false
         end
-    catch
+    else
         return false
     end
 end

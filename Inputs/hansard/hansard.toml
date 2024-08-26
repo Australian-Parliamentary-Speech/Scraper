@@ -11,4 +11,4 @@
 [ general_options ]
     csv_exist = false
     edit = true
-    year = [2023,2024]
+    year = [2023,2023]

@@ -110,7 +110,6 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
         xdoc = readxml(fn)
     catch e
         @debug e
-        @show e
         push!(error_files,fn)
     end
     if isnothing(xdoc)
