@@ -53,10 +53,9 @@ function edit_csv(fn,::Type{<:AbstractPhase})
         write_row_to_io(io,string.(headers_))
         for row in rows
             if !is_written[row_index]
-                if !is_stage_direction(row,header_to_num)
+                if !is_stage_direction(row,header_to_num) && row_index < length(rows)
                     row_ = @. collect(row)
                     row = row_[1]
-
                     name_pos = header_to_num[:name]
                     content_pos = header_to_num[:content]
                     talker = row[name_pos]
@@ -68,7 +67,6 @@ function edit_csv(fn,::Type{<:AbstractPhase})
                     row = row_[1]
                 end
                 write_row_to_io(io,row)
-
             end
             row_index += 1
         end
@@ -90,26 +88,23 @@ function find_all_child_speeches(row_no,rows,header_to_num,is_written)
     #    end
 
     content = ""
-    while row_no != length(rows)   
-        @show row_no
-        while !stop_before_next_talker(row_no+1,rows,header_to_num,log)         
-            row = rows[row_no+1]
-            row_ = @. collect(row)
-            row = row_[1]
-            content_ = row[header_to_num[:content]]
-            content *= content_
-            row_no += 1
-            is_written[row_no] = true
+    while !(stop_before_next_talker(row_no+1,rows,header_to_num,log)) && (row_no < length(rows))
+        row = rows[row_no+1]
+        row_ = @. collect(row)
+        row = row_[1]
+        content_ = row[header_to_num[:content]]
+        content *= content_
+        row_no += 1
+        is_written[row_no] = true
+        if row_no == length(rows)
+            return content,is_written
         end
-        return content,is_written
     end
     return content,is_written
 end
 
 function stop_before_next_talker(row_no,rows,header_to_num,log)
     if is_stage_direction(rows[row_no],header_to_num)
-
-        @show row_no
 #        row = rows[row_no]
 #        row = @. collect(row)
 #        @show row[1][header_to_num[:content]]

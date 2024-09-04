@@ -1,5 +1,0 @@
-[ global ]
-    output_path = "../../Outputs/test_1909"
-
-[[ XML ]]
-    filename = "1909-12-08.xml"
