@@ -10,3 +10,6 @@ Download/**/*.xml
 **/*.zip
 **/*.tar.gz
 Inputs/hansard/download_utils.jl
+sgml2xml/download_utils.jl
+sgml2xml/**/*.xml
+sgml2xml/**/*.sgm

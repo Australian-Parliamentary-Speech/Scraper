@@ -9,6 +9,8 @@ using Dates
 using ProgressMeter
 using Logging
 include("utils.jl")
+
+
 #todo: what is going on with the compare and update. and what is going on with logging
 #this is the function you run
 function main()
