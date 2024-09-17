@@ -16,6 +16,7 @@ function check_csv(curr,correct)
     return file_curr == file_correct
 end 
 
+
 #this set of test looks at before edit only.
 @testset verbose = false "AbstractPhase" begin
     @test  begin
@@ -65,4 +66,35 @@ end
        true         
     end
 end
+
+function get_all_dates(outputpath,testpath)
+    function editrow(row)
+        edit_row = ""
+        for i in row
+            i = replace(string(i), "\"" => "\'")
+            edit_row = edit_row * "\"$i\","
+        end
+    end
+
+    integer_pattern = r"^\d+$"
+    year_dirs = filter(name -> isdir(joinpath(outputpath, name)) && occursin(integer_pattern, name), readdir(outputpath))
+    open(joinpath(testpath,"summary_all_dates.csv"), "w") do io
+        for year_dir in year_dirs
+            dir_ = joinpath(outputpath,year_dir)
+            files = filter(name -> isfile(joinpath(dir_, name)) && endswith(name, "edit_step2.csv"), readdir(dir_))
+            row = [replace(filename, r"_edit_step2\.csv$" => "") for filename in files]
+            write(io,join(vcat([year_dir],row),","),"\n")
+        end
+    end
+end
+
+@testset verbose = true "Summary" begin
+    @test begin
+        path = pathof(ParlinfoSpeechScraper)
+        outputpath = joinpath(dirname(dirname(path)),"Outputs/hansard")
+        get_all_dates(outputpath,@__DIR__)
+        true
+    end
+end
+ 
 
