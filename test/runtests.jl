@@ -2,6 +2,7 @@ using ParlinfoSpeechScraper
 using EzXML
 using InteractiveUtils
 using Test
+using CSV
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 
@@ -84,6 +85,33 @@ function get_all_dates(outputpath,testpath)
             files = filter(name -> isfile(joinpath(dir_, name)) && endswith(name, "edit_step2.csv"), readdir(dir_))
             row = [replace(filename, r"_edit_step2\.csv$" => "") for filename in files]
             write(io,join(vcat([year_dir],row),","),"\n")
+        end
+    end
+
+    open(joinpath(testpath,"summary_speaker_coverage.csv"), "w") do io
+        for year_dir in year_dirs
+            dir_ = joinpath(outputpath,year_dir)
+            files = filter(name -> isfile(joinpath(dir_, name)) && endswith(name, "edit_step2.csv"), readdir(dir_))
+            speaker_no = 0
+            missing_speaker_no = 0
+            for file in files
+                csvfile = CSV.File(joinpath(dir_,file))
+                rows = eachrow(csvfile)
+                headers_ = copy(propertynames(csvfile))
+                header_to_num = RunModule.EditModule.edit_set_up(headers_)
+                for row in rows
+                    if !RunModule.EditModule.is_stage_direction(row,header_to_num)
+                        row = @. collect(row)
+                        row_ = row[1]
+                        if row_[header_to_num[Symbol("name.id")]] != "N/A"
+                            speaker_no += 1
+                        else
+                            missing_speaker_no += 1
+                        end
+                    end
+                end
+            end
+            println(io,join([year_dir, speaker_no, missing_speaker_no, speaker_no/(speaker_no+missing_speaker_no)],","))
         end
     end
 end
