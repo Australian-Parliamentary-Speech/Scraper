@@ -63,18 +63,22 @@ find_talker_in_p(p_node)
 If the p_node is not the first p_node, we check if there is a talker inside the p_node.
 """
 function find_talker_in_p(p_node)
-    p_talker = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
-    if isnothing(p_talker)
-        content = clean_text(p_with_a_as_parent(p_node))
-        if content != "N/A"
+    p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
+    if isnothing(p_talker_soup)
+        content_row = p_with_a_as_parent(p_node)
+        if content_row[1] != "N/A" || content_row[2] != "N/A"
             edge_case = "p_with_a_as_parent"
         else
             edge_case = "found_nothing"
         end
-        return [content,"N/A","N/A","N/A","N/A","N/A"],edge_case
+        return content_row,edge_case
     else
+        p_talker  = findfirst_in_subsoup(p_talker_soup.path,"/@type",p_node.soup)
+        p_talker_id = findfirst_in_subsoup(p_talker_soup.path,"/@href",p_node.soup)
+        p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
+        p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
         edge_case = "found_a_in_p_block"
-        return [clean_text(p_talker.content),"N/A","N/A","N/A","N/A","N/A"],edge_case
+        return [clean_text(p_talker),clean_text(p_talker_id),"N/A","N/A","N/A","N/A"],edge_case
     end
 end
 
@@ -94,15 +98,16 @@ function p_with_a_as_parent(p_node)
             return false
         end
     end
-    if parent_path_check(p_node.node.parentnode.path)
-        p_talkers  = findfirst_in_subsoup(p_node.node.parentnode.path,"/@type",soup)
-        if p_talkers != nothing
-            return  p_talkers.content
-        else
-            return "N/A"
-        end
+    parent_path = p_node.node.parentnode.path
+    if parent_path_check(parent_path)
+        p_talker  = findfirst_in_subsoup(parent_path,"/@type",soup)
+        p_talker_id = findfirst_in_subsoup(parent_path,"/@href",soup)
+        p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
+        p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
+        return [clean_text(p_talker),clean_text(p_talker_id),"N/A","N/A","N/A","N/A"]
+ 
     else
-        return "N/A"
+        return ["N/A" for i in 1:6]
     end
 end
 #args is a list, kwargs is a dictionary
