@@ -1,7 +1,7 @@
 .env/
 Inputs/**/*.xml
 Download/**/*.xml
-**/*.csv
+Outputs/**/*.csv
 **/*.png
 **/*.pdf
 **/*.txt
