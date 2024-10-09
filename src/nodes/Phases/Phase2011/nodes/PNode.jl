@@ -51,7 +51,7 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{Phase2
         if length(node_tree) == 0
             @info "para without parent detected"
             dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup,OrderedDict("a"=>0))
-            parent_node = Node{AbstractNode{phase}}(soup,1,0.0,soup)
+            parent_node = Node{AbstractNode{phase}}(soup,1,0.0,soup, OrderedDict("a"=>0))
             edge_case = "para_without_parent" 
             write_test_xml(dummy_node,parent_node,edge_case) 
             return true
