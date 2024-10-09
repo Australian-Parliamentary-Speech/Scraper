@@ -13,7 +13,7 @@ function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{
             return true
         else
             if length(node_tree)>0
-                dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup)
+                dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup,OrderedDict("a" => 0))
                 parent_node = node_tree[end-1]
                 edge_case = "question_node_not_question_time"
                 write_test_xml(dummy_node,parent_node,edge_case)

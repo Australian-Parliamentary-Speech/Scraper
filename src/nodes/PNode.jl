@@ -17,23 +17,23 @@ function process_node(node::Node{<:PNode},node_tree)
     
     edge_case = nothing
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
-        talker_contents = get_talker_from_parent(nodetype,parent_node)
-        if all(i->(i=="N/A"), talker_contents)
+        get_talker_from_parent(node,parent_node)
+        if node.headers_dict["name"] == "N/A"
             edge_case = "no_talker_block_from_parent"
             name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
             if !isnothing(name)
                 edge_case = "any_name_from_parent"
-                talker_contents[1] = name.content
+                node.headers_dict["name"] = name.content
             end
         else
             edge_case = "exist_talker_block_in_parent"
         end
     else
-        talker_contents,edge_case = find_talker_in_p(node)
+        edge_case = find_talker_in_p(node)
     end 
-    flags = define_flags(node,parent_node,node_tree)
-    write_test_xml(node, parent_node, edge_case) 
-    return construct_row(node,node_tree,flags,talker_contents,node.node.content)
+    define_flags(node,parent_node,node_tree)
+    write_test_xml(node, parent_node, edge_case)
+    return construct_row(node,node_tree)
 end
 
 """
@@ -65,20 +65,22 @@ If the p_node is not the first p_node, we check if there is a talker inside the 
 function find_talker_in_p(p_node)
     p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker_soup)
-        content_row = p_with_a_as_parent(p_node)
-        if content_row[1] != "N/A" || content_row[2] != "N/A"
+        p_with_a_as_parent(p_node)
+        if p_node.headers_dict["name"] != "N/A" || p_node.headers_dict["name.id"] != "N/A"
             edge_case = "p_with_a_as_parent"
         else
             edge_case = "found_nothing"
         end
-        return content_row,edge_case
+        return edge_case
     else
         p_talker  = findfirst_in_subsoup(p_talker_soup.path,"/@type",p_node.soup)
         p_talker_id = findfirst_in_subsoup(p_talker_soup.path,"/@href",p_node.soup)
         p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
         p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
         edge_case = "found_a_in_p_block"
-        return [clean_text(p_talker),clean_text(p_talker_id),"N/A","N/A","N/A","N/A"],edge_case
+        p_node.headers_dict["name"] = clean_text(p_talker)
+        p_node.headers_dict["name.id"] = clean_text(p_talker_id)
+        return edge_case
     end
 end
 
@@ -104,10 +106,8 @@ function p_with_a_as_parent(p_node)
         p_talker_id = findfirst_in_subsoup(parent_path,"/@href",soup)
         p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
         p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
-        return [clean_text(p_talker),clean_text(p_talker_id),"N/A","N/A","N/A","N/A"]
- 
-    else
-        return ["N/A" for i in 1:6]
+        p_node.headers_dict["name"] = clean_text(p_talker)
+        p_node.headers_dict["name.id"] = clean_text(p_talker_id)
     end
 end
 #args is a list, kwargs is a dictionary
@@ -165,7 +165,7 @@ get_talker_from_parent(::Type{<:PNode},parent_node)
 
 If the p_node is the first p_node, we search in the parent to find the talker.
 """
-function get_talker_from_parent(::Type{<:PNode},parent_node)
+function get_talker_from_parent(node::Node{<:PNode},parent_node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
@@ -179,15 +179,14 @@ function get_talker_from_parent(::Type{<:PNode},parent_node)
     end
 
     talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
-    if isnothing(talker_node)
-        return ["N/A" for i in 1:length(talker_xpaths)]
-    else
-        talker_contents = []
-        for xpath in talker_xpaths
+    headers = ["name","name.id","electorate","party","role","page.no"]
+    header_and_xpath = zip(headers,talker_xpaths)
+    if !isnothing(talker_node)
+        for hx in header_and_xpath
+            header,xpath = hx
             talker_content = find_content(xpath)
-            push!(talker_contents,talker_content)
+            node.headers_dict[header]=talker_content         
         end
-        return talker_contents
     end
 end
 

@@ -1,6 +1,7 @@
 module RunModule
 using InteractiveUtils
 using Reexport
+using OrderedCollections
 
 export run_ParlinfoSpeechScraper
 export get_year
@@ -122,10 +123,10 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     outputcsv = joinpath(output_path,"$date.csv")
     if !(csv_exist) 
         open(outputcsv, "w") do io
-            headers = define_headers(PhaseType)
+            headers_dict = define_headers(PhaseType)
             @debug methods(define_headers)
-            write_row_to_io(io,headers)
-            recurse(soup,date_float,PhaseType,soup,io)
+            write_row_to_io(io,collect(keys(headers_dict)))
+            recurse(soup,date_float,PhaseType,soup,io,headers_dict)
         end
     end
     ###Edit
@@ -156,7 +157,7 @@ Inputs:
 - `max_depth` (optional): The maximum depth for recursion (default is 0, meaning no limit).
 - `node_tree` (optional): A vector maintaining the tree of nodes (default is an empty vector).
 """
-function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
+function recurse(soup, date, PhaseType, xml_node, io, headers_dict, index=1,depth=0, max_depth=0, node_tree=Vector{Node}())
     # If max_depth is defined, and depth has surpassed, don't do anything
     if (max_depth > 0) && (depth > max_depth)
         return nothing
@@ -173,12 +174,12 @@ function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth
     NodeType = detect_node_type(xml_node, node_tree, date,soup,PhaseType)
     # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
-        node = Node{NodeType{PhaseType}}(xml_node,index,date,soup)
+        node = Node{NodeType{PhaseType}}(xml_node,index,date,soup,headers_dict)
         @debug "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
     else
         @debug "$(ins)NodeType: GenericNode"
-        node = Node{GenericNode{GenericPhase}}(xml_node,index,date,soup)
+        node = Node{GenericNode{GenericPhase}}(xml_node,index,date,soup,headers_dict)
     end
 
     # Next, recurse into any subnodes
@@ -194,7 +195,7 @@ function recurse(soup, date, PhaseType, xml_node, io, index=1,depth=0, max_depth
             push!(subnode_tree, node)
         end
         for (i,subnode) in enumerate(subnodes)
-            recurse(soup,date,PhaseType,subnode,io,i,depth+1,max_depth,subnode_tree)
+            recurse(soup,date,PhaseType,subnode,io,headers_dict,i,depth+1,max_depth,subnode_tree)
         end
     end
 end

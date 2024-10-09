@@ -3,6 +3,7 @@
 
 module NodeModule
 using InteractiveUtils
+using OrderedCollections
 using EzXML
 using ..XMLModule
 using ..Utils
@@ -29,7 +30,9 @@ struct Node{N <: AbstractNode}
     index::Int64
     date::Float64
     soup
+    headers_dict::OrderedDict{String,Any}
 end
+
 get_nodetype(::Node{N}) where {N} = N
 get_phasetype(::Node{N}) where {P <: AbstractPhase, N <: AbstractNode{P}} = P
 
@@ -57,9 +60,6 @@ for dir in readdir(phase_path, join=true)
     end
 end
 
-function define_headers(::Type{<:AbstractPhase})
-    return ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
-end
 
 """
 detect_phase(date)
@@ -284,12 +284,12 @@ Returns:
 function find_chamber(node,node_tree)
     chamber_node = reverse_find_first_node_name(node_tree,vcat(get_xpaths(ChamberNode),get_xpaths(FedChamberNode)))
     if chamber_node isa Node{<:FedChamberNode}
-        return 2
+        return node.headers_dict["chamber_flag"] = 2
     elseif chamber_node isa Node{<:ChamberNode}
-        return 1
+        return node.headers_dict["chamber_flag"] = 1
     else
 #        @error "no chamber is found"
-        return 0
+        return node.headers_dict["chamber_flag"] = 0
     end
 end
 
@@ -307,10 +307,13 @@ Returns:
 """
 function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,node_tree)
     ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag"]
     flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
+    header_and_flag = zip(headers,flags)
+    for couple in header_and_flag
+        node.headers_dict[couple[1]] = couple[2]
+    end
     chamber = find_chamber(node,node_tree)
-    push!(flags,chamber)
-    return flags
 end
 
 
@@ -320,9 +323,6 @@ construct_row(node, node_tree, flags, talker_contents, content)
 Inputs:
 - `node`: A `Node` struct.
 - `node_tree`: A vector representing a tree of nodes for context.
-- `flags`: An array of flags indicating characteristics of `node`.
-- `talker_contents`: Contents related to speakers or talkers associated with `node`.
-- `content`: Raw content associated with `node`.
 
 Returns:
 - An array (`row`) representing the data to be written to a CSV file. The row includes:
@@ -333,12 +333,23 @@ Returns:
   - Section title for `DebateNode`, if found.
   - XPath path of `node` within the XML document.
 """
-function construct_row(node,node_tree,flags,talker_contents,content)
+function construct_row(node,node_tree)
     debateinfo =  find_section_title(node,node_tree,node.soup,DebateNode)
     subdebateinfo =  find_section_title(node,node_tree,node.soup,SubdebateNode)
-    row = [flags...,talker_contents...,clean_text(content),subdebateinfo,debateinfo,node.node.path]
+    node.headers_dict["content"] = clean_text(node.node.content)
+    node.headers_dict["subdebateinfo"] = subdebateinfo
+    node.headers_dict["debateinfo"] = debateinfo
+    node.headers_dict["path"] = node.node.path
+    row = collect(values(node.headers_dict))
     return row
 end
+
+function define_headers(::Type{<:AbstractPhase})
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+    headers_dict = OrderedDict(headers .=> ["N/A" for h in headers])
+    return headers_dict
+end
+
 
 """
 Writes the test xmls for all edge cases

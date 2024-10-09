@@ -48,7 +48,7 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{Phase2
     if name in allowed_names
         if length(node_tree) == 0
             @info "para without parent detected"
-            dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup)
+            dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup,OrderedDict("a"=>0))
             parent_node = Node{AbstractNode{phase}}(soup,1,0.0,soup)
             edge_case = "para_without_parent" 
             write_test_xml(dummy_node,parent_node,edge_case) 
@@ -73,26 +73,22 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     if length(node_tree) > 0
         parent_node = node_tree[end]
         if is_first_node_type(node,parent_node,allowed_names,node_tree)
-            talker_contents = get_talker_from_parent(nodetype,parent_node)
-            if all(i->(i=="N/A"), talker_contents)
+            get_talker_from_parent(node,parent_node)
+            if node.headers_dict["name"] == "N/A"
                 name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
                 if !isnothing(name)
-                    talker_contents[1] = name.content
+                    node.headers_dict["name"] = name.content
                 end
             end
 
         else
-            talker_contents,edge_case = find_talker_in_p(node)
+            edge_case = find_talker_in_p(node)
         end
-
-        flags = define_flags(node,parent_node,node_tree)
-
-        write_test_xml(node, parent_node, edge_case) 
+        define_flags(node,parent_node,node_tree)
     else
-        talker_contents = ["N/A" for i in 1:6]
-        flags = define_flags(node,node,node_tree)
+        define_flags(node,node,node_tree)
     end
-    return construct_row(node,node_tree,flags,talker_contents,node.node.content)
+    return construct_row(node,node_tree)
 end
 
 

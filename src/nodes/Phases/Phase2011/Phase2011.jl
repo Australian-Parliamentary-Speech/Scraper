@@ -25,15 +25,20 @@ function define_flags(node::Node{<:AbstractNode{Phase2011}},parent_node,node_tre
 #    if parent_node isa Node{QuoteNode_{Phase2011}} && !(node_tree[end-1] isa Node{DebateNode{Phase2011}})
 #        parent_node = node_tree[end-1]
 #    end
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag"]
     flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
+    header_and_flag = zip(headers,flags)
+    for couple in header_and_flag
+        node.headers_dict[couple[1]] = couple[2]
+    end
     chamber = find_chamber(node,node_tree)
-    push!(flags,chamber)
-    return flags
 end
 
 
 function define_headers(::Type{Phase2011})
-    return ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+    headers_dict = OrderedDict(headers .=> ["N/A" for h in headers])
+    return headers_dict
 end
 
 

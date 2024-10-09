@@ -23,6 +23,7 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
     else
         content = text_node.content
     end
+    node.headers_dict["content"] = content
 
     allowed_names = get_xpaths(InterTalkNode)
     parent_node = reverse_find_first_node_not_name(node_tree,allowed_names) 
@@ -31,9 +32,9 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
         @assert parent_node_ == parent_node.node
     end
 
-    talker_contents = get_talker_from_parent(InterTalkNode,parent_node)
-    flags = define_flags(node,parent_node,node_tree)
-    return construct_row(node,node_tree,flags,talker_contents,content)
+    get_talker_from_parent(node,parent_node)
+    define_flags(node,parent_node,node_tree)
+    return construct_row(node,node_tree)
 end
 
 """
@@ -74,7 +75,7 @@ get_talker_from_parent(::Type{InterTalkNode},parent_node)
 
 Get the talker information from the parentnode.
 """
-function get_talker_from_parent(::Type{InterTalkNode},parent_node)
+function get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
@@ -88,15 +89,15 @@ function get_talker_from_parent(::Type{InterTalkNode},parent_node)
     end
 
     talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
-    if isnothing(talker_node)
-        return ["N/A" for i in 1:length(talker_xpaths)]
-    else
-        talker_contents = []
-        for xpath in talker_xpaths
+    headers = ["name","name.id","electorate","party","role","page.no"]
+    header_and_xpath = zip(headers,talker_xpaths)
+ 
+    if !isnothing(talker_node)
+        for hx in header_and_xpath
+            header,xpath = hx
             talker_content = find_content(xpath)
-            push!(talker_contents,talker_content)
+            node.headers_dict[header]=talker_content         
         end
-        return talker_contents
     end
 end
 
