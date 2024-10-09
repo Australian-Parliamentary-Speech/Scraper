@@ -2,7 +2,7 @@
     output_path = "../../Outputs/hansard"
 
 #[[ XML ]]
-#    filename = "xmls/2008/2008-12-01.xml"
+#    filename = "xmls/1926/1926_08_05.xml"
 
 
 [[ XML_DIR ]]
@@ -11,4 +11,4 @@
 [ general_options ]
     csv_exist = false
     edit = true
-    year = [1925,1925]
+    year = [1901,2024]

@@ -61,7 +61,8 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
         if ! isabspath(filename)
             filename = joinpath(input_path, filename)
         end
-        push!(xml_paths, filename)
+        year = match(r"/(\d{4})/", filename).captures[1]
+        push!(xml_paths,(year, filename))
     end
 
     # Get all xml paths in a directory with years being the subdirectory
@@ -81,12 +82,11 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     end
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
     edit_opt = toml["GENERAL_OPTIONS"]["EDIT"]
-    for (year,fn) in xml_paths
-        output_path_ = joinpath(output_path,"$year/")
+    Threads.@threads for (year,fn) in xml_paths
+        output_path_ = joinpath(output_path,"$year")
         if !(isdir(fn))
             create_dir(output_path_)
         end
-
         run_xml(fn,output_path_,csv_exist,edit_opt)
     end
 end

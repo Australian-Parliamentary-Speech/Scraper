@@ -26,7 +26,9 @@ function is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_nam
         write_test_xml(node,parent_node,"is_first_p_node_motionnospeech")
         return true
     end
-    
+    if !hasprevnode(node.node)
+        return true
+    end
     if hasprevnode(prevnode(node.node))
         if nodename(prevnode(prevnode(node.node))) == "talker"
             write_test_xml(node,parent_node,"is_first_p_node_talker") 
