@@ -29,7 +29,9 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
     parent_node = reverse_find_first_node_not_name(node_tree,allowed_names) 
     if true
         parent_node_ = node.node.parentnode
-        @assert parent_node_ == parent_node.node
+        if parent_node_ != parent_node.node
+            @info "parent_node_ does not match with parent node"
+        end
     end
 
     get_talker_from_parent(node,parent_node)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../hansard.xsd" version="2.1">
+<root><hansard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../hansard.xsd" version="2.1">
     <session.header>
         <date>1928-03-15</date>
         <parliament.no>10</parliament.no>
@@ -5168,4 +5168,4 @@
         </debate>
         <para class="block">House adjourned at 10.52 p.m. </para>
     </answers.to.questions>
-</hansard>
+</hansard></root>

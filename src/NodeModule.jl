@@ -352,7 +352,7 @@ end
 
 
 """
-Writes the test xmls for all edge cases
+Writes the test xmls for all edge cases: it cannot handle dummy parent as root itself -- soup is getting passed and not document type
 """
 function write_test_xml(trigger_node, parent_node, edge_case)
     if isnothing(edge_case)
@@ -366,6 +366,7 @@ function write_test_xml(trigger_node, parent_node, edge_case)
             next = nextnode(node)
             return n -> linkprev!(next, n)
         end
+
         parent = parentnode(node)
         return n -> link!(parent, n)
     end
@@ -383,7 +384,6 @@ function write_test_xml(trigger_node, parent_node, edge_case)
    if !isfile(fpath)
         orig_doc = string(document(trigger_node.soup))
         write(fpath_orig_doc, orig_doc)
-
         #get time block
         soup = trigger_node.soup
         time_node = parentnode(findfirst("//session.header/date",soup))
@@ -395,7 +395,6 @@ function write_test_xml(trigger_node, parent_node, edge_case)
 
         unlink!(time_node)
         link!(elm,time_node)
-    
         tree_parent = parent_node.node
         parent = parentnode(trigger_node.node)
  
@@ -412,7 +411,6 @@ function write_test_xml(trigger_node, parent_node, edge_case)
         else
             linknext!(time_node,parent)
         end
-
         node = trigger_node.node
         prev_siblings = []
         while (hasprevnode(node))
@@ -439,7 +437,6 @@ function write_test_xml(trigger_node, parent_node, edge_case)
 
         unlink!(parent)
         parent_relink!(parent)
-
         prev_siblings = prev_siblings
         post = node
         for prior in prev_siblings
@@ -447,7 +444,6 @@ function write_test_xml(trigger_node, parent_node, edge_case)
             linkprev!(post,prior)
             post = prior
         end
-
         prior = node 
         for next in next_siblings
             unlink!(next)

@@ -34,6 +34,7 @@ function get_date(fn)
     time = time_node.content
     year,month,day = split(time,"-")
     #turns dates into a float for comparison
+    Base.GC.gc()
     return date_to_float(parse(Int,year),parse(Int,month),parse(Int,day)),time
 end
 
@@ -117,10 +118,8 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     try
         xdoc = readxml(fn)
     catch e
-        @debug e
         push!(error_files,fn)
-    end
-    if isnothing(xdoc)
+        Base.GC.gc()
         return
     end
     soup = root(xdoc)
@@ -143,6 +142,7 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
+    Base.GC.gc()
     return date
 end
 
