@@ -1,5 +1,9 @@
 using Documenter 
 using Pkg
+using CSV, DataFrames
+using Latexify
+using Dates
+
 push!(LOAD_PATH,"../src/")
 Pkg.develop(path = abspath(joinpath(@__DIR__, "../")))
 using ParlinfoSpeechScraper
