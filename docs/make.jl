@@ -12,6 +12,7 @@ DocMeta.setdocmeta!(
     ParlinfoSpeechScraper,
     :DocTestSetup,
     :(using ParlinfoSpeechScraper);
+    :(using CSV);
     recursive = true,
     )
 
