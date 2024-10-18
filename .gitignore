@@ -14,3 +14,5 @@ sgml2xml/download_utils.jl
 sgml2xml/**/*.xml
 sgml2xml/**/*.sgm
 Analysis/*
+/docs/build/
+Manifest.toml
