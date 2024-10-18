@@ -10,6 +10,7 @@ using ParlinfoSpeechScraper
 
 DocMeta.setdocmeta!(
     ParlinfoSpeechScraper,
+    CSV,
     :DocTestSetup,
     :(using ParlinfoSpeechScraper);
     :(using CSV);
