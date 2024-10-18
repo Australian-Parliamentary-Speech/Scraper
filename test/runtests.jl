@@ -6,6 +6,14 @@ using CSV
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 
+
+function create_dir(directory_path::String)
+    if !isdir(directory_path)
+        mkpath(directory_path)
+    end
+end
+
+
 function check_csv(curr,correct)
     file_curr = open(curr, "r") do f
         readlines(f)
@@ -19,31 +27,31 @@ end
 
 
 #this set of test looks at before edit only.
-@testset verbose = false "AbstractPhase" begin
+@testset verbose = false "Step1 and Step2" begin
     @test  begin
-        files = readdir(joinpath(@__DIR__,"xmls/AbstractPhase/"))
-        output_path = joinpath(dirname(@__FILE__),"step1_result/AbstractPhase")
-        for file in files
-            date = RunModule.run_xml(joinpath(@__DIR__,"xmls/AbstractPhase/$file"),output_path,false,false)
-#            mv(joinpath(output_path,"$(date)_edit_step1.csv"),joinpath(output_path,"$(date)_edit_step1_$(file[1:end-4]).csv"),force=true)
-#            mv(joinpath(output_path,"$(date)_edit_step2.csv"),joinpath(output_path,"$(date)_edit_step2_$(file[1:end-4]).csv"),force=true)
-            mv(joinpath(output_path,"$(date).csv"),joinpath(output_path,"$(date)_$(file[1:end-4]).csv"),force=true)
-        end
-        
-        current_files = readdir(output_path)
-        current_csvs = filter(f -> endswith(f, ".csv"), current_files)
-        for file in current_files
-            curr = joinpath(output_path,file)
-            correct = joinpath("$(output_path)/correct/",file)
-            if !check_csv(curr,correct)
-                return false
+        pass = true
+        for Phase in ["AbstractPhase","Phase2011"]
+            files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
+            output_path = joinpath(dirname(@__FILE__),"step1_result/$(Phase)")
+            create_dir(output_path)
+            for file in files
+                date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),output_path,false,false)
+                mv(joinpath(output_path,"$(date).csv"),joinpath(output_path,"$(date)_$(file[1:end-4]).csv"),force=true)
             end
-      end
-    true 
-    end
-end
 
-@testset verbose = true "Edit" begin
+            current_files = filter(f -> endswith(f,".csv"),readdir(output_path))
+            current_csvs = filter(f -> endswith(f, ".csv"), current_files)
+            for file in current_files
+                curr = joinpath(output_path,file)
+                correct = joinpath("$(output_path)/correct/",file)
+                if !check_csv(curr,correct)
+                    pass = false
+                end
+            end
+        end
+        pass
+    end
+
     @test begin
         PhaseType = AbstractPhase
         test_path = joinpath(@__DIR__,"csvs/AbstractPhase")
@@ -64,7 +72,7 @@ end
                 return false
             end
         end
-       true         
+       return true         
     end
 end
 
