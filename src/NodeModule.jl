@@ -317,22 +317,6 @@ function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,no
 end
 
 
-"""
-construct_row(node, node_tree, flags, talker_contents, content)
-
-Inputs:
-- `node`: A `Node` struct.
-- `node_tree`: A vector representing a tree of nodes for context.
-
-Returns:
-- An array (`row`) representing the data to be written to a CSV file. The row includes:
-  - Flags indicating characteristics of `node`.
-  - Talker contents related to speakers or talkers.
-  - Cleaned text content derived from `content`.
-  - Section title for `SubdebateNode`, if found.
-  - Section title for `DebateNode`, if found.
-  - XPath path of `node` within the XML document.
-"""
 function construct_row(node,node_tree)
     debateinfo =  find_section_title(node,node_tree,node.soup,DebateNode)
     subdebateinfo =  find_section_title(node,node_tree,node.soup,SubdebateNode)

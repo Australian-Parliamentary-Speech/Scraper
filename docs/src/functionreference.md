@@ -82,10 +82,6 @@ define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,node_tree)
 ```
 
 ```@docs
-construct_row(node,node_tree,flags,talker_contents,content)
-```
-
-```@docs
 write_test_xml(trigger_node, parent_node, edge_case)
 ```
 

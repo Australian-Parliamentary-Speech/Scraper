@@ -42,7 +42,7 @@ parse_node(node::Node{<:PNode},node_tree,io)
 ```
 
 ```@docs
-get_talker_from_parent(::Type{<:PNode},parent_node)
+get_talker_from_parent(node::Node{<:PNode},parent_node)
 ```
 
 ### InterTalkNode
@@ -64,7 +64,7 @@ is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:Abstr
 ```
 
 ```@docs
-get_talker_from_parent(::Type{InterTalkNode},parent_node)
+get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
 ```
 
 ### Placeholder nodes

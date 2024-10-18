@@ -73,9 +73,9 @@ function parse_node(node::Node{<:InterTalkNode},node_tree,io)
 end
 
 """
-get_talker_from_parent(::Type{InterTalkNode},parent_node)
+get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
 
-Get the talker information from the parentnode.
+Its get the talker information from parent node
 """
 function get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
     soup = parent_node.soup

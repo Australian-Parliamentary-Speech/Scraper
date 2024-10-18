@@ -159,11 +159,10 @@ function parse_node(node::Node{<:PNode},node_tree,io)
     write_row_to_io(io,row)
 end
 
-
 """
-get_talker_from_parent(::Type{<:PNode},parent_node)
+ get_talker_from_parent(node::Node{<:PNode},parent_node)
 
-If the p_node is the first p_node, we search in the parent to find the talker.
+It finds the speaker information from the parent node
 """
 function get_talker_from_parent(node::Node{<:PNode},parent_node)
     soup = parent_node.soup

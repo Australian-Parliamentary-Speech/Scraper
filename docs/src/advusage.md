@@ -49,4 +49,7 @@ date_to_phase[(lowerbound,upperbound)] = PhaseExample
 
 You can then add any new definition for node processing in the "Phases/ExamplePhase/nodes" directory.
 
+## How to add a new flag
+In order to add a new flag, or a new column of content, you would only need to interact with two functions: define\_flags and define\_headers. The dictionary that contains all information gets passed around and content gets added into it as the parsing goes on. The headers\_dict sets all headers to "N/A" to start with and they get overwritten during running. 
+
 
