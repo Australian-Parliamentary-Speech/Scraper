@@ -1,6 +1,4 @@
-.env/
 Inputs/**/*.xml
-Download/**/*.xml
 Outputs/**/*.csv
 **/*.png
 **/*.pdf
@@ -10,9 +8,6 @@ Outputs/**/*.csv
 **/*.zip
 **/*.tar.gz
 Inputs/hansard/download_utils.jl
-sgml2xml/download_utils.jl
-sgml2xml/**/*.xml
-sgml2xml/**/*.sgm
 Analysis/*
 /docs/build/
 Manifest.toml
