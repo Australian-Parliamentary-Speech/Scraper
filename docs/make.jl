@@ -1,19 +1,16 @@
 using Documenter 
 using Pkg
-using CSV, DataFrames
-using Latexify
-using Dates
 
 push!(LOAD_PATH,"../src/")
 Pkg.develop(path = abspath(joinpath(@__DIR__, "../")))
 using ParlinfoSpeechScraper
 
-DocMeta.setdocmeta!(
-    ParlinfoSpeechScraper,
-    :DocTestSetup,
-    :(using ParlinfoSpeechScraper);
-    recursive = true,
-    )
+#DocMeta.setdocmeta!(
+#    ParlinfoSpeechScraper,
+#    :DocTestSetup,
+#    :(using ParlinfoSpeechScraper);
+#    recursive = true,
+#    )
 
 makedocs(
     sitename = "ParlinfoSpeechScraper Documentation",

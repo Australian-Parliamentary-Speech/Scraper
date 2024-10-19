@@ -6,8 +6,8 @@ This page contains some summary statistics we have calculated for our scraping r
 ```@eval
    using CSV, DataFrames
    using Latexify
-   using ParlinfoSpeechScraper
    using Dates
+   using ParlinfoSpeechScraper
 
    current_year = year(today())
 
