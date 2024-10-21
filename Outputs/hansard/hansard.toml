@@ -1,5 +1,5 @@
 [GENERAL_OPTIONS]
-YEAR = [1980, 2024]
+YEAR = [1981, 1997]
 OVERWRITE = true
 CSV_EXIST = false
 EDIT = true
@@ -12,9 +12,9 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Outputs/hansard"
 
 [METADATA]
-TIME = "19:35:13"
+TIME = "14:57:47"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
-DATE = "2024-10-17"
+DATE = "2024-10-21"
 
 [[XML_DIR]]
 PATH = "xmls"

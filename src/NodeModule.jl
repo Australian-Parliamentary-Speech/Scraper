@@ -320,12 +320,20 @@ end
 function construct_row(node,node_tree)
     debateinfo =  find_section_title(node,node_tree,node.soup,DebateNode)
     subdebateinfo =  find_section_title(node,node_tree,node.soup,SubdebateNode)
-    node.headers_dict["content"] = clean_text(node.node.content)
+    node.headers_dict["content"] = node.node.content
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
     node.headers_dict["path"] = node.node.path
     row = collect(values(node.headers_dict))
-    return row
+    row_ = []
+    for r in row
+        if typeof(r) <: Int
+            push!(row_,r)
+        else
+            push!(row_,clean_text(r))
+        end
+    end
+    return row_
 end
 
 function define_headers(::Type{<:AbstractPhase})

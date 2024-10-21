@@ -25,7 +25,7 @@ edit_csv(fn, ::Type{<:AbstractPhase})
 Two steps are implemented here. The first step does mostly regular expression processing. The second step collapses some of the N/As to the previous talker.
 """
 function edit_csv(fn,::Type{<:AbstractPhase})
-    csvfile = CSV.File(fn,quotechar='"')
+    csvfile = CSV.File(fn)
     headers_ = copy(propertynames(csvfile))
     header_to_num = edit_set_up(headers_)
     #any additional headers needed

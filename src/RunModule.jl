@@ -28,13 +28,26 @@ Inputs:
 - `fn`: the file directory for the xml file
 """
 function get_date(fn)
-    xdoc = readxml(fn)
-    soup = root(xdoc)
-    time_node = findfirst("//session.header/date",soup)
-    time = time_node.content
-    year,month,day = split(time,"-")
+    function process_fn(fn)
+        return replace(basename(fn),".xml"=>"")
+    end
+    year,month,day,time = begin
+        try
+            xdoc = readxml(fn)
+            soup = root(xdoc)
+            time_node = findfirst("//session.header/date",soup)
+            time = time_node.content
+            year,month,day = split(time,"-")
+            Base.GC.gc()
+            year,month,day,time
+        catch
+            fn = process_fn(fn)
+            year,month,day = split(fn,"_")
+            time = replace(fn, "_" => "-")
+            year,month,day,time
+        end
+    end
     #turns dates into a float for comparison
-    Base.GC.gc()
     return date_to_float(parse(Int,year),parse(Int,month),parse(Int,day)),time
 end
 
