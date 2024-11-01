@@ -94,11 +94,7 @@ function p_with_a_as_parent(p_node)
     function parent_path_check(parent_path)
         paths = split(parent_path,"/")
         path_end = paths[end]
-        if path_end == 'a' || path_end == "a" || occursin(r"^a\[\d+\]$", path_end)
-            return true
-        else
-            return false
-        end
+        return path_end == 'a' || path_end == "a" || occursin(r"^a\[\d+\]$", path_end)
     end
     parent_path = p_node.node.parentnode.path
     if parent_path_check(parent_path)
@@ -168,6 +164,7 @@ function get_talker_from_parent(node::Node{<:PNode},parent_node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+    print(talker_node)
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
         if isnothing(talker_content_node)
@@ -176,7 +173,6 @@ function get_talker_from_parent(node::Node{<:PNode},parent_node)
             return talker_content_node.content
         end
     end
-
     talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
     headers = ["name","name.id","electorate","party","role","page.no"]
     header_and_xpath = zip(headers,talker_xpaths)
@@ -184,8 +180,9 @@ function get_talker_from_parent(node::Node{<:PNode},parent_node)
         for hx in header_and_xpath
             header,xpath = hx
             talker_content = find_content(xpath)
-            node.headers_dict[header]=talker_content         
+            node.headers_dict[header]=talker_content
         end
+
     end
 end
 

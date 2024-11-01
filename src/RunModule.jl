@@ -110,7 +110,23 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
             end 
         end
    end
+   copy_sample_file(output_path)
 end
+
+function copy_sample_file(output_path)
+    sample_dir = joinpath(@__DIR__,"../","Outputs","upload")
+    for dir in filter(isdir,readdir(output_path,join=true))
+        for fn in readdir(dir,join=true)
+            if occursin("step2",fn)
+                command = `cp $fn $sample_dir`
+                run(command)
+                break
+            end
+        end
+    end
+end
+
+
 
 """
     run_xml(fn, output_path, csv_exist, edit_opt)
@@ -158,6 +174,7 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
     Base.GC.gc()
     return date
 end
+
 
 """
 recurse(soup, date, PhaseType, xml_node, io, index=1, depth=0, max_depth=0, node_tree=Vector{Node}())
