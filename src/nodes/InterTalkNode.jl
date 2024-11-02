@@ -72,35 +72,4 @@ function parse_node(node::Node{<:InterTalkNode},node_tree,io)
     write_row_to_io(io,row)
 end
 
-"""
-get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
-
-Its get the talker information from parent node
-"""
-function get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
-    soup = parent_node.soup
-    parent_node = parent_node.node
-    talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
-    function find_content(xpath)
-        talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
-        if isnothing(talker_content_node)
-            return "N/A"
-        else
-            return talker_content_node.content
-        end
-    end
-
-    talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
-    headers = ["name","name.id","electorate","party","role","page.no"]
-    header_and_xpath = zip(headers,talker_xpaths)
- 
-    if !isnothing(talker_node)
-        for hx in header_and_xpath
-            header,xpath = hx
-            talker_content = find_content(xpath)
-            node.headers_dict[header]=talker_content         
-        end
-    end
-end
-
 

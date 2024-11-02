@@ -1,5 +1,5 @@
 """
-get_xpaths(::Type{PNode{Phase2011}})
+get_xpaths(::Type{PNode{PhaseSGML}})
 
 "para" as accepted xpaths for PNode.
 """
@@ -8,16 +8,17 @@ function get_xpaths(::Type{PNode{PhaseSGML}})
 end
 
 """
-get_sections(::Type{PNode{Phase2011}})
+get_sections(::Type{PNode{PhaseSGML}})
 
 Allowed sections for PNodes.
 """
 function get_sections(::Type{PNode{PhaseSGML}})
     return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:InterjectionNode},Node{<:MotionnospeechNode},Node{<:DebateNode},Node{<:QuoteNode_},Node{<:PetitionNode}]
+           # ,Node{<:InterTalkNode}]
 end
 
 """
-is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_names,node_tree)
+is_first_node_type(node::Node{PNode{PhaseSGML}},parent_node,allowed_names,node_tree)
 
 A different method to detect if the pnode is the first pnode for this phase
 """
@@ -91,37 +92,3 @@ end
 
 
 
-function get_talker_from_parent(node::Node{<:PNode},parent_node)
-    soup = parent_node.soup
-    parent_node = parent_node.node
-    talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
-    function find_content(xpath)
-        talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
-        if isnothing(talker_content_node)
-            return "N/A"
-        else
-            return talker_content_node.content
-        end
-    end
-
-    function find_id(node)
-        if node.headers_dict["name.id"] == "N/A"
-            talker = findfirst_in_subsoup(talker_node.path,"//name",soup)
-            talker_id = findfirst_in_subsoup(talker.path,"/@nameid",soup)
-            node.headers_dict["name.id"] = clean_text(talker_id.content)
-        end
-    end
-
-    talker_xpaths = ["//name","//name.id","//electorate","//party","//role","//page.no"]
-    headers = ["name","name.id","electorate","party","role","page.no"]
-    header_and_xpath = zip(headers,talker_xpaths)
-    if !isnothing(talker_node)
-        for hx in header_and_xpath
-            header,xpath = hx
-            talker_content = find_content(xpath)
-            node.headers_dict[header]=talker_content
-            find_id(node)
-        end
-
-    end
-end
