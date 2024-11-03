@@ -11,5 +11,5 @@
 [ general_options ]
     csv_exist = false
     edit = true
-    year = [1901,2024]
+    year = [1970,1998]
     overwrite = true

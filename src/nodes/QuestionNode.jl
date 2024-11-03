@@ -7,7 +7,7 @@ function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
-    title = find_section_title(node,node_tree,soup,DebateNode)
+    title = find_section_title(node_tree,soup,DebateNode)
     if name in allowed_names
         if title == "QUESTIONS WITHOUT NOTICE"
             return true

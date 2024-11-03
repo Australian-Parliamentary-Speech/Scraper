@@ -241,32 +241,6 @@ function get_xpaths(::Type{<:N}) where {N <: AbstractNode}
     return []
 end
 
-"""find_section_title(node, node_tree, soup, section_type)
-
-Inputs:
-- `node`: The XML node from which to extract the section title.
-- `node_tree`: A vector representing a tree of nodes for context.
-- `soup`: The root node of the XML document.
-- `section_type`: The nodenames of the types of section nodes where the title is wanted. For example, "speech".
-
-Returns:
-- The title of the specified `section_type` found within the XML document, or "N/A" if not found.
-"""
-function find_section_title(node,node_tree,soup,section_type)
-    section_title_path = get_section_title_path(section_type)
-    section_node = reverse_find_first_node_name(node_tree,get_xpaths(section_type))
-    if isnothing(section_node)
-        return "N/A"
-    end
-    title = findfirst_in_subsoup(section_node.node.path,section_title_path,soup)
-    if isnothing(title)
-        return "N/A"
-    else
-        return title.content
-    end
-end
-
-
 """
  get_talker_from_parent(node::Node,parent_node)
 
@@ -276,6 +250,7 @@ function get_talker_from_parent(node::Node,parent_node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
         if isnothing(talker_content_node)
@@ -285,7 +260,6 @@ function get_talker_from_parent(node::Node,parent_node)
         end
     end
 
-
     function find_id(node)
         if node.headers_dict["name.id"] == "N/A"
             talker = findfirst_in_subsoup(talker_node.path,"//name",soup)
@@ -293,6 +267,21 @@ function get_talker_from_parent(node::Node,parent_node)
                 talker_id = findfirst_in_subsoup(talker.path,"/@nameid",soup)
                 if !isnothing(talker_id)
                     node.headers_dict["name.id"] = clean_text(talker_id.content)
+                end
+            end
+        end
+    end
+
+
+    function find_headers_from_node(node,parent_node,headers)
+        talker_xpaths_nodes = ["/@speaker","/@nameid","/@electorate","/@party","/@role","/@page"]
+        header_and_xpath = zip(headers,talker_xpaths_nodes)
+        for hx in header_and_xpath
+            header,xpath = hx
+            if node.headers_dict[header] == "N/A"
+                info = findfirst_in_subsoup(parent_node.path,xpath,soup)
+                if !isnothing(info)
+                    node.headers_dict[header] = info.content
                 end
             end
         end
@@ -307,6 +296,7 @@ function get_talker_from_parent(node::Node,parent_node)
             talker_content = find_content(xpath)
             node.headers_dict[header]=talker_content
             find_id(node)
+            find_headers_from_node(node,parent_node,headers)
         end
 
     end
@@ -362,10 +352,37 @@ function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,no
     chamber = find_chamber(node,node_tree)
 end
 
+"""find_section_title(node_tree, soup, section_type)
+
+Inputs:
+- `node`: The XML node from which to extract the section title.
+- `node_tree`: A vector representing a tree of nodes for context.
+- `soup`: The root node of the XML document.
+- `section_type`: The nodenames of the types of section nodes where the title is wanted. For example, "speech".
+
+Returns:
+- The title of the specified `section_type` found within the XML document, or "N/A" if not found.
+"""
+function find_section_title(node_tree,soup,section_type)
+    section_node = reverse_find_first_node_name(node_tree,get_xpaths(section_type))
+    if isnothing(section_node)
+        return "N/A"
+    end
+    section_title_path = get_section_title_path(typeof(section_node).parameters[1])
+
+    title = findfirst_in_subsoup(section_node.node.path,section_title_path,soup)
+    if isnothing(title)
+        return "N/A"
+    else
+        return title.content
+    end
+end
+
+
 
 function construct_row(node,node_tree)
-    debateinfo =  find_section_title(node,node_tree,node.soup,DebateNode)
-    subdebateinfo =  find_section_title(node,node_tree,node.soup,SubdebateNode)
+    debateinfo =  find_section_title(node_tree,node.soup,DebateNode)
+    subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode)
     node.headers_dict["content"] = node.node.content
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
