@@ -13,8 +13,7 @@ get_sections(::Type{PNode{PhaseSGML}})
 Allowed sections for PNodes.
 """
 function get_sections(::Type{PNode{PhaseSGML}})
-    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:InterjectionNode},Node{<:MotionnospeechNode},Node{<:DebateNode},Node{<:QuoteNode_},Node{<:PetitionNode}]
-           # ,Node{<:InterTalkNode}]
+    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:InterjectionNode},Node{<:MotionnospeechNode},Node{<:DebateNode},Node{<:QuoteNode_},Node{<:PetitionNode},Node{<:InterTalkNode}]
 end
 
 """
