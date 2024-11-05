@@ -16,11 +16,6 @@ function get_sections(::Type{PNode{PhaseSGML}})
     return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:InterjectionNode},Node{<:MotionnospeechNode},Node{<:DebateNode},Node{<:QuoteNode_},Node{<:PetitionNode},Node{<:InterTalkNode}]
 end
 
-"""
-is_first_node_type(node::Node{PNode{PhaseSGML}},parent_node,allowed_names,node_tree)
-
-A different method to detect if the pnode is the first pnode for this phase
-"""
 function is_first_node_type(node::Node{PNode{PhaseSGML}},parent_node,allowed_names,node_tree)
     if typeof(parent_node) <: Node{<:MotionnospeechNode}
         write_test_xml(node,parent_node,"is_first_p_node_motionnospeech")

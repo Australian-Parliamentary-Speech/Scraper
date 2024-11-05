@@ -242,11 +242,11 @@ function get_xpaths(::Type{<:N}) where {N <: AbstractNode}
 end
 
 """
- get_talker_from_parent(node::Node,parent_node)
+get_talker_from_parent(node::Node,parent_node::Node)
 
 It finds the speaker information from the parent node
 """
-function get_talker_from_parent(node::Node,parent_node)
+function get_talker_from_parent(node::Node,parent_node::Node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)

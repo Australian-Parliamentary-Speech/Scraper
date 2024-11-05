@@ -41,10 +41,6 @@ is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{<:AbstractPhase
 parse_node(node::Node{<:PNode},node_tree,io)
 ```
 
-```@docs
-get_talker_from_parent(node::Node{<:PNode},parent_node)
-```
-
 ### InterTalkNode
 xpaths: "talk.start"
 ```@docs
@@ -61,10 +57,6 @@ get_sections(::Type{<:InterTalkNode})
 
 ```@docs
 is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
-```
-
-```@docs
-get_talker_from_parent(node::Node{<:InterTalkNode},parent_node)
 ```
 
 ### Placeholder nodes
@@ -89,7 +81,7 @@ xpaths: "speech", "question", "answer"
 ##### SubdebateNode
 xpaths: "subdebate.1"
 
-## before April 2011
+## before April 2011 (exclude 1981-1997)
 Phase information:
 ### Phase2011
 ```@docs
@@ -117,6 +109,20 @@ xpaths: "petition"
 
 ##### QuoteNode_
 xpaths: "quote"
+
+## 1981-1997 (SGML)
+### PNode
+xpaths: "para"
+```@docs
+get_xpaths(::Type{PNode{PhaseSGML}})
+```
+
+```@docs
+get_sections(::Type{PNode{PhaseSGML}})
+```
+
+
+
 
 
 

@@ -50,6 +50,10 @@ reverse_find_first_node_not_name(node_tree,names)
 ```
 
 ```@docs
+get_talker_from_parent(node::Node,parent_node::Node)
+```
+
+```@docs
 detect_node_type(node,node_tree,date,soup,PhaseType)
 ```
 
@@ -70,7 +74,7 @@ get_xpaths(::Type{<:N}) where {N <: AbstractNode}
 ```
 
 ```@docs
-find_section_title(node,node_tree,soup,section_type)
+find_section_title(node_tree,soup,section_type)
 ```
 
 ```@docs
