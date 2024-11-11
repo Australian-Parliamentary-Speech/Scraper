@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root><session.header>
-<date>2011-02-08</date>
-<parliament.no>43</parliament.no>
+<date>2004-12-09</date>
+<parliament.no>41</parliament.no>
 <session.no>1</session.no>
-<period.no>2</period.no>
+<period.no>1</period.no>
 <chamber>REPS</chamber>
 <page.no>0</page.no>
-<proof>1</proof>
+<proof>0</proof>
 </session.header><motionnospeech>
-<name>Mr ALBANESE</name>
-<electorate>(Grayndler</electorate>
-<role>—Leader of the House)</role>
-<time.stamp>14:14:00</time.stamp>
+<name>Mr McGAURAN</name>
+<electorate>(Gippsland</electorate>
+<role>—Minister for Citizenship and Multicultural Affairs)</role>
+<time.stamp>09:52:00</time.stamp>
 <inline>—by leave—I move:</inline>
-
+<motion><para>That this bill be now read a third time.</para></motion>
 <para>Question agreed to.</para>
-<motion><para>That the following order of the day be referred to the Main Committee for debate: Death of Corporal Richard Edward Atkinson—Copy of the condolence motion moved by the Prime Minister—Motion to take note of the Paper: Resumption of Debate.</para></motion></motionnospeech></root>
+<para>Bill read a third time.</para>
+</motionnospeech></root>

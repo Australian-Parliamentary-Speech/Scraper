@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root><session.header>
-<date>2011-02-08</date>
-<parliament.no>43</parliament.no>
-<session.no>1</session.no>
-<period.no>2</period.no>
-<chamber>REPS</chamber>
-<page.no>0</page.no>
-<proof>1</proof>
-</session.header><business.start><para>
-<inline font-weight="bold">The SPEAKER (Mr Harry Jenkins)</inline> took the chair at 2 pm, made an acknowledgement of country and read prayers.</para></business.start></root>
+        <date>1960-10-25</date>
+        <parliament.no>23</parliament.no>
+        <session.no>2</session.no>
+        <period.no>2</period.no>
+        <chamber>REPS</chamber>
+        <page.no>2297</page.no>
+        <proof>0</proof>
+    </session.header><business.start><para>
+                <inline font-weight="bold">Mr. SPEAKER (Hon. John McLeay)</inline>
+                took the chair at 2.30  p.m., and read prayers.
+            </para></business.start></root>

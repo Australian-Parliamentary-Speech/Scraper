@@ -378,7 +378,13 @@ function find_section_title(node_tree,soup,section_type)
     end
 end
 
-
+function find_p_node_parent(node::Node{<:PNode},node_tree)
+    if node_tree[end] isa Node{<:InterTalkNode}
+        return node_tree[end-1]
+    else
+        return node_tree[end]
+    end
+end
 
 function construct_row(node,node_tree)
     debateinfo =  find_section_title(node_tree,node.soup,DebateNode)
@@ -451,21 +457,11 @@ function write_test_xml(trigger_node, parent_node, edge_case)
         unlink!(time_node)
         link!(elm,time_node)
         tree_parent = parent_node.node
-        parent = parentnode(trigger_node.node)
- 
-        if tree_parent != parent        
-            tree_parent_relink! = get_relink(tree_parent)
-            unlink!(tree_parent)
-            linknext!(time_node, tree_parent)
-        end
 
-        parent_relink! = get_relink(parent)
-        unlink!(parent)
-        if tree_parent != parent
-            link!(tree_parent, parent)
-        else
-            linknext!(time_node,parent)
-        end
+        tree_parent_relink! = get_relink(tree_parent)
+        unlink!(tree_parent)
+        linknext!(time_node, tree_parent)
+
         node = trigger_node.node
         prev_siblings = []
         while (hasprevnode(node))
@@ -485,13 +481,9 @@ function write_test_xml(trigger_node, parent_node, edge_case)
         unlink!(time_node)
         time_relink!(time_node)
         
-        if tree_parent != parent
-            unlink!(tree_parent)
-            tree_parent_relink!(tree_parent)
-        end
+        unlink!(tree_parent)
+        tree_parent_relink!(tree_parent)
 
-        unlink!(parent)
-        parent_relink!(parent)
         prev_siblings = prev_siblings
         post = node
         for prior in prev_siblings

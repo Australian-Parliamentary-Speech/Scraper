@@ -26,7 +26,8 @@ function process_node(node::Node{<:InterTalkNode},node_tree)
     node.headers_dict["content"] = content
 
     allowed_names = get_xpaths(InterTalkNode)
-    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names) 
+    parent_node = node_tree[end]
+#    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     if true
         parent_node_ = node.node.parentnode
         if parent_node_ != parent_node.node

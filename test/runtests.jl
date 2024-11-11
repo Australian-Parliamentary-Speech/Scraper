@@ -19,9 +19,11 @@ function check_csv(curr,correct)
         readlines(f)
     end
 
+
     file_correct = open(correct, "r") do f
         readlines(f)
     end
+
     return file_curr == file_correct
 end 
 

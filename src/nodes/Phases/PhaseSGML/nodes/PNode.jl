@@ -64,7 +64,8 @@ function process_node(node::Node{PNode{PhaseSGML}},node_tree)
     edge_case = nothing
     #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     if length(node_tree) > 0
-        parent_node = node_tree[end]
+#        parent_node = node_tree[end]
+        parent_node = find_p_node_parent(node,node_tree)
         if is_first_node_type(node,parent_node,allowed_names,node_tree)
             get_talker_from_parent(node,parent_node)
             if node.headers_dict["name"] == "N/A"
