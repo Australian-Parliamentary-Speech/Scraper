@@ -1,15 +1,15 @@
 [ global ]
     output_path = "../../Outputs/hansard"
 
-[[ XML ]]
-    filename = "xmls/1901/1901_05_09.xml"
+#[[ XML ]]
+#    filename = "xmls/1901/1901_05_09.xml"
 
 
-#[[ XML_DIR ]]
-#    path = "xmls"
+[[ XML_DIR ]]
+    path = "xmls"
 
 [ general_options ]
     csv_exist = false
     edit = true
-    year = [1928,2024]
-    overwrite = true
+    year = [1901,2011]
+    overwrite = false
