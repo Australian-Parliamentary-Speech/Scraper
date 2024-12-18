@@ -9,7 +9,7 @@ function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{
     name = nodename(node)
     title = find_section_title(node_tree,soup,DebateNode)
     if name in allowed_names
-        if title == "QUESTIONS WITHOUT NOTICE"
+        if title == "QUESTIONS WITHOUT NOTICE" || title == "QUESTIONS"
             return true
         else
             if length(node_tree)>1

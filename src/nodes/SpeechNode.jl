@@ -24,7 +24,7 @@ function is_nodetype(node, node_tree,nodetype::Type{<:SpeechNode},phase::Type{<:
 end
 
 function get_xpaths(::Type{<:SpeechNode})
-    return ["speech","question","answer"]
+    return ["speech","question","answer","continue"]
 end
 
 
