@@ -71,20 +71,22 @@ function edit_set_up(headers)
     return Dict(zip(headers,collect(1:length(headers)))) 
 end
 
+"""
+func_list: a list of function names as string
+editor: a struct with two parameters
+"""
 function edit_main(fn,editor::Editor)
     func_list = editor.edit_funcs
     edit_phase = editor.edit_phase
     funcs = [Symbol(f) for f in func_list]
     func = funcs[1]
-    @show func
-    @show typeof(func)
-    fn = @eval $func(fn,editor.edit_phase)
-    @show fn
-#    for func in funcs
-#        @show func
-#        @show fn
+
+ #   fn = @eval $func(fn,editor.edit_phase)
+    for func in funcs
+        resolved_func = getfield(EditModule, func)
+        fn = resolved_func(fn,editor.edit_phase)
 #        fn = @eval $func(fn,editor.edit_phase)
-#    end
+    end
 end
 
 

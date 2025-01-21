@@ -1,5 +1,4 @@
 function re(fn,::Type{<:AbstractEditPhase})
-    @show "it is run"
     csvfile = CSV.File(fn)
     headers_ = copy(propertynames(csvfile))
     header_to_num = edit_set_up(headers_)
@@ -20,7 +19,6 @@ function re(fn,::Type{<:AbstractEditPhase})
         end
     end
     csvfilestep1 = CSV.File(step1fn)
-    @show step1fn
     return step1fn
 end
 

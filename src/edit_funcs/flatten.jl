@@ -1,8 +1,13 @@
-function flatten(csvfilestep1,::Type{<:AbstractEditPhase})
+function flatten(step1fn,::Type{<:AbstractEditPhase})
+    csvfilestep1 = CSV.File(step1fn)
+    headers_ = copy(propertynames(csvfilestep1))
+    header_to_num = edit_set_up(headers_)
+ 
     rows = eachrow(csvfilestep1)
     row_index = 1
-    is_written = Dict(number => false for number in 1:length(eachrow(csvfile)))
-    step2fn = "$(fn[1:end-4])_edit_step2.csv"
+    is_written = Dict(number => false for number in 1:length(rows))
+    partstep2fn = split(step1fn,"_")[1]
+    step2fn = "$(partstep2fn)_edit_step2.csv"
     open(step2fn, "w") do io
         write_row_to_io(io,string.(headers_))
         for row in rows
