@@ -1,8 +1,9 @@
 [ global ]
     output_path = "../../Outputs/hansard"
 
+###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "xmls/1901/1901_05_09.xml"
+#    filename = "xmls/1905/1905_06_28.xml"
 
 
 [[ XML_DIR ]]
@@ -10,6 +11,6 @@
 
 [ general_options ]
     csv_exist = false
-    edit = true
-    year = [1901,2024]
+    edit = ["re","flatten"]
+    year = [1901,2012]
     overwrite = true

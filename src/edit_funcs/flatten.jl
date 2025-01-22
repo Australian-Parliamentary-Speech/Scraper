@@ -64,13 +64,14 @@ function find_all_child_speeches(row_no,rows,header_to_num,is_written)
     return content,is_written
 end
 
+
 function stop_before_next_talker(row_no,rows,header_to_num,log)
     if is_stage_direction(rows[row_no],header_to_num)
 #        row = rows[row_no]
 #        row = @. collect(row)
 #        @show row[1][header_to_num[:content]]
         return true
-    else
+    else 
         next_row = rows[row_no]
         next_row_ = @. collect(next_row)
         next_row = next_row_[1]

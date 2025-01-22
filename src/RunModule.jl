@@ -96,7 +96,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
         end
     end
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
-    edit_opt = toml["GENERAL_OPTIONS"]["EDIT"]
+    edit_funcs = toml["GENERAL_OPTIONS"]["EDIT"]
     over_write = toml["GENERAL_OPTIONS"]["OVERWRITE"]
     Threads.@threads for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
@@ -104,10 +104,10 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
         outputcsv = joinpath(output_path_,"$date.csv")
         if !(isfile(outputcsv))
             create_dir(output_path_)
-            run_xml(fn,output_path_,csv_exist,edit_opt)
+            run_xml(fn,output_path_,csv_exist,edit_funcs)
         else
             if over_write
-                run_xml(fn,output_path_,csv_exist,edit_opt)
+                run_xml(fn,output_path_,csv_exist,edit_funcs)
             end 
         end
    end
@@ -171,7 +171,7 @@ end
 
 
 """
-    run_xml(fn, output_path, csv_exist, edit_opt)
+    run_xml(fn, output_path, csv_exist, edit_funcs)
 
 Process and save XML data to CSV
 
@@ -181,9 +181,9 @@ Inputs:
 - `fn`: The file path for the XML file.
 - `output_path`: The directory where the processed CSV file will be saved.
 - `csv_exist`: Boolean flag indicating if a CSV file already exists.
-- `edit_opt`: Boolean flag indicating if the CSV file should be edited after creation.
+- `edit_funcs`: list of edit functions
 """
-function run_xml(fn,output_path,csv_exist,edit_opt)
+function run_xml(fn,output_path,csv_exist,edit_funcs)
     error_files = []
     xdoc = nothing
     try
@@ -207,9 +207,9 @@ function run_xml(fn,output_path,csv_exist,edit_opt)
         end
     end
     ###Edit
-    if edit_opt
-        edit_csv(outputcsv,PhaseType)
-    end
+    edit_phase = detect_edit_phase(date)
+    editor = Editor(edit_funcs,edit_phase)    
+    edit_main(outputcsv,editor)
     open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
