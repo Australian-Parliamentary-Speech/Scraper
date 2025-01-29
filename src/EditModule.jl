@@ -7,6 +7,8 @@ export edit_main
 export Editor
 export re
 export flatten
+export AbstractEditPhase
+
 
 abstract type AbstractEditPhase end
 

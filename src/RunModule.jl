@@ -17,7 +17,8 @@ include("NodeModule.jl")
 @reexport using .NodeModule
 
 include("EditModule.jl")
-using .EditModule
+@reexport using .EditModule
+
 
 
 """
