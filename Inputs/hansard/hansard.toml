@@ -12,5 +12,5 @@
 [ general_options ]
     csv_exist = false
     edit = ["re","flatten"]
-    year = [1901,2012]
+    year = [1981,1996]
     overwrite = true
