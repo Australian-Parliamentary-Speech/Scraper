@@ -2,6 +2,8 @@
 
 This page contains some summary statistics we have calculated for our scraping result.
 
+
+
 ## Number of sitting days detected for each year
 ```@eval
    using CSV, DataFrames

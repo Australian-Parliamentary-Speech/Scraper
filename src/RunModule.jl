@@ -119,7 +119,7 @@ function copy_sample_file(output_path)
     sample_dir = joinpath(@__DIR__,"../","Outputs","upload")
     dirs = filter(isdir,readdir(output_path,join=true))   
     for dir in dirs
-        ran = rand(1:length(dirs))
+        ran = 15
         i = 0
         for fn in readdir(dir,join=true)
             if i > ran

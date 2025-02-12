@@ -9,7 +9,7 @@ function is_nodetype(node, node_tree,nodetype::Type{<:SpeechNode},phase::Type{<:
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
     try
-        title = find_section_title(node_tree,soup,DebateNode)
+        title = find_section_title(node_tree,soup,DebateNode{phase})
         if title != "QUESTIONS WITHOUT NOTICE"
             if name == "motionnospeech"
             end

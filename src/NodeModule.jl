@@ -374,7 +374,7 @@ function find_section_title(node_tree,soup,section_type)
     if isnothing(title)
         return "N/A"
     else
-        return title.content
+        return clean_text(title.content)
     end
 end
 
@@ -387,8 +387,9 @@ function find_p_node_parent(node::Node{<:PNode},node_tree)
 end
 
 function construct_row(node,node_tree)
-    debateinfo =  find_section_title(node_tree,node.soup,DebateNode)
-    subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode)
+    phase = get_phasetype(node)
+    debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
+    subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
     node.headers_dict["content"] = node.node.content
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
