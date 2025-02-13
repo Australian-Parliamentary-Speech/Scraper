@@ -62,7 +62,7 @@ find_talker_in_p(p_node)
 
 If the p_node is not the first p_node, we check if there is a talker inside the p_node.
 """
-function find_talker_in_p(p_node)
+function find_talker_in_p(p_node::Node{<:PNode})
     p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker_soup)
         p_with_a_as_parent(p_node)

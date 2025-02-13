@@ -86,20 +86,18 @@ function edit_interjections(row,header_to_num)
             row[header_to_num[:name]] = split_content[1]
             row[header_to_num[:content]] = talker
         end
- 
- 
     end
-
     return row
 end
 
 function replace_known_beginning(s,beginning)
-    cell = try
-        Regex("^$(beginning):")
-    catch LoadError
-        Regex("^$(beginning)):")
+   cell = try
+        Regex("^$(raw"$beginning"):")
+    catch e
+        @show beginning
+        @show e
     end
-    regs = [cell,r"The SPEAKER:"]
+    regs = [cell,r"The SPEAKER:",r"Mr SPEAKER"]
     for reg in regs
         m = match(reg, s)
         if m !== nothing

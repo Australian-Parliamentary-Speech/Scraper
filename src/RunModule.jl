@@ -119,6 +119,9 @@ function copy_sample_file(output_path)
     sample_dir = joinpath(@__DIR__,"../","Outputs","upload")
     dirs = filter(isdir,readdir(output_path,join=true))   
     for dir in dirs
+        if occursin("1977",dir)
+            run(`cp $(joinpath(dir,"1977-08-23_edit_step2.csv")) $sample_dir`)
+        end
         ran = 15
         i = 0
         for fn in readdir(dir,join=true)
