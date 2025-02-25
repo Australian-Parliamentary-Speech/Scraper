@@ -1,0 +1,4 @@
+"question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"
+"0","0","0","0","0","0","1","0","Mr McGAURAN","N/A","N/A","N/A","N/A","N/A","That this bill be now read a third time.","N/A","N/A","/root/motionnospeech/motion/para"
+"0","0","0","0","0","0","1","0","Mr McGAURAN","N/A","N/A","N/A","N/A","N/A","Question agreed to.","N/A","N/A","/root/motionnospeech/para[1]"
+"0","0","0","0","0","0","1","0","Mr McGAURAN","N/A","N/A","N/A","N/A","N/A","Bill read a third time.","N/A","N/A","/root/motionnospeech/para[2]"

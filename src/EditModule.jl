@@ -79,12 +79,14 @@ editor: a struct with two parameters
 """
 function edit_main(fn,editor::Editor)
     func_list = editor.edit_funcs
-    edit_phase = editor.edit_phase
-    funcs = [Symbol(f) for f in func_list]
+    if !isempty(func_list)
+        edit_phase = editor.edit_phase
+        funcs = [Symbol(f) for f in func_list]
     
-    for func in funcs
-        resolved_func = getfield(EditModule, func)
-        fn = resolved_func(fn,editor.edit_phase)
+        for func in funcs
+            resolved_func = getfield(EditModule, func)
+            fn = resolved_func(fn,editor.edit_phase)
+        end
     end
 end
 

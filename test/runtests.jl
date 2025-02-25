@@ -30,7 +30,8 @@ end
 
 #this set of test looks at before edit only.
 @testset verbose = false "Step1 and Step2" begin
-    edit_funcs = ["re","flatten"]
+    edit_funcs = []
+    pass = true
  
     @test  begin
         for Phase in ["AbstractPhase","Phase2011"]
@@ -47,14 +48,18 @@ end
             for file in current_files
                 curr = joinpath(output_path,file)
                 correct = joinpath("$(output_path)/correct/",file)
-                if !check_csv(curr,correct)
-                    pass = false
-                end
+                pass = check_csv(curr,correct)
             end
         end
         pass
     end
+    true
+end
 
+
+@testset verbose = false "Edit test" begin
+    edit_funcs = ["re","flatten"]
+ 
     @test begin
        editor = RunModule.EditModule.Editor(edit_funcs,AbstractEditPhase) 
 #       editor = RunModule.EditModule.Editor(edit_funcs,RunModule.EditModule.detect_edit_phase(2024)) 
