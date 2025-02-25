@@ -318,11 +318,13 @@ Returns:
   - `0` if no chamber node is found.
 """
 function find_chamber(node,node_tree)
-    chamber_node = reverse_find_first_node_name(node_tree,vcat(get_xpaths(ChamberNode),get_xpaths(FedChamberNode)))
+    chamber_node = reverse_find_first_node_name(node_tree,vcat(get_xpaths(ChamberNode),get_xpaths(FedChamberNode),get_xpaths(AnswersToQuestionsNode)))
     if chamber_node isa Node{<:FedChamberNode}
         return node.headers_dict["chamber_flag"] = 2
     elseif chamber_node isa Node{<:ChamberNode}
         return node.headers_dict["chamber_flag"] = 1
+    elseif chamber_node isa Node{<:AnswersToQuestionsNode}
+        return node.headers_dict["chamber_flag"] = 3
     else
 #        @error "no chamber is found"
         return node.headers_dict["chamber_flag"] = 0

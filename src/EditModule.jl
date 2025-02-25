@@ -34,14 +34,14 @@ date_to_phase = Dict()
 range_to_phase = Dict()
 
 # Get Phase Overwrites
-const phase_path = joinpath(func_path,"Phases")
-for dir in readdir(phase_path,join=true)
-    for path in readdir(dir,join=true)
-        if isfile(path)
-            include(path)
-        end
-    end
-end
+#const phase_path = joinpath(func_path,"Phases")
+#for dir in readdir(phase_path,join=true)
+#    for path in readdir(dir,join=true)
+#        if isfile(path)
+#            include(path)
+#        end
+#    end
+#end
 
 function detect_edit_phase(date)
     # See if year has specific phase

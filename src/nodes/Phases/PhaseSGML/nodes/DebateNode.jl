@@ -5,6 +5,6 @@ end
 
 function get_xpaths(::Type{DebateNode{PhaseSGML}})
 #    return ["qwn"]
-    return ["debate","qwn"]
+    return ["debate","qwn","answer.to.qon"]
 end
 
