@@ -2,7 +2,7 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
     csvfilestep1 = CSV.File(step1fn)
     headers_ = copy(propertynames(csvfilestep1))
     header_to_num = edit_set_up(headers_)
- 
+
     rows = eachrow(csvfilestep1)
     row_index = 1
     is_written = Dict(number => false for number in 1:length(rows))
@@ -11,7 +11,7 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
     name_pos = header_to_num[:name]
     content_pos = header_to_num[:content]
     id_pos = header_to_num[Symbol("name.id")]
- 
+
     open(step2fn, "w") do io
         write_row_to_io(io,string.(headers_))
         prev_talker = "None"
@@ -29,13 +29,16 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
                             prev_id = id
                         end
                     end
-                    
-                    prev_row = get_row(rows, row_index-1)
-                    if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1
-                        row[name_pos] = prev_talker
-                        row[id_pos] = prev_id 
+                    if row_index > 1                
+                        prev_row = get_row(rows, row_index-1)
+                if :quote_flag in keys(header_to_num)
+                        if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1
+                            row[name_pos] = prev_talker
+                            row[id_pos] = prev_id 
+                        end
                     end
- 
+                end
+
                     row_content = row[content_pos]
                     children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
                     row[content_pos] = row_content*" $children_content"
@@ -46,12 +49,12 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
 
                 if :quote_flag in keys(header_to_num)
 
-                    if row[header_to_num[:quote_flag]] == 1
+                    if row[header_to_num[:quote_flag]] == 1 && prev_talker != "None"
                         row[name_pos] = prev_talker
                         row[id_pos] = prev_id
                     end
                 end
-                    
+
                 write_row_to_io(io,row)
             end
             row_index += 1
