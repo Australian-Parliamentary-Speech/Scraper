@@ -8,16 +8,34 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
     is_written = Dict(number => false for number in 1:length(rows))
     partstep2fn = split(step1fn,"_")[1]
     step2fn = "$(partstep2fn)_edit_step2.csv"
+    name_pos = header_to_num[:name]
+    content_pos = header_to_num[:content]
+    id_pos = header_to_num[Symbol("name.id")]
+ 
     open(step2fn, "w") do io
         write_row_to_io(io,string.(headers_))
+        prev_talker = "None"
+        prev_id = "None"
         for row in rows
             if !is_written[row_index]
                 if !is_stage_direction(row,header_to_num) && row_index < length(rows)
                     row_ = @. collect(row)
                     row = row_[1]
-                    name_pos = header_to_num[:name]
-                    content_pos = header_to_num[:content]
                     talker = row[name_pos]
+                    id = row[id_pos]
+                    if talker != "N/A"
+                        prev_talker = talker
+                        if id != "N/A"
+                            prev_id = id
+                        end
+                    end
+                    
+                    prev_row = get_row(rows, row_index-1)
+                    if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1
+                        row[name_pos] = prev_talker
+                        row[id_pos] = prev_id 
+                    end
+ 
                     row_content = row[content_pos]
                     children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
                     row[content_pos] = row_content*" $children_content"
@@ -25,6 +43,15 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
                     row_ = @. collect(row)
                     row = row_[1]
                 end
+
+                if :quote_flag in keys(header_to_num)
+
+                    if row[header_to_num[:quote_flag]] == 1
+                        row[name_pos] = prev_talker
+                        row[id_pos] = prev_id
+                    end
+                end
+                    
                 write_row_to_io(io,row)
             end
             row_index += 1
@@ -80,8 +107,10 @@ function equiv(current_row,next_row,header_to_num)
  
     flag_indices, current_flags = find_all_flags(current_row,header_to_num)
     flag_indices, next_flags = find_all_flags(next_row,header_to_num)
-    current_flags = change_flag(current_flags)
-    next_flags = change_flag(next_flags)
+    if false
+        current_flags = change_flag(current_flags)
+        next_flags = change_flag(next_flags)
+    end
     return current_flags == next_flags
 end
 

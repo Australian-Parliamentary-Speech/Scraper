@@ -72,19 +72,19 @@ end
 function edit_interjections(row,header_to_num)
     content = row[header_to_num[:content]]
     if content != "N/A"
-        m = match(r"[iI]nterjecting—", content)
+        m = match(r"[iI]nterjecting", content)
         if m != nothing && length(split(content," "))<5
             split_content = split(content,m.match)
             talker = split_content[1]
-            row[header_to_num[:name]] = talker
+            row[header_to_num[:name]] = clean_text(talker)
         end
     elseif content == "N/A"
         talker = row[header_to_num[:name]]
-        m = match(r"[iI]nterjecting—", talker)
+        m = match(r"[iI]nterjecting", talker)
         if m != nothing 
             split_content = split(talker,m.match)
             row[header_to_num[:name]] = split_content[1]
-            row[header_to_num[:content]] = talker
+            row[header_to_num[:content]] = clean_text(talker)
         end
     end
     return row

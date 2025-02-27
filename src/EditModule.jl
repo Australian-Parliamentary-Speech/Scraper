@@ -2,6 +2,7 @@ module EditModule
 using CSV,DataFrames
 using ..NodeModule
 using ..Utils
+using ..XMLModule
 export detect_edit_phase
 export edit_main
 export Editor

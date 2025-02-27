@@ -35,7 +35,7 @@ end
 
 @xport function clean_text(str::AbstractString)
     # Replace newline characters with an empty string
-    filtered_str = replace(str, "\n" => "")
+    filtered_str = replace(str, "\n" => "","-" => "")
     # Replace multiple spaces with a single space, excluding spaces between words
     filtered_str = clean_quotes(replace(filtered_str, r"\s+" => " "))
     if all(isspace, filtered_str)
