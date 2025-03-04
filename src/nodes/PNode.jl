@@ -4,6 +4,45 @@ export PNode
 
 abstract type PNode{P} <: AbstractNode{P} end
 
+function find_item(node::Node{<:PNode})
+    parent = parentnode(node.node)
+    if nodename(parent) == "item"
+        label = findfirst_in_subsoup(parent.path,"/@label",node.soup)
+       return label.content
+    end
+    return nothing
+end
+
+
+function construct_row(node::Node{<:PNode},node_tree)
+    phase = get_phasetype(node)
+    debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
+    subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
+
+    label = find_item(node)
+    if !isnothing(label)
+        content = label*node.node.content
+    else
+        content = node.node.content
+    end
+
+    node.headers_dict["content"] = content
+    node.headers_dict["subdebateinfo"] = subdebateinfo
+    node.headers_dict["debateinfo"] = debateinfo
+    node.headers_dict["path"] = node.node.path
+    row = collect(values(node.headers_dict))
+    row_ = []
+    for r in row
+        if typeof(r) <: Int
+            push!(row_,r)
+        else
+            push!(row_,clean_text(r))
+        end
+    end
+    return row_
+end
+
+
 """
 process_node(node::Node{<:PNode},node_tree)
 

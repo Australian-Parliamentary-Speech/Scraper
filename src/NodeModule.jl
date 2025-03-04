@@ -388,7 +388,7 @@ function find_p_node_parent(node::Node{<:PNode},node_tree)
     end
 end
 
-function construct_row(node,node_tree)
+function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
     phase = get_phasetype(node)
     debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
     subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
