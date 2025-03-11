@@ -1,6 +1,3 @@
-[[XML]]
-FILENAME = "xmls/1994/1994_02_09.xml"
-
 [GENERAL_OPTIONS]
 YEAR = [1901, 2024]
 OVERWRITE = true
@@ -15,6 +12,9 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Outputs/hansard"
 
 [METADATA]
-TIME = "16:30:00"
+TIME = "22:04:56"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
-DATE = "2025-03-04"
+DATE = "2025-03-10"
+
+[[XML_DIR]]
+PATH = "xmls"

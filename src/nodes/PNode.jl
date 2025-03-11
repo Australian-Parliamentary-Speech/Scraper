@@ -8,7 +8,11 @@ function find_item(node::Node{<:PNode})
     parent = parentnode(node.node)
     if nodename(parent) == "item"
         label = findfirst_in_subsoup(parent.path,"/@label",node.soup)
-       return label.content
+        if isnothing(label)
+            return nothing
+        else
+            return label.content
+        end
     end
     return nothing
 end
