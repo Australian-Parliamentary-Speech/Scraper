@@ -22,7 +22,7 @@ is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_tree)
 ```
 
 ```@docs
-find_talker_in_p(p_node)
+find_talker_in_p(p_node::Node{<:PNode})
 ```
 
 ```@docs
