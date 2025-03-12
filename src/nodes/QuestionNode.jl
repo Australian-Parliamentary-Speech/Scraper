@@ -7,7 +7,13 @@ function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
-    return name in allowed_names
+    if name == "continue"
+        parent = node_tree[end]
+        parent_name = nodename(parent.node)
+        return parent_name in allowed_names
+    else
+        return name in allowed_names
+    end
 end
 
 
