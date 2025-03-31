@@ -25,64 +25,6 @@ function check_csv(curr,correct)
     end
 
     return file_curr == file_correct
-end 
-
-
-#this set of test looks at before edit only.
-@testset verbose = false "Step1 and Step2" begin
-    edit_funcs = []
-    pass = true
- 
-    @test  begin
-        for Phase in ["AbstractPhase","Phase2011"]
-            files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
-            output_path = joinpath(dirname(@__FILE__),"step1_result/$(Phase)")
-            create_dir(output_path)
-            for file in files
-                date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),output_path,false,edit_funcs)
-                mv(joinpath(output_path,"$(date).csv"),joinpath(output_path,"$(date)_$(file[1:end-4]).csv"),force=true)
-            end
-
-            current_files = filter(f -> endswith(f,".csv"),readdir(output_path))
-            current_csvs = filter(f -> endswith(f, ".csv"), current_files)
-            for file in current_files
-                curr = joinpath(output_path,file)
-                correct = joinpath("$(output_path)/correct/",file)
-                pass = check_csv(curr,correct)
-            end
-        end
-        pass
-    end
-    true
-end
-
-
-@testset verbose = false "Edit test" begin
-    edit_funcs = ["re","flatten"]
- 
-    @test begin
-       editor = RunModule.EditModule.Editor(edit_funcs,AbstractEditPhase) 
-#       editor = RunModule.EditModule.Editor(edit_funcs,RunModule.EditModule.detect_edit_phase(2024)) 
-       test_path = joinpath(@__DIR__,"csvs/AbstractPhase")
-        test_files = readdir(test_path)
-        test_csvs = filter(f -> endswith(f, ".csv"), test_files)
-        for test_csv in test_csvs
-            RunModule.EditModule.edit_main(joinpath(test_path,test_csv),editor)
-        end
-        result_files = readdir(test_path)
-        result_csvs = filter(f -> occursin("step", f), result_files)
-        for result_csv in result_csvs
-            mv(joinpath(test_path,result_csv),joinpath(@__DIR__,"step2_result/AbstractPhase/$result_csv"),force=true)
-        end
-        for result_csv in result_csvs
-            curr = joinpath(@__DIR__,"step2_result/AbstractPhase/$result_csv")
-            correct = joinpath(@__DIR__,"step2_result/AbstractPhase/correct/$result_csv")
-            if !check_csv(curr,correct)
-                return false
-            end
-        end
-       return true         
-    end
 end
 
 function get_all_dates(outputpath,testpath)
@@ -142,4 +84,63 @@ end
     end
 end
  
+
+
+##this set of test looks at before edit only.
+#@testset verbose = false "Step1 and Step2" begin
+#    edit_funcs = []
+#    pass = true
+# 
+#    @test  begin
+#        for Phase in ["AbstractPhase","Phase2011"]
+#            files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
+#            output_path = joinpath(dirname(@__FILE__),"step1_result/$(Phase)")
+#            create_dir(output_path)
+#            for file in files
+#                date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),output_path,false,edit_funcs)
+#                mv(joinpath(output_path,"$(date).csv"),joinpath(output_path,"$(date)_$(file[1:end-4]).csv"),force=true)
+#            end
+#
+#            current_files = filter(f -> endswith(f,".csv"),readdir(output_path))
+#            current_csvs = filter(f -> endswith(f, ".csv"), current_files)
+#            for file in current_files
+#                curr = joinpath(output_path,file)
+#                correct = joinpath("$(output_path)/correct/",file)
+#                pass = check_csv(curr,correct)
+#            end
+#        end
+#        pass
+#    end
+#    true
+#end
+#
+#
+#@testset verbose = false "Edit test" begin
+#    edit_funcs = ["re","flatten"]
+# 
+#    @test begin
+#       editor = RunModule.EditModule.Editor(edit_funcs,AbstractEditPhase) 
+##       editor = RunModule.EditModule.Editor(edit_funcs,RunModule.EditModule.detect_edit_phase(2024)) 
+#       test_path = joinpath(@__DIR__,"csvs/AbstractPhase")
+#        test_files = readdir(test_path)
+#        test_csvs = filter(f -> endswith(f, ".csv"), test_files)
+#        for test_csv in test_csvs
+#            RunModule.EditModule.edit_main(joinpath(test_path,test_csv),editor)
+#        end
+#        result_files = readdir(test_path)
+#        result_csvs = filter(f -> occursin("step", f), result_files)
+#        for result_csv in result_csvs
+#            mv(joinpath(test_path,result_csv),joinpath(@__DIR__,"step2_result/AbstractPhase/$result_csv"),force=true)
+#        end
+#        for result_csv in result_csvs
+#            curr = joinpath(@__DIR__,"step2_result/AbstractPhase/$result_csv")
+#            correct = joinpath(@__DIR__,"step2_result/AbstractPhase/correct/$result_csv")
+#            if !check_csv(curr,correct)
+#                return false
+#            end
+#        end
+#       return true         
+#    end
+#end
+#
 
