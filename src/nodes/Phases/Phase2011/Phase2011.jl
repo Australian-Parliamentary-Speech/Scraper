@@ -11,7 +11,7 @@ for path in readdir(phase_node_path, join=true)
 end
 
 upperbound = date_to_float(2011,4,0)
-upperbound2 = date_to_float(1979,12,12)
+upperbound2 = date_to_float(1980,12,12)
 date_to_phase[(1998.0,upperbound)] = Phase2011
 date_to_phase[(1901.0,upperbound2)] = Phase2011
 

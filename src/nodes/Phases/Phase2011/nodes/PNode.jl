@@ -71,21 +71,18 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
     edge_case = nothing
-    #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     if length(node_tree) > 0
-#        parent_node = node_tree[end]
-        parent_node = find_p_node_parent(node,node_tree)
-        if is_first_node_type(node,parent_node,allowed_names,node_tree)
-            get_talker_from_parent(node,parent_node)
-            if node.headers_dict["name"] == "N/A"
-                name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
-                if !isnothing(name)
-                    node.headers_dict["name"] = name.content
-                end
+        parent_node = node_tree[end]
+        c = node.node.content
+        get_talker_from_parent(node,parent_node)
+        if node.headers_dict["name.id"] == "N/A"
+            name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
+            if !isnothing(name)
+                node.headers_dict["name"] = name.content
             end
-
-        else
-            find_talker_in_p(node)
+            if node.headers_dict["name"] == "N/A"
+                find_talker_in_p(node)
+            end
         end
         define_flags(node,parent_node,node_tree)
     else
@@ -96,38 +93,4 @@ end
 
 
 
-#function find_talker_in_p(p_node::Node{PNode{Phase2011}})
-#    p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
-#    if isnothing(p_talker_soup)
-#        p_with_a_as_parent(p_node)
-#        if p_node.headers_dict["name"] == "N/A" || p_node.headers_dict["name.id"] == "N/A"
-#            p_talker_inline = findfirst_in_subsoup(p_node.node.path,"//inline",p_node.soup)
-#            if !isnothing(p_talker_inline)
-#                potential_talker = p_talker_inline.content
-#                content = p_node.node.content
-#                if length(content) > 2*length(potential_talker)
-#                    start = content[1:length(potential_talker)*2]
-#                else
-#                    start = content
-#                end
-#                name_ = strip(clean_text(p_talker_inline.content),['(',')'])
-#                if occursin("Australian Financial Review",potential_talker) 
-#                    @show start
-#                end
-#                if occursin(name_, start)
-#                    if length(split(name_," "))< 4 && !(occursin(r"\d", name_))
-#                        p_node.headers_dict["name"] = name_
-#                    end
-#                end
-#            end
-#        end
-#    else
-#        p_talker  = findfirst_in_subsoup(p_talker_soup.path,"/@type",p_node.soup)
-#        p_talker_id = findfirst_in_subsoup(p_talker_soup.path,"/@href",p_node.soup)
-#        p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
-#        p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
-#        p_node.headers_dict["name"] = clean_text(p_talker)
-#        p_node.headers_dict["name.id"] = clean_text(p_talker_id)
-#    end
-#end
-#
+

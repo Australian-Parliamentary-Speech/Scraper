@@ -1,3 +1,12 @@
+#"""Not used as the edge case does not work"""
+#function change_quote_to_answer(row,prev_row,header_to_num)
+#    prev_content = prev_row[header_to_num[:content]]
+#    if (occursin('ask',prev_content) && occursin('upon notice',prev_content)) || occursin('The answers to the honorable members questions are as follow',prev_content)
+#        row[header_to_num[:answer_flat]] = 1
+#    end
+#    return row
+#end
+
 function flatten(step1fn,::Type{<:AbstractEditPhase})
     csvfilestep1 = CSV.File(step1fn)
     headers_ = copy(propertynames(csvfilestep1))
@@ -31,13 +40,13 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
                     end
                     if row_index > 1                
                         prev_row = get_row(rows, row_index-1)
-                if :quote_flag in keys(header_to_num)
-                        if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1
-                            row[name_pos] = prev_talker
-                            row[id_pos] = prev_id 
+                        if :quote_flag in keys(header_to_num)
+                            if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1
+                                row[name_pos] = prev_talker
+                                row[id_pos] = prev_id 
+                            end
                         end
                     end
-                end
 
                     row_content = row[content_pos]
                     children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
