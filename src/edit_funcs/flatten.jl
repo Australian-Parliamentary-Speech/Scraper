@@ -127,17 +127,22 @@ function equiv(current_row,next_row,header_to_num)
 end
 
 function stop_before_next_talker(row_no,rows,header_to_num,log)
+    current_row = get_row(rows,row_no - 1)
     if is_stage_direction(rows[row_no],header_to_num)
         return true
     else
         next_row = get_row(rows,row_no)
-
         name_pos = header_to_num[:name]
-        if next_row[name_pos] != "N/A"
+        next_name = next_row[name_pos]
+        now_name = current_row[name_pos]
+#        if occursin("Abbott",next_name)
+#            @show next_name
+#            @show now_name
+#        end
+        if next_row[name_pos] != "N/A" && next_name != now_name
             return true
         else
-           current_row = get_row(rows,row_no - 1)
-           return !(equiv(current_row,next_row,header_to_num))
+            return !(equiv(current_row,next_row,header_to_num))
         end 
     end
     return false

@@ -3,7 +3,7 @@
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "xmls/2014/1980_02_26.xml"
+#    filename = "xmls/2004/2004_02_19.xml"
 
 
 [[ XML_DIR ]]
@@ -12,5 +12,5 @@
 [ general_options ]
     csv_exist = false
     edit = ["re","flatten"]
-    year = [1901,2011]
-    overwrite = false
+    year = [2004,2004]
+    overwrite = true
