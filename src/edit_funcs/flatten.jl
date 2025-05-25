@@ -1,11 +1,3 @@
-#"""Not used as the edge case does not work"""
-#function change_quote_to_answer(row,prev_row,header_to_num)
-#    prev_content = prev_row[header_to_num[:content]]
-#    if (occursin('ask',prev_content) && occursin('upon notice',prev_content)) || occursin('The answers to the honorable members questions are as follow',prev_content)
-#        row[header_to_num[:answer_flat]] = 1
-#    end
-#    return row
-#end
 
 function flatten(step1fn,::Type{<:AbstractEditPhase})
     csvfilestep1 = CSV.File(step1fn)
@@ -40,14 +32,8 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
                     end
                     if row_index > 1                
                         prev_row = get_row(rows, row_index-1)
-                        if :quote_flag in keys(header_to_num)
-                            if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1
-                                row[name_pos] = prev_talker
-                                row[id_pos] = prev_id 
-                            end
-                        end
+                        row = speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,talker)
                     end
-
                     row_content = row[content_pos]
                     children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
                     row[content_pos] = row_content*" $children_content"
@@ -55,21 +41,30 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
                     row_ = @. collect(row)
                     row = row_[1]
                 end
-
-                if :quote_flag in keys(header_to_num)
-
-                    if row[header_to_num[:quote_flag]] == 1 && prev_talker != "None"
-                        row[name_pos] = prev_talker
-                        row[id_pos] = prev_id
-                    end
-                end
-
                 write_row_to_io(io,row)
             end
             row_index += 1
         end
     end
     return step2fn
+end
+
+function speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,talker)
+    name_pos = header_to_num[:name]
+    id_pos = header_to_num[Symbol("name.id")]
+    prev_debate, prev_subdebate = prev_row[header_to_num[:debateinfo]],prev_row[header_to_num[:subdebateinfo]]
+    debate, subdebate = row[header_to_num[:debateinfo]],row[header_to_num[:subdebateinfo]]
+
+    if :quote_flag in keys(header_to_num) && prev_debate == debate && prev_subdebate == subdebate
+        if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1 && talker == "N/A"
+            row[name_pos] = prev_talker
+            row[id_pos] = prev_id
+        elseif row[header_to_num[:quote_flag]] == 1 && prev_talker != "None" && prev_row[header_to_num[:speech_flag]] == 1 && talker == "N/A"
+            row[name_pos] = prev_talker
+            row[id_pos] = prev_id 
+        end
+    end
+    return row
 end
 
 

@@ -1,5 +1,6 @@
 Inputs/**/*.xml
 Outputs/hansard/**/*.csv
+Outputs/saved_hansard/**/*.csv
 Outputs/**/*.sh
 **/*.png
 **/*.pdf

@@ -3,10 +3,55 @@ using EzXML
 using InteractiveUtils
 using Test
 using CSV
+using Glob
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
 
+function collect_row(row)
+    row_ = @. collect(row)
+    row = row_[1]
+    return row
+end
+ 
+function compare_csv(csv1,csv2)
+    csvfile1 = CSV.File(csv1)
+    csvfile2 = CSV.File(csv2)
+    rows1 = eachrow(csvfile1)
+    rows2 = eachrow(csvfile2)
+
+    @assert length(rows1) == length(rows2)
+
+    rows_mismatched = ""
+    for i in 1:length(rows1)
+        crow1 = collect_row(rows1[i])
+        crow2 = collect_row(rows2[i])
+        if crow1 != crow2
+            rows_mismatched = rows_mismatched * "\"$i\","
+        end
+    end
+    return rows_mismatched
+end
+
+function get_all_csvnames(path)
+    all = readdir(glob"*/*step2.csv", path)
+    return all
+end
+
+function compare_outputs(hansardpath,outputpath,outputsavepath)
+    fn = joinpath(hansardpath,"compatibility_test.csv")
+    all_csvs = get_all_csvnames(outputpath)
+    open(fn,"w") do io
+        for csv_name in all_csvs
+            name = split(csv_name,"/")[end]
+            year = split(name,"-")[1]
+            new_csv = joinpath(joinpath(outputpath,year),name)
+            saved_csv = joinpath(joinpath(outputsavepath,year),name)
+            mismatched = compare_csv(new_csv,saved_csv)
+            println(io,"\"$name\","*mismatched)
+        end
+    end
+end
 
 function create_dir(directory_path::String)
     if !isdir(directory_path)
@@ -78,8 +123,11 @@ end
 @testset verbose = true "Summary" begin
     @test begin
         path = pathof(ParlinfoSpeechScraper)
+        hansardpath = joinpath(dirname(dirname(path)),"Outputs")
         outputpath = joinpath(dirname(dirname(path)),"Outputs/hansard")
+        outputsavepath = joinpath(dirname(dirname(path)),"Outputs/saved_hansard")
         get_all_dates(outputpath,@__DIR__)
+        compare_outputs(hansardpath, outputpath, outputsavepath)
         true
     end
 end
