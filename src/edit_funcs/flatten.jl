@@ -59,7 +59,7 @@ function speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,tal
         if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1 && talker == "N/A"
             row[name_pos] = prev_talker
             row[id_pos] = prev_id
-        elseif row[header_to_num[:quote_flag]] == 1 && prev_talker != "None" && prev_row[header_to_num[:speech_flag]] == 1 && talker == "N/A"
+        elseif row[header_to_num[:quote_flag]] == 1 && prev_talker != "None" && talker == "N/A"
             row[name_pos] = prev_talker
             row[id_pos] = prev_id 
         end

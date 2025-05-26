@@ -74,20 +74,30 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     if length(node_tree) > 0
         parent_node = node_tree[end]
         c = node.node.content
-        get_talker_from_parent(node,parent_node)
-        if node.headers_dict["name.id"] == "N/A"
-            name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
-            if !isnothing(name)
-                node.headers_dict["name"] = name.content
+        """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
+        if !(typeof(parent_node) <: Node{<:DebateNode})
+            get_talker_from_parent(node,parent_node)
+            if node.headers_dict["name.id"] == "N/A"
+                name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
+                if !isnothing(name)
+                    node.headers_dict["name"] = name.content
+                end
+                if node.headers_dict["name"] == "N/A"
+                    find_talker_in_p(node)
+                end
+
             end
-            if node.headers_dict["name"] == "N/A"
-                find_talker_in_p(node)
-            end
+
         end
         define_flags(node,parent_node,node_tree)
     else
         define_flags(node,node,node_tree)
     end
+#    if occursin("Debate resumed from the 23rd April",c)
+#        @show typeof(parent_node)
+#        @show node.headers_dict["name"]
+#    end
+
     return construct_row(node,node_tree)
 end
 

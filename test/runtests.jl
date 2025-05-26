@@ -27,7 +27,7 @@ function compare_csv(csv1,csv2)
         crow1 = collect_row(rows1[i])
         crow2 = collect_row(rows2[i])
         if crow1 != crow2
-            rows_mismatched = rows_mismatched * "\"$i\","
+            rows_mismatched = rows_mismatched * "\"$(i+1)\","
         end
     end
     return rows_mismatched
