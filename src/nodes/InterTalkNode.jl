@@ -18,8 +18,11 @@ The default setting for processing intertalknodes.
 """
 function process_node(node::Node{<:InterTalkNode},node_tree)
     text_node = findfirst_in_subsoup(node.node.path,node.soup,"//talk.text")
+
     if isnothing(text_node)
-        content = filter_node_content_by_paths(node.node,["$(node.node.path)/talker"])
+        """not getting anything now if no text is found"""
+        content = " "
+#        content = filter_node_content_by_paths(node.node,["$(node.node.path)/talker"])
     else
         content = text_node.content
     end

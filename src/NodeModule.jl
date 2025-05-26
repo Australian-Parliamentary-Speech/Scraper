@@ -392,7 +392,9 @@ function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
     phase = get_phasetype(node)
     debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
     subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
-    node.headers_dict["content"] = node.node.content
+    if node.headers_dict["content"] == "N/A"
+        node.headers_dict["content"] = node.node.content
+    end
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
     node.headers_dict["path"] = node.node.path

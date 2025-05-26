@@ -14,21 +14,22 @@ function collect_row(row)
     return row
 end
  
-function compare_csv(csv1,csv2)
+function compare_csv(csv1,csv2,csv_name)
     csvfile1 = CSV.File(csv1)
     csvfile2 = CSV.File(csv2)
     rows1 = eachrow(csvfile1)
     rows2 = eachrow(csvfile2)
-
-    @assert length(rows1) == length(rows2)
-
-    rows_mismatched = ""
-    for i in 1:length(rows1)
-        crow1 = collect_row(rows1[i])
-        crow2 = collect_row(rows2[i])
-        if crow1 != crow2
-            rows_mismatched = rows_mismatched * "\"$(i+1)\","
+    if length(rows1) == length(rows2)
+        rows_mismatched = ""
+        for i in 1:length(rows1)
+            crow1 = collect_row(rows1[i])
+            crow2 = collect_row(rows2[i])
+            if crow1 != crow2
+                rows_mismatched = rows_mismatched * "\"$(i+1)\","
+            end
         end
+    else
+        rows_mismatched = "length not equal"
     end
     return rows_mismatched
 end
@@ -47,7 +48,7 @@ function compare_outputs(hansardpath,outputpath,outputsavepath)
             year = split(name,"-")[1]
             new_csv = joinpath(joinpath(outputpath,year),name)
             saved_csv = joinpath(joinpath(outputsavepath,year),name)
-            mismatched = compare_csv(new_csv,saved_csv)
+            mismatched = compare_csv(new_csv,saved_csv,csv_name)
             println(io,"\"$name\","*mismatched)
         end
     end

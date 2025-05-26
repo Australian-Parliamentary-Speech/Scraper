@@ -55,21 +55,23 @@ If no particular phase is specified, this default version of process node is run
 function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
-    #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     parent_node = node_tree[end]
-    
     edge_case = nothing
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
-        get_talker_from_parent(node,parent_node)
-        if node.headers_dict["name"] == "N/A"
-            edge_case = "no_talker_block_from_parent"
-            name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
-            if !isnothing(name)
-                edge_case = "any_name_from_parent"
-                node.headers_dict["name"] = name.content
+        if !(typeof(parent_node) <: Node{<:DebateNode})
+            get_talker_from_parent(node,parent_node)
+            if node.headers_dict["name"] == "N/A"
+                edge_case = "no_talker_block_from_parent"
+                name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
+                if !isnothing(name)
+                    edge_case = "any_name_from_parent"
+                    node.headers_dict["name"] = name.content
+                end
+            else
+                edge_case = "exist_talker_block_in_parent"
             end
         else
-            edge_case = "exist_talker_block_in_parent"
+            node.headers_dict["name"] = "FREE NODE"
         end
     else
         edge_case = find_talker_in_p(node)
