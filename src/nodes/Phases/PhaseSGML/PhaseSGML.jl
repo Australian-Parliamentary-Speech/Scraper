@@ -13,7 +13,6 @@ upperbound = date_to_float(1997,12,12)
 date_to_phase[(1981.0,upperbound)] = PhaseSGML
 
 
-
 function define_flags(node::Node{<:AbstractNode{PhaseSGML}},parent_node,node_tree)
     ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode,PetitionNode,QuoteNode_{PhaseSGML},MotionnospeechNode]
     headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag"]

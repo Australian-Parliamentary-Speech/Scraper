@@ -15,6 +15,9 @@ upperbound2 = date_to_float(1980,12,12)
 date_to_phase[(1998.0,upperbound)] = Phase2011
 date_to_phase[(1901.0,upperbound2)] = Phase2011
 
+function free_node_parent_types(node::Node{<:AbstractNode{Phase2011}})
+    return [DebateNode,SubdebateNode,SpeechNode]
+end
 
 """
 define_flags(node::Node{<:AbstractNode{Phase2011}},parent_node,node_tree)
@@ -41,5 +44,6 @@ function define_headers(::Type{Phase2011})
     headers_dict = OrderedDict(headers .=> ["N/A" for h in headers])
     return headers_dict
 end
+
 
 

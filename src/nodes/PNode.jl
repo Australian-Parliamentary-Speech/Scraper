@@ -58,7 +58,7 @@ function process_node(node::Node{<:PNode},node_tree)
     parent_node = node_tree[end]
     edge_case = nothing
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
-        if !(typeof(parent_node) <: Node{<:DebateNode})
+        if !(is_free_node(node,parent_node))
             get_talker_from_parent(node,parent_node)
             if node.headers_dict["name"] == "N/A"
                 edge_case = "no_talker_block_from_parent"

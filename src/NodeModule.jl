@@ -331,6 +331,25 @@ function find_chamber(node,node_tree)
     end
 end
 
+function free_node_parent_types(node::Node{<:AbstractNode{<:AbstractPhase}})
+#    return [DebateNode]
+    return [DebateNode,SubdebateNode,SpeechNode]
+end
+
+function is_free_node(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node)
+    """to toggle the free node feature"""
+    if true
+        ParentTypes = free_node_parent_types(node)
+        for type in ParentTypes
+            if parent_node isa Node{<:type}
+                return true
+            end
+        end
+    end
+    return false
+end
+#
+
 """
 define_flags(node::Node{<:AbstractNode{<:AbstractPhase}}, node_tree)
 

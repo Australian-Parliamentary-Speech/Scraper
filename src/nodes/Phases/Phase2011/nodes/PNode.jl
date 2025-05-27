@@ -75,7 +75,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
         parent_node = node_tree[end]
         c = node.node.content
         """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
-        if !(typeof(parent_node) <: Node{<:DebateNode})
+        if !(is_free_node(node,parent_node))
             get_talker_from_parent(node,parent_node)
             if node.headers_dict["name.id"] == "N/A"
                 name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
