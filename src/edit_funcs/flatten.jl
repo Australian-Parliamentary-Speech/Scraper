@@ -41,6 +41,8 @@ function flatten(step1fn,::Type{<:AbstractEditPhase})
                         prev_row = get_row(rows, row_index-1)
                         row = free_node(row,prev_row,prev_talker,prev_id,header_to_num,talker)
                         row = speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,talker)
+                    else
+                        prev_talker = "None"
                     end
                     prev_debate = debate
                     prev_subdebate = subdebate

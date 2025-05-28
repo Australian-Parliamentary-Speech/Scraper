@@ -50,10 +50,6 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{Phase2
     if name in allowed_names
         if length(node_tree) == 0
             @info "para without parent detected"
-#            dummy_node = Node{AbstractNode{phase}}(node,1,0.0,soup,OrderedDict("a"=>0))
-#            dummy_parent_node = Node{AbstractNode{phase}}(soup,1,0.0,soup, OrderedDict("a"=>0))
-#            edge_case = "para_without_parent" 
-#            write_test_xml(dummy_node,dummy_parent_node,edge_case) 
             return true
         else
             section_types = get_sections(nodetype)
@@ -74,7 +70,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     if length(node_tree) > 0
         parent_node = node_tree[end]
         c = node.node.content
-        """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
+       """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
         if !(is_free_node(node,parent_node))
             get_talker_from_parent(node,parent_node)
             if node.headers_dict["name.id"] == "N/A"
@@ -90,7 +86,13 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
         else
             node.headers_dict["name"] = "FREE NODE"
         end
-        define_flags(node,parent_node,node_tree)
+
+        if typeof(parent_node) <: Node{<:InterTalkNode}
+            flag_parent = node_tree[end-1]
+        else
+            flag_parent = parent_node
+        end
+        define_flags(node,flag_parent,node_tree)
     else
         define_flags(node,node,node_tree)
     end

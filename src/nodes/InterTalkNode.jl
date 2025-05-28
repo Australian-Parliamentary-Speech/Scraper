@@ -58,7 +58,7 @@ is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:Abstr
 
 This function checks if the given xml node is of nodetype InterTalkNode
 """
-function is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...) 
+function is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...)
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)
     name = nodename(node)
