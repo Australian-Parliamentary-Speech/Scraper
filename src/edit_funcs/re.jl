@@ -1,5 +1,5 @@
-function re(fn,::Type{<:AbstractEditPhase})
-    csvfile = CSV.File(fn)
+function re(input_fn,output_fn,::Type{<:AbstractEditPhase})
+    csvfile = CSV.File(input_fn)
     headers_ = copy(propertynames(csvfile))
     header_to_num = edit_set_up(headers_)
     #any additional headers needed
@@ -8,8 +8,7 @@ function re(fn,::Type{<:AbstractEditPhase})
     end
     rows = eachrow(csvfile)
   
-    step1fn = "$(fn[1:end-4])_edit_step1.csv"
-    open(step1fn, "w") do io
+    open(output_fn, "w") do io
         write_row_to_io(io,string.(headers_))
         for row in rows
             row_ = @. collect(row)
@@ -18,8 +17,6 @@ function re(fn,::Type{<:AbstractEditPhase})
             write_row_to_io(io,row)
         end
     end
-    csvfilestep1 = CSV.File(step1fn)
-    return step1fn
 end
 
 function edit_row(row,header_to_num)

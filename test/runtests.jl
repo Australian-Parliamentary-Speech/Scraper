@@ -14,7 +14,7 @@ function collect_row(row)
     return row
 end
  
-function compare_csv(csv1,csv2,csv_name)
+function compare_csv(csv1,csv2)
     csvfile1 = CSV.File(csv1)
     csvfile2 = CSV.File(csv2)
     rows1 = eachrow(csvfile1)
@@ -38,6 +38,7 @@ function get_all_csvnames(path)
     all = readdir(glob"*/*step2.csv", path)
     return all
 end
+
 
 function compare_outputs(hansardpath,outputpath,outputsavepath)
     fn = joinpath(hansardpath,"compatibility_test.csv")

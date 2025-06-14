@@ -79,16 +79,49 @@ func_list: a list of function names as string
 editor: a struct with two parameters
 """
 function edit_main(fn,editor::Editor)
+    function which_csv(num,fn)
+        if num > 0            
+            fn = fn[1:end-4]
+            return "$(fn)_edit_step$(num).csv"
+        else
+            return fn
+        end
+    end
     func_list = editor.edit_funcs
     if !isempty(func_list)
         edit_phase = editor.edit_phase
         funcs = [Symbol(f) for f in func_list]
-    
+        num = 0  
         for func in funcs
             resolved_func = getfield(EditModule, func)
-            fn = resolved_func(fn,editor.edit_phase)
+            input_fn = which_csv(num,fn)
+            num += 1
+            output_fn = which_csv(num,fn)
+            resolved_func(input_fn, output_fn,editor.edit_phase)
         end
     end
+end
+
+function cell_not_null(cell)
+    return !(cell == "N/A" || cell == "FREE NODE" || cell == "None")
+end
+
+
+
+function is_stage_direction(row,header_to_num)
+    row_ = @. collect(row)
+    row = row_[1]
+    flag_indices, all_flags = find_all_flags(row,header_to_num)
+    if all(==(0), all_flags)
+        return true
+    end  
+    return false 
+end
+
+function get_row(rows, row_no)
+    row = rows[row_no]
+    row_ = @. collect(row)
+    return row_[1]
 end
 
 

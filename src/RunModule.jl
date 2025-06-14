@@ -112,21 +112,24 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
             end 
         end
    end
-   copy_sample_file(output_path)
+   copy_sample_file(output_path,length(edit_funcs))
 end
 
-function copy_sample_file(output_path)
+function copy_sample_file(output_path,num)
+    @show num
     sample_dir = joinpath(@__DIR__,"../","Outputs","upload")
     dirs = filter(isdir,readdir(output_path,join=true))   
     for dir in dirs
         if occursin("1977",dir)
-            run(`cp $(joinpath(dir,"1977-08-23_edit_step2.csv")) $sample_dir`)
+            run(`cp $(joinpath(dir,"1977-08-23_edit_step$(num).csv")) $sample_dir`)
+#            run(`cp $(joinpath(dir,"1977-08-23_edit_step1.csv")) $sample_dir`)
+ 
         end
         ran = 15
         i = 0
         for fn in readdir(dir,join=true)
             if i > ran
-                if occursin("step2",fn)
+                if occursin("step$(num)",fn)  
                     command = `cp $fn $sample_dir`
                     run(command)
                     break
@@ -137,39 +140,39 @@ function copy_sample_file(output_path)
         end
     end
 
-    for file in readdir(sample_dir)
-        if endswith(file, ".csv") & !endswith(file, "_pro.csv")
-            fn = normpath(joinpath(sample_dir, file))
-            savefn = "$(split(fn, ".")[1])_pro.csv"
-            data = open(fn) do io
-                return [split(row, "\",\"") for row in readlines(io)]
-            end
-            header = Vector{String}(["index"])
-            for col in data[1]
-                push!(header, replace(col, "\"" => ""))
-            end
-            rtn = Vector{Vector{String}}([header])
-            for (i, d) in enumerate(data[2:end])
-                row = Vector{String}(["$i"])
-                for s in d
-                    s = replace(s, "\"" => "")
-                    try
-                        parse(Int, s)
-                    catch
-                        s = "\"$s\""
-                    end
-                    push!(row, s)
-                end
-                push!(rtn, row)
-            end
-            open(savefn,"w") do io
-                for line in rtn
-                    write(io, join(line, ",") * "\n")
-                end
-            end
-            rm(fn)
-        end
-    end
+#    for file in readdir(sample_dir)
+#        if endswith(file, ".csv") & !endswith(file, "_pro.csv")
+#            fn = normpath(joinpath(sample_dir, file))
+#            savefn = "$(split(fn, ".")[1])_pro.csv"
+#            data = open(fn) do io
+#                return [split(row, "\",\"") for row in readlines(io)]
+#            end
+#            header = Vector{String}(["index"])
+#            for col in data[1]
+#                push!(header, replace(col, "\"" => ""))
+#            end
+#            rtn = Vector{Vector{String}}([header])
+#            for (i, d) in enumerate(data[2:end])
+#                row = Vector{String}(["$i"])
+#                for s in d
+#                    s = replace(s, "\"" => "")
+#                    try
+#                        parse(Int, s)
+#                    catch
+#                        s = "\"$s\""
+#                    end
+#                    push!(row, s)
+#                end
+#                push!(rtn, row)
+#            end
+#            open(savefn,"w") do io
+#                for line in rtn
+#                    write(io, join(line, ",") * "\n")
+#                end
+#            end
+#            rm(fn)
+#        end
+#    end
 end
 
 
