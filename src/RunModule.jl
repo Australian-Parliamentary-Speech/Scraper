@@ -116,7 +116,6 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
 end
 
 function copy_sample_file(output_path,num)
-    @show num
     sample_dir = joinpath(@__DIR__,"../","Outputs","upload")
     dirs = filter(isdir,readdir(output_path,join=true))   
     for dir in dirs
@@ -135,7 +134,9 @@ function copy_sample_file(output_path,num)
                     break
                 end
             else
-                i += 1
+                if !(occursin("step1",fn))
+                    i += 1
+                end
             end
         end
     end

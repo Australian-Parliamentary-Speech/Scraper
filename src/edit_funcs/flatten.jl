@@ -59,12 +59,6 @@ function find_all_child_speeches(row_no,rows,header_to_num,is_written)
     return content,is_written
 end
 
-function get_row(rows, row_no)
-    row = rows[row_no]
-    row_ = @. collect(row)
-    return row_[1]
-end
-
 function equiv(current_row,next_row,header_to_num)
     flag_indices, current_flags = find_all_flags(current_row,header_to_num)
     flag_indices, next_flags = find_all_flags(next_row,header_to_num)
