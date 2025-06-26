@@ -1,7 +1,7 @@
 Inputs/**/*.xml
-Outputs/hansard/**/*.csv
-Outputs/saved_hansard/**/*.csv
-Outputs/**/*.sh
+HouseCSV/hansard/**/*.csv
+HouseCSV/saved_hansard/**/*.csv
+HouseCSV/**/*.sh
 **/*.png
 **/*.pdf
 **/*.txt
