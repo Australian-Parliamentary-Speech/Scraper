@@ -1,5 +1,5 @@
 [ global ]
-    output_path = "../../Outputs/hansard"
+    output_path = "../../HouseCSV/hansard"
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]

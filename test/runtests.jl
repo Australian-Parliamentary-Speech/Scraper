@@ -4,9 +4,18 @@ using InteractiveUtils
 using Test
 using CSV
 using Glob
+using BetterInputFiles
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
+
+function setup()
+    input_path = "../Inputs/hansard/hansard.toml"
+    toml = setup_input(input_path,false)
+    global_options = toml["GLOBAL"]
+    output_path = global_options["OUTPUT_PATH"] 
+    return output_path
+end
 
 function collect_row(row)
     row_ = @. collect(row)
@@ -49,7 +58,7 @@ function compare_outputs(hansardpath,outputpath,outputsavepath)
             year = split(name,"-")[1]
             new_csv = joinpath(joinpath(outputpath,year),name)
             saved_csv = joinpath(joinpath(outputsavepath,year),name)
-            mismatched = compare_csv(new_csv,saved_csv,csv_name)
+            mismatched = compare_csv(new_csv,saved_csv)
             println(io,"\"$name\","*mismatched)
         end
     end
@@ -124,11 +133,10 @@ end
 
 @testset verbose = true "Summary" begin
     @test begin
-        path = pathof(ParlinfoSpeechScraper)
-        hansardpath = joinpath(dirname(dirname(path)),"Outputs")
-        outputpath = joinpath(dirname(dirname(path)),"Outputs/hansard")
-        outputsavepath = joinpath(dirname(dirname(path)),"Outputs/saved_hansard")
+        outputpath = setup()
+        hansardpath = dirname(outputpath)
         get_all_dates(outputpath,@__DIR__)
+        outputsavepath = joinpath(hansardpath,"saved_hansard")
         compare_outputs(hansardpath, outputpath, outputsavepath)
         true
     end
