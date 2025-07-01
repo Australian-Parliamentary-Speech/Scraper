@@ -1,5 +1,5 @@
 [GENERAL_OPTIONS]
-YEAR = [2024, 2024]
+YEAR = [2025, 2025]
 OVERWRITE = true
 CSV_EXIST = false
 EDIT = ["re", "free_node", "flatten", "flatten"]
@@ -12,7 +12,7 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "15:33:18"
+TIME = "16:19:54"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
 DATE = "2025-07-01"
 

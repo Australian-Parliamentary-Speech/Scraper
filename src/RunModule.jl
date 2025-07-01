@@ -135,7 +135,7 @@ function copy_sample_file(output_path,num)
                     break
                 end
             else
-                if !(occursin("step1",fn))
+                if !(occursin("step2",fn)) && !(occursin("step3",fn))
                     i += 1
                 end
             end
