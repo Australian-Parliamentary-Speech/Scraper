@@ -69,7 +69,7 @@ function speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,tal
     name_pos = header_to_num[:name]
     id_pos = header_to_num[Symbol("name.id")]
     if :quote_flag in keys(header_to_num) 
-        if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1 && (!cell_not_null(talker))
+        if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1 && (!cell_not_null(talker)) && cell_not_null(prev_talker) 
             row[name_pos] = prev_talker
             row[id_pos] = prev_id
         elseif row[header_to_num[:quote_flag]] == 1 && cell_not_null(prev_talker) && (!cell_not_null(talker))
