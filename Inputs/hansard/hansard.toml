@@ -12,5 +12,5 @@
 [ general_options ]
     csv_exist = false
     edit = ["re","free_node","flatten","flatten"]
-    year = [2025,2025]
+    year = [1901,2025]
     overwrite = true

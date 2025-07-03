@@ -19,6 +19,7 @@ function free_node_parent_types(node::Node{<:AbstractNode{Phase2011}})
     return [DebateNode,SubdebateNode,SpeechNode]
 end
 
+
 """
 define_flags(node::Node{<:AbstractNode{Phase2011}},parent_node,node_tree)
 
