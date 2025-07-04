@@ -1,10 +1,10 @@
 [![Documentation](https://github.com/Australian-Parliamentary-Speech/Scraper/actions/workflows/documentation.yml/badge.svg)](https://australian-parliamentary-speech.github.io/House_Scraper/)
 
-This project is divided into three parts: download, sgml download, and parsing. The detailed documentation is in the documentation page above. 
+This project is divided into three parts: download, sgml download, and parsing. The detailed documentation is in the documentation page [here](https://australian-parliamentary-speech.github.io/House_Scraper/). 
 
 # Install Julia
 
-To run the package, Julia needs to be installed. Help see https://julialang.org/install/
+To run the package, Julia needs to be installed. For help see https://julialang.org/install/
 
 # Download the XML files
 
@@ -64,7 +64,24 @@ Go into the directory:
 cd House_Scraper
 ```
 
-You would have to copy all the downloaded XML files into Inputs/hansard. The input XML files should be in directories with the corresponding year as the directory name. 
+You would have to copy all the downloaded XML files into Inputs/hansard/:
+
+```
+mv -rf ../sgml2xml/house\_xmls/* Inputs/hansard/
+```
+```
+mv -rf ../Download/sitemap\_xmls\_house/* Inputs/hansard/
+```
+Or
+
+
+```
+mv -rf ../sgml2xml/senate\_xmls/* Inputs/hansard/
+```
+```
+mv -rf ../Download/sitemap\_xmls\_senate/* Inputs/hansard/
+```
+
 
 In the directory, run:
 ```
@@ -73,11 +90,5 @@ In the directory, run:
 The output file will be in Outputs/hansard/{{year}}/
 
 To run different year ranges or a specific year, hansard.toml file needs to be editted.
-
-# To inspect how each node is processed
-
-In the directory src/nodes, all the information regarding how each node is processed is stored in the corresponding file. For example, how nodes with nodename "p" would be stored in PNode.jl. The detailed documentation can be accessed in both docs/build/nodes/index.html or the docstrings in each function.
-
-
 
 
