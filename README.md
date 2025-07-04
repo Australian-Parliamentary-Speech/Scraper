@@ -1,12 +1,7 @@
-[![Documentation](https://github.com/Australian-Parliamentary-Speech/Scraper/actions/workflows/documentation.yml/badge.svg)](https://australian-parliamentary-speech.github.io/Scraper/)
+[![Documentation](https://github.com/Australian-Parliamentary-Speech/Scraper/actions/workflows/documentation.yml/badge.svg)](https://australian-parliamentary-speech.github.io/House_Scraper/)
 
 # To install and run the package
-In your preferred directory, run:
-```
-git clone git@github.com:Australian-Parliamentary-Speech/Scraper.git
-```
-
-In the directory where run file is, run:
+In your preferred directory, clone this repo. In the directory, run:
 ```
 ./run Inputs/hansard/hansard.toml
 ```

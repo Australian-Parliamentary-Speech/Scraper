@@ -1,12 +1,18 @@
 # Downloading the XML files
 
-We use the sitemap provided by <https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml> to download the XML files. The sitemap contains a list of XML links which then provide with the html pages where the links for the debate XML pages were provided. Here we give a brief overlook on the steps the program takes to download the XMLs and the information in the logfile if anything goes wrong. All csv files will be stored in **sitemap\_inter\_csvs/**. All files live in **ParlinfoSpeechScraper/Download/**.
+We use the sitemap provided by <https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml> to download the XML files. The sitemap contains a list of XML links which then provide with the html pages where the links for the debate XML pages were provided. Here we give a brief overlook on the steps the program takes to download the XMLs and the information in the logfile if anything goes wrong. All csv files will be stored in **sitemap\_inter\_csvs/**. 
 
-To update or run for the first time, head to the Download/ directory and run
+To update or run for the first time, git clone this repo and run:
 
 ```console
-julia XML_Download_method1.jl
+./run <senate or house>
 ```
+
+## required file
+XML\_download\_method1.jl
+utils.jl
+download\_utils.jl (hidden file)
+run (bash file)
 
 ## logfile
 The logfiles are in sitemap\_logfiles/. It contains information on how many links in total were detected (to compare with the parlinfo website) and how many missing were updated from this run.
