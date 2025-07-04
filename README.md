@@ -2,7 +2,7 @@
 
 # Install Julia
 
-To run the package, Julia needs to be installed. Help see [https://julialang.org/install/]
+To run the package, Julia needs to be installed. Help see https://julialang.org/install/
 
 # To install and run the package
 In your preferred directory, clone this repo. In the directory, run:
