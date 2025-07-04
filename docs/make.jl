@@ -18,7 +18,7 @@ makedocs(
     pages = [
     "ParlinfoSpeechScraper" => "index.md",
     "XML download" => "download.md",
-    "XML download (1981-1996)" => "sgml2xml.md",
+    "XML download (1981-1997)" => "sgml2xml.md",
     "Usage" => "usage.md",
     "Advanced Usage" => "advusage.md",
     "Nodes" => "nodes.md",
