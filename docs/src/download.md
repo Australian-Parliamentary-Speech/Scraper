@@ -1,12 +1,26 @@
-# Downloading the XML files
 
-We use the sitemap provided by <https://parlinfo.aph.gov.au/sitemap/sitemapindex.xml> to download the XML files. The sitemap contains a list of XML links which then provide with the html pages where the links for the debate XML pages were provided. Here we give a brief overlook on the steps the program takes to download the XMLs and the information in the logfile if anything goes wrong. All csv files will be stored in **sitemap\_inter\_csvs/**. 
+# Download the XML files
 
-To update or run for the first time, git clone this repo and run:
-
-```console
-./run <senate or house>
+Step one, in your preferred directory, clone the Download repo with HTTP or SSH:
 ```
+git clone https://github.com/Australian-Parliamentary-Speech/Download.git
+```
+
+Go into the directory:
+```
+cd Download
+```
+
+In the directory, run:
+```
+./run house
+```
+or
+```
+./run senate
+```
+
+The XML files should be in the directory sitemap\_xmls\_senate or sitemap\_xmls\_house.
 
 ## required file
 XML\_download\_method1.jl

@@ -1,13 +1,26 @@
-# Downloading the XML files from 1981-1996
-
-The XML files from 1981-1997 are missing from the sitemap provided on Parlinfo website. From 1981-1996 sgml files were downloaded and then converted into xml files.
-
-
-To update or run for the first time, git clone this repo and run:
-
-```console
-./run <senate or house>
+# Download the SGML files and convert them to XML files
+Step one, in your preferred directory, clone the sgml2xml repo with HTTP or SSH:
 ```
+git clone https://github.com/Australian-Parliamentary-Speech/sgml2xml.git
+```
+
+Go into the directory
+```
+cd sgml2xml
+```
+ 
+In the directory, run:
+```
+./run house
+```
+
+or 
+```
+./run senate
+```
+
+The XML files should be in the directory senate\_xmls or house\_xmls
+
 
 ### required file:
 hansard.dtd (converts sgml to xml)

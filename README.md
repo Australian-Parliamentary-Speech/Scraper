@@ -64,22 +64,26 @@ Go into the directory:
 cd House_Scraper
 ```
 
-You would have to copy all the downloaded XML files into Inputs/hansard/:
+You would have to copy all the downloaded XML files into Inputs/hansard/, first make the directory:
 
 ```
-mv -rf ../sgml2xml/house\_xmls/* Inputs/hansard/
+mkdir Inputs/hansard/xmls
+```
+
+```
+mv -f ../sgml2xml/house\_xmls/* Inputs/hansard/xmls
 ```
 ```
-mv -rf ../Download/sitemap\_xmls\_house/* Inputs/hansard/
+mv -f ../Download/sitemap\_xmls\_house/* Inputs/hansard/xmls
 ```
 Or
 
 
 ```
-mv -rf ../sgml2xml/senate\_xmls/* Inputs/hansard/
+mv -f ../sgml2xml/senate\_xmls/* Inputs/hansard/xmls
 ```
 ```
-mv -rf ../Download/sitemap\_xmls\_senate/* Inputs/hansard/
+mv -f ../Download/sitemap\_xmls\_senate/* Inputs/hansard/xmls
 ```
 
 
