@@ -1,5 +1,9 @@
 [![Documentation](https://github.com/Australian-Parliamentary-Speech/Scraper/actions/workflows/documentation.yml/badge.svg)](https://australian-parliamentary-speech.github.io/House_Scraper/)
 
+# Install Julia
+
+To run the package, Julia needs to be installed. Help see [https://julialang.org/install/]
+
 # To install and run the package
 In your preferred directory, clone this repo. In the directory, run:
 ```
