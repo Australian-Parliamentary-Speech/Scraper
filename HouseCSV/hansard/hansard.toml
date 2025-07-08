@@ -4,8 +4,9 @@ FILENAME = "xmls/1928/1928_03_02.xml"
 [GENERAL_OPTIONS]
 YEAR = [1928, 1928]
 OVERWRITE = true
+SAMPLE = false
 CSV_EXIST = false
-EDIT = ["re", "free_node", "flatten", "flatten"]
+EDIT = ["re", "free_node", "flatten", "flatten", "column_decorate"]
 
 [GLOBAL]
 BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/"
@@ -15,6 +16,6 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "12:21:39"
+TIME = "17:17:46"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
 DATE = "2025-07-08"

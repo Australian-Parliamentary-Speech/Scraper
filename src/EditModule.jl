@@ -65,6 +65,16 @@ function detect_edit_phase(date)
     return AbstractEditPhase
 end
 
+
+"""get all flags except chamber flag"""
+function find_all_flags(row,header_to_num)
+ #   all_flags = [process_flag(row[header_to_num[k]]) for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))]
+    flag_indices = sort([header_to_num[k] for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))])
+    all_flags = [process_flag(row[f]) for f in flag_indices]
+    return flag_indices,all_flags
+end 
+
+
 """
 edit_set_up(headers)
 
@@ -106,6 +116,25 @@ function cell_not_null(cell)
     return !(cell == "N/A" || cell == "FREE NODE" || cell == "None")
 end
 
+function reverse_dict(d)
+    return Dict(v => k for (k, v) in d)
+end
+
+
+function add_header_to_num(num_to_header,which_cols)
+    for which_col in which_cols
+        col_num,col_header = which_col
+        new_num_to_header = deepcopy(num_to_header)
+        for i in 1:length(num_to_header)
+            if i >= col_num
+                new_num_to_header[i+1] = num_to_header[i]
+            end
+        end
+            new_num_to_header[col_num] = col_header
+            num_to_header = new_num_to_header
+    end
+    return num_to_header
+end
 
 
 function is_stage_direction(row,header_to_num)
@@ -123,6 +152,12 @@ function get_row(rows, row_no)
     row_ = @. collect(row)
     return row_[1]
 end
+
+function fill_row(new_headers, row_dict)
+    return [row_dict[header] for header in new_headers]
+end
+
+
 
 
 end

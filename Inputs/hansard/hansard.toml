@@ -11,6 +11,7 @@
 
 [ general_options ]
     csv_exist = false
-    edit = ["re","free_node","flatten","flatten"]
+    edit = ["re","free_node","flatten","flatten","column_decorate"]
     year = [1928,1928]
     overwrite = true
+    sample = true

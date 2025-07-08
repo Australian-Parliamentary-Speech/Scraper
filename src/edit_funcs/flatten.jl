@@ -90,14 +90,6 @@ function stop_before_next_talker(row_no,rows,header_to_num,log)
 end
 
 
-"""get all flags except chamber flag"""
-function find_all_flags(row,header_to_num)
- #   all_flags = [process_flag(row[header_to_num[k]]) for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))]
-    flag_indices = sort([header_to_num[k] for k in keys(header_to_num) if (occursin("flag",string(k)) && !(occursin("chamber",string(k))))])
-    all_flags = [process_flag(row[f]) for f in flag_indices]
-    return flag_indices,all_flags
-end 
-
 function process_flag(flag)
     if typeof(flag) <: Int
         return flag

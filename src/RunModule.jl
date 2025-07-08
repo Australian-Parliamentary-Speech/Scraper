@@ -99,6 +99,8 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     csv_exist = toml["GENERAL_OPTIONS"]["CSV_EXIST"]
     edit_funcs = toml["GENERAL_OPTIONS"]["EDIT"]
     over_write = toml["GENERAL_OPTIONS"]["OVERWRITE"]
+    sample_write = toml["GENERAL_OPTIONS"]["SAMPLE"]
+
     Threads.@threads for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
         date_float,date = get_date(fn)
@@ -112,7 +114,9 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
             end 
         end
    end
-   copy_sample_file(output_path,length(edit_funcs))
+   if sample_write
+        copy_sample_file(output_path,length(edit_funcs))
+   end
 end
 
 function copy_sample_file(output_path,num)
