@@ -18,7 +18,6 @@ end
 
 function is_first_node_type(node::Node{PNode{PhaseSGML}},parent_node,allowed_names,node_tree)
     if typeof(parent_node) <: Node{<:MotionnospeechNode}
-        write_test_xml(node,parent_node,"is_first_p_node_motionnospeech")
         return true
     end
     if !hasprevnode(node.node)
@@ -61,7 +60,6 @@ end
 function process_node(node::Node{PNode{PhaseSGML}},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
-    edge_case = nothing
     #    parent_node = reverse_find_first_node_not_name(node_tree,allowed_names)
     if length(node_tree) > 0
 #        parent_node = node_tree[end]
@@ -74,9 +72,6 @@ function process_node(node::Node{PNode{PhaseSGML}},node_tree)
                     node.headers_dict["name"] = name.content
                 end
             end
-
-        else
-            edge_case = find_talker_in_p(node)
         end
         define_flags(node,parent_node,node_tree)
     else

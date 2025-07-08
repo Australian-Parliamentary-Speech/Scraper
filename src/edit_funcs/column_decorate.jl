@@ -20,6 +20,8 @@ function column_decorate(input_fn, output_fn, ::Type{<:AbstractEditPhase})
                 row_dict[:speaker_no] = "N/A"
             else
                 row_dict[:stage_direction_flag] = 0
+                speaker_num += 1
+                row_dict[:speaker_no] = speaker_num
                 if row_index > 1
                     row_dict,speaker_num = input_speaker_number(rows,row_dict, row_index,speaker_num,header_to_num)
                 end

@@ -58,28 +58,20 @@ function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
-    edge_case = nothing
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         if !(is_free_node(node,parent_node))
             get_talker_from_parent(node,parent_node)
             if node.headers_dict["name"] == "N/A"
-                edge_case = "no_talker_block_from_parent"
                 name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
                 if !isnothing(name)
-                    edge_case = "any_name_from_parent"
                     node.headers_dict["name"] = name.content
                 end
-            else
-                edge_case = "exist_talker_block_in_parent"
             end
         else
             node.headers_dict["name"] = "FREE NODE"
         end
-    else
-        edge_case = find_talker_in_p(node)
     end 
     define_flags(node,parent_node,node_tree)
-    write_test_xml(node, parent_node, edge_case)
     return construct_row(node,node_tree)
 end
 
@@ -113,21 +105,13 @@ function find_talker_in_p(p_node::Node{<:PNode})
     p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker_soup)
         p_with_a_as_parent(p_node)
-        if p_node.headers_dict["name"] != "N/A" || p_node.headers_dict["name.id"] != "N/A"
-            edge_case = "p_with_a_as_parent"
-        else
-            edge_case = "found_nothing"
-        end
-        return edge_case
     else
         p_talker  = findfirst_in_subsoup(p_talker_soup.path,"/@type",p_node.soup)
         p_talker_id = findfirst_in_subsoup(p_talker_soup.path,"/@href",p_node.soup)
         p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
         p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
-        edge_case = "found_a_in_p_block"
         p_node.headers_dict["name"] = clean_text(p_talker)
         p_node.headers_dict["name.id"] = clean_text(p_talker_id)
-        return edge_case
     end
 end
 

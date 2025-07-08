@@ -66,7 +66,6 @@ end
 function process_node(node::Node{PNode{Phase2011}},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
-    edge_case = nothing
     if length(node_tree) > 0
         parent_node = node_tree[end]
         c = node.node.content

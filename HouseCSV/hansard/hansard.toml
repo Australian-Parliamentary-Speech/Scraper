@@ -1,8 +1,5 @@
-[[XML]]
-FILENAME = "xmls/1928/1928_03_02.xml"
-
 [GENERAL_OPTIONS]
-YEAR = [1928, 1928]
+YEAR = [1901, 2025]
 OVERWRITE = true
 SAMPLE = true
 CSV_EXIST = false
@@ -16,6 +13,9 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "17:19:20"
+TIME = "20:01:04"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
 DATE = "2025-07-08"
+
+[[XML_DIR]]
+PATH = "xmls"
