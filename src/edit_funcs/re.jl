@@ -25,6 +25,7 @@ function edit_row(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
     row = delete_talker_from_content(row,header_to_num) 
+    row = remove_dash(row,header_to_num)
     return row
 end
 
@@ -38,6 +39,14 @@ function remove_the_speaker(row,header_to_num)
 #    if row[name_num] != test
 #        @show test
 #    end
+    return row
+end
+
+function remove_dash(row, header_to_num)
+    content_num = header_to_num[:content]
+    content = row[content_num]
+    new_content = replace.(content, r"^[ \.]?-+" => "")
+    row[content_num] = new_content
     return row
 end
 
