@@ -2,15 +2,15 @@
     output_path = "../../HouseCSV/hansard"
 
 ###choose one: XML or XML_DIR
-#[[ XML ]]
-#    filename = "xmls/1901/1901_05_29.xml"
+[[ XML ]]
+    filename = "xmls/1928/1928_03_02.xml"
 
 
-[[ XML_DIR ]]
-    path = "xmls"
+#[[ XML_DIR ]]
+#    path = "xmls"
 
 [ general_options ]
     csv_exist = false
     edit = ["re","free_node","flatten","flatten"]
-    year = [1901,2025]
+    year = [1928,1928]
     overwrite = true

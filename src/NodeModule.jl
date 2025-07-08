@@ -412,7 +412,9 @@ function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
     debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
     subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
     if node.headers_dict["content"] == "N/A"
-        node.headers_dict["content"] = node.node.content
+        content = node.node.content
+        content = get_node_content(node,content)
+        node.headers_dict["content"] = content
     end
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
@@ -433,6 +435,18 @@ function define_headers(::Type{<:AbstractPhase})
     headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
     headers_dict = OrderedDict(headers .=> ["N/A" for h in headers])
     return headers_dict
+end
+
+"""add space for in-lines"""
+function get_node_content(node::Node{<:AbstractNode{<:AbstractPhase}},content)
+    inlines = findall_in_subsoup(node.node.path,"//inline",node.soup)
+    if !isnothing(inlines)
+        inline_contents = [inline.content for inline in inlines]
+        for inline_content in inline_contents
+            content = replace(content, inline_content => " $(inline_content) ")
+        end
+    end
+    return content
 end
 
 

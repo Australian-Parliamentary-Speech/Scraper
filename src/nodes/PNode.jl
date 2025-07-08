@@ -30,6 +30,8 @@ function construct_row(node::Node{<:PNode},node_tree)
         content = node.node.content
     end
 
+    content = get_node_content(node,content)
+
     node.headers_dict["content"] = content
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
