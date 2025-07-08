@@ -437,7 +437,6 @@ function define_headers(::Type{<:AbstractPhase})
     return headers_dict
 end
 
-"""add space for in-lines"""
 function get_node_content(node::Node{<:AbstractNode{<:AbstractPhase}},content)
     inlines = findall_in_subsoup(node.node.path,"//inline",node.soup)
     if !isnothing(inlines)
