@@ -15,7 +15,7 @@ This page contains some summary statistics we have calculated for our scraping r
 
    parent_dir = pathof(ParlinfoSpeechScraper)
    dir_ = joinpath(dirname(dirname(parent_dir)),"test")
-   df = CSV.read(joinpath(dir_,"summary_all_dates.csv"),DataFrame;header=false)
+   df = CSV.read(joinpath(dir_,"all_csv_dates.csv"),DataFrame;header=false)
     
    years = collect(1901:current_year)
    counts = [0 for i in 1:length(years)]
@@ -35,21 +35,4 @@ This page contains some summary statistics we have calculated for our scraping r
    mdtable(M,latex=false,side=sides)
 ```
 
-## The speaker coverage
-```@eval
-   using CSV, DataFrames
-   using Latexify
-   using ParlinfoSpeechScraper
-   using Dates
 
-   current_year = year(today())
-
-   parent_dir = pathof(ParlinfoSpeechScraper)
-   dir_ = joinpath(dirname(dirname(parent_dir)),"test")
-   df = CSV.read(joinpath(dir_,"summary_speaker_coverage.csv"),DataFrame;header=false)
-   M = Matrix(df)
-   M[:, 1] = Int.(M[:, 1])
-   sides = ["Year","No. speaker detected","No. missing speakers","Detection ratio"]
-   mdtable(M',latex=false,side=sides)
- 
-```

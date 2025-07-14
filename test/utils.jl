@@ -48,3 +48,13 @@ function get_all_csvnames(path)
     all = readdir(glob"*.csv", path)
     return all
 end
+
+function get_all_csv_subdir(path)
+    all = readdir(glob"*/*.csv", path)
+    return all
+end
+
+function get_all_xml_subdir(path)
+    all = readdir(glob"*/*.xml", path)
+    return all
+end

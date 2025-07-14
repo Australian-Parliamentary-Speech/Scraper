@@ -11,11 +11,14 @@ const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
 
 function setup()
-    input_path = "../Inputs/hansard/hansard.toml"
-    toml = setup_input(input_path,false)
+    tomlpath = "../Inputs/hansard/hansard.toml"
+    toml = setup_input(tomlpath,false)
     global_options = toml["GLOBAL"]
-    output_path = global_options["OUTPUT_PATH"] 
-    return output_path
+    outputpath = global_options["OUTPUT_PATH"]
+    xml_path_toml = toml["XML_DIR"][1]
+    xml_path = xml_path_toml["PATH"]
+    inputpath = joinpath(dirname(tomlpath),xml_path)
+    return inputpath,outputpath
 end
 
 function get_sample_csvs(outputpath,gold_standard_csvs,sample_dir)
@@ -51,67 +54,60 @@ function compare_gold_standard(outputpath, testpath)
 end
 
 
-function get_all_dates(outputpath,testpath)
-    function editrow(row)
-        edit_row = ""
-        for i in row
-            i = replace(string(i), "\"" => "\'")
-            edit_row = edit_row * "\"$i\","
+function get_all_csv_dates(outputpath,testpath)
+    function find_all_csv_dates(all_csv_names)
+        simple_list = []
+        for name in all_csv_names
+            date_match = match(r"\d+-\d+-\d+",name)
+            date = date_match.match
+            push!(simple_list,date) 
+        end
+        return unique(simple_list)
+    end
+    all_csv_names = get_all_csv_subdir(outputpath)
+    all_csv_dates = find_all_csv_dates(all_csv_names)
+    years = [split(date,"-")[1] for date in all_csv_dates]
+    open("all_csv_dates.csv", "w") do io
+        for (x,y) in zip(years, all_csv_dates)
+            println(io, "$x,$y")
         end
     end
+end
 
-    integer_pattern = r"^\d+$"
-    year_dirs = filter(name -> isdir(joinpath(outputpath, name)) && occursin(integer_pattern, name), readdir(outputpath))
-    open(joinpath(testpath,"summary_all_dates.csv"), "w") do io
-        for year_dir in year_dirs
-            dir_ = joinpath(outputpath,year_dir)
-            files = filter(name -> isfile(joinpath(dir_, name)) && endswith(name, "edit_step2.csv"), readdir(dir_))
-            row = [replace(filename, r"_edit_step2\.csv$" => "") for filename in files]
-            write(io,join(vcat([year_dir],row),","),"\n")
+function get_all_xml_dates(inputpath,testpath)
+    function find_all_xml_dates(all_xml_names)
+        simple_list = []
+        for name in all_xml_names
+            date_match = match(r"\d+_\d+_\d+",name)
+            date = date_match.match
+            push!(simple_list,date) 
         end
+        return unique(simple_list)
     end
-
-    open(joinpath(testpath,"summary_speaker_coverage.csv"), "w") do io
-        for year_dir in year_dirs
-            dir_ = joinpath(outputpath,year_dir)
-            files = filter(name -> isfile(joinpath(dir_, name)) && endswith(name, "edit_step2.csv"), readdir(dir_))
-            speaker_no = 0
-            missing_speaker_no = 0
-            for file in files
-                csvfile = CSV.File(joinpath(dir_,file))
-                rows = eachrow(csvfile)
-                headers_ = copy(propertynames(csvfile))
-                header_to_num = RunModule.EditModule.edit_set_up(headers_)
-                for row in rows
-                    if !RunModule.EditModule.is_stage_direction(row,header_to_num)
-                        row = @. collect(row)
-                        row_ = row[1]
-                        if row_[header_to_num[Symbol("name.id")]] != "N/A"
-                            speaker_no += 1
-                        else
-                            missing_speaker_no += 1
-                        end
-                    end
-                end
-            end
-            println(io,join([year_dir, speaker_no, missing_speaker_no, speaker_no/(speaker_no+missing_speaker_no)],","))
+    all_xml_names = get_all_xml_subdir(inputpath)
+    all_xml_dates = find_all_xml_dates(all_xml_names)
+    years = [split(date,"_")[1] for date in all_xml_dates]
+    open("all_xml_dates.csv", "w") do io
+        for (x,y) in zip(years, all_xml_dates)
+            println(io, "$x,$y")
         end
     end
 end
 
 
-@testset verbose = true "Test set" begin
-    @test begin
-        outputpath = setup()
-        compare_gold_standard(outputpath, @__DIR__)
-        true
-    end
 
+@testset verbose = true "Test set" begin
+    inputpath, outputpath = setup()
 #    @test begin
-#        outputpath = setup()
-#        get_all_dates(outputpath,@__DIR__)
+#        compare_gold_standard(outputpath, @__DIR__)
 #        true
 #    end
+
+    @test begin
+        get_all_csv_dates(outputpath,@__DIR__)
+        get_all_xml_dates(inputpath,@__DIR__)
+        true
+    end
 end
  
 

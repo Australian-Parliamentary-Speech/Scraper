@@ -13,7 +13,7 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "14:10:14"
+TIME = "15:28:12"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
 DATE = "2025-07-14"
 
