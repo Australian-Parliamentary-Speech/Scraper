@@ -13,9 +13,9 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "05:03:40"
+TIME = "14:10:14"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/hansard.toml"
-DATE = "2025-07-09"
+DATE = "2025-07-14"
 
 [[XML_DIR]]
 PATH = "xmls"

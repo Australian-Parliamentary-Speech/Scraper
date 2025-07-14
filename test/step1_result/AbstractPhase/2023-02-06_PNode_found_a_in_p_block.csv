@@ -1,4 +1,0 @@
-"question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"
-"0","0","1","0","0","Dick, Milton MP (The SPEAKER)","53517","Oxley","ALP","N/A","33","33 Dick, Milton MP (The SPEAKER) 53517 Oxley ALP","N/A","N/A","/root/speech/interjection[1]/talk.start"
-"0","0","1","0","0","Chandler-Mather, Max MP","300121","Griffith","AG","N/A","33","33 Chandler-Mather, Max MP 300121 Griffith AG","N/A","N/A","/root/speech/interjection[2]/talk.start"
-"0","0","0","1","0","Bates, Stephen MP","300246","Brisbane","AG","N/A","33","The SPEAKER: Is the motion seconded?","N/A","N/A","/root/speech/body/p"
