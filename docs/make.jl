@@ -22,8 +22,8 @@ makedocs(
     "Usage" => "usage.md",
     "Advanced Usage" => "advusage.md",
     "Nodes" => "nodes.md",
-    "Function references" => "functionreference.md",
-    "Summaries" => "summaries.md"
+    "Function references" => "functionreference.md"
+#    "Summaries" => "summaries.md"
     ]
     )
 
