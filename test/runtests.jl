@@ -2,7 +2,7 @@ using ParlinfoSpeechScraper
 using EzXML
 using InteractiveUtils
 using Test
-using CSV
+using CSV, DataFrames
 using Glob
 using BetterInputFiles
 include(joinpath(@__DIR__, "utils.jl"))
@@ -80,6 +80,7 @@ function get_all_xml_dates(inputpath,testpath)
         for name in all_xml_names
             date_match = match(r"\d+_\d+_\d+",name)
             date = date_match.match
+            date = replace(date, "_" => "-")
             push!(simple_list,date) 
         end
         return unique(simple_list)
@@ -106,6 +107,16 @@ end
     @test begin
         get_all_csv_dates(outputpath,@__DIR__)
         get_all_xml_dates(inputpath,@__DIR__)
+
+        xml = CSV.read("all_xml_dates.csv", DataFrame)
+        csv = CSV.read("all_csv_dates.csv", DataFrame)
+
+        xmls = xml[:, 2]
+        csvs = csv[:, 2]
+        only_in_xml = setdiff(xmls, csvs)
+        only_in_csv = setdiff(csvs, xmls)
+        @show only_in_xml
+        @show only_in_csv
         true
     end
 end
