@@ -25,7 +25,7 @@ function edit_row(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
     row = delete_talker_from_content(row,header_to_num) 
-    row = remove_dash(row,header_to_num)
+    row = remove_bits(row,header_to_num)
     return row
 end
 
@@ -42,11 +42,28 @@ function remove_the_speaker(row,header_to_num)
     return row
 end
 
-function remove_dash(row, header_to_num)
+
+
+function remove_bits(row, header_to_num)
     content_num = header_to_num[:content]
     content = row[content_num]
-    new_content = replace.(content, r"^[ \.]?-+" => "")
-    row[content_num] = new_content
+    #removes leading dash and full stop
+    content = replace(content, r"^[ \.]?-+" => "")
+    #removes leading spaces
+    content = replace(content, r"^ +" => "")  
+    #removes space before !
+    content = replace(content, r" +(?=!)" => "")
+    #removes space before ?
+    content = replace(content, r" +(?=\?)" => "") 
+    #removes trailing spaces in the end
+    content = replace(content, r" +$" => "")
+    #adds space in front of ( if missing
+    content = replace(content, r"(?<! )\(" => " (")
+    #change pf to of
+    content = replace(content, r" pf " => " of ")
+    #no space before semicolon
+    content = replace(content,r" +;" => ";")
+    row[content_num] = content
     return row
 end
 
