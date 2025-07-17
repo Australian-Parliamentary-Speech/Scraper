@@ -13,19 +13,18 @@ function column_decorate(input_fn, output_fn, ::Type{<:AbstractEditPhase})
     open(output_fn,"w") do io
         write_row_to_io(io,string.(new_headers))
         for row in rows
+            row_dict = Dict()
             if row_index > 1
                 row_dict,speaker_num = input_speaker_number(rows,row_dict, row_index,speaker_num,header_to_num)
             else
                 row_dict[:speaker_no] = speaker_num 
             end
 
-            row_dict = Dict()
-            if is_stage_direction(row,header_to_num)
+           if is_stage_direction(row,header_to_num)
 
                 row_dict[:stage_direction_flag] = 1
             else
                 row_dict[:stage_direction_flag] = 0
-                speaker_num += 1
             end
             row_ = @. collect(row)
             row = row_[1]

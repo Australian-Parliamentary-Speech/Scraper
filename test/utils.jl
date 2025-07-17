@@ -39,8 +39,10 @@ end
 
 function compare_row(sample_rows, gs_row, num, header_to_num)
     function equiv(row,gs_row)
-        @show row
-        @show gs_row
+        if row != gs_row
+            @show row
+            @show gs_row
+        end
         return row == gs_row
     end
     content = gs_row[header_to_num[:content]]
@@ -63,15 +65,18 @@ function similarity_csv(gs_csv,sample_csv)
     header_to_num = edit_set_up(headers)
     num = 1
     success = 0
+    content_success = 0
     for gs_row in gs_rows
         gs_row = get_row(gs_row)
         equiv, i = compare_row(sample_rows,gs_row,num,header_to_num) 
         @show equiv
         if equiv == true
             success += 1
+        elseif equiv != "N/A"
+            content_success += 1
         end
     end
-    return success/length(gs_rows)
+    return success/length(gs_rows), content_success/length(gs_rows)
 end
 
 

@@ -13,7 +13,7 @@
     which_house = "house"
     csv_exist = true
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
-    year = [1928,1928]
+    year = [1901,2025]
     overwrite = true
     sample = true
     remove_nums = [1,2,3,4,5,6]

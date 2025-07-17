@@ -11,7 +11,7 @@ const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
 
 function setup()
-    tomlpath = "../Inputs/hansard/hansard.toml"
+    tomlpath = "../Inputs/hansard/house.toml"
     toml = setup_input(tomlpath,false)
     global_options = toml["GLOBAL"]
     outputpath = global_options["OUTPUT_PATH"]
@@ -40,8 +40,9 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, testpath)
             gs_name = basename(gs_csv)
 
             sample_csv = joinpath(sample_csv_path,gs_name)
-            ratio = similarity_csv(gs_csv,sample_csv)
-            @show ratio
+            overall_ratio, content_ratio = similarity_csv(gs_csv,sample_csv)
+            @show overall_ratio
+            @show content_ratio
             println(io,"\"$gs_name\",ratio")
         end
     end
