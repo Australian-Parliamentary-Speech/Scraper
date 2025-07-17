@@ -74,6 +74,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     edit_funcs = general_options["EDIT"]
     over_write = general_options["OVERWRITE"]
     sample_write = general_options["SAMPLE"]
+    remove_num = general_options["REMOVE_NUMS"]
 
     xml_paths = [] 
 
@@ -119,6 +120,20 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
    if sample_write
         copy_sample_file(output_path,length(edit_funcs))
    end
+   remove_steps(output_path, remove_num)
+end
+
+function remove_steps(output_path,remove_num)
+    dirs = filter(isdir,readdir(output_path,join=true))    
+    for num in remove_num
+        for dir in dirs
+            for file in readdir(dir)
+                if occursin("step$(num).csv", file)
+                    rm(joinpath(dir, file))
+                end
+            end
+        end
+    end
 end
 
 function copy_sample_file(output_path,num)

@@ -2,10 +2,6 @@ function re(input_fn,output_fn,::Type{<:AbstractEditPhase})
     csvfile = CSV.File(input_fn)
     headers_ = copy(propertynames(csvfile))
     header_to_num = edit_set_up(headers_)
-    #any additional headers needed
-    for header in [:Speaker,:Time]
-        push!(headers_,header)
-    end
     rows = eachrow(csvfile)
   
     open(output_fn, "w") do io
@@ -20,7 +16,6 @@ function re(input_fn,output_fn,::Type{<:AbstractEditPhase})
 end
 
 function edit_row(row,header_to_num)
-    row = edit_out_time_content_row(row,header_to_num)
     row = remove_the_speaker(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
@@ -55,8 +50,6 @@ function remove_bits(row, header_to_num)
     content = replace(content, r" +(?=!)" => "")
     #removes space before ?
     content = replace(content, r" +(?=\?)" => "") 
-    #removes trailing spaces in the end
-    content = replace(content, r" +$" => "")
     #adds space in front of ( if missing
     content = replace(content, r"(?<! )\(" => " (")
     #change pf to of
@@ -65,31 +58,14 @@ function remove_bits(row, header_to_num)
     content = replace(content,r" +;" => ";")
     #no _ at end of speeches
     content = replace(content, r"_$" => "")
+    #removes trailing spaces in the end
+    content = replace(content, r" +$" => "")
+ 
     row[content_num] = content
     return row
 end
 
-function edit_out_time_content_row(row,header_to_num)
-    content_num = header_to_num[:content]
-    content = row[content_num]
-    new_content = edit_out_time_content(content)
-    row[content_num] = new_content[1]
-    new_row = vcat(row,[new_content[2],new_content[3]])
-    return new_row
-end
 
-function edit_out_time_content(cell)
-    pattern = r"\(\d{2}:\d{2}\):"
-    match_ = match(pattern,cell)
-    if isnothing(match_) 
-        return [cell,"N/A","N/A"]
-    else
-        match_ = match_.match
-        split_cell = split(cell,match_)
-        return [split_cell[2],split_cell[1],match_]
-    end
-end
- 
 function has_letters(s::AbstractString)
     return occursin(r"[a-zA-Z]", s)
 end
