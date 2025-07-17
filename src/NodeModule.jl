@@ -73,7 +73,7 @@ function detect_phase(date,which_house)
 end
 
 function detect_phase_senate(date)
-    phase = get(date_to_house_senate, date, nothing)
+    phase = get(date_to_phase_senate, date, nothing)
     if ! isnothing(phase)
         return phase
     end

@@ -1,0 +1,18 @@
+[ global ]
+    output_path = "../../SenateCSV/hansard"
+
+###choose one: XML or XML_DIR
+#[[ XML ]]
+#    filename = "xmls/2009/2009_06_03.xml"
+
+
+[[ XML_DIR ]]
+    path = "senate_xmls"
+
+[ general_options ]
+    which_house = "senate"
+    csv_exist = false
+    edit = ["re","free_node","flatten","flatten","column_decorate"]
+    year = [1901,2025]
+    overwrite = false
+    sample = false

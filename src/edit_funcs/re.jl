@@ -63,6 +63,8 @@ function remove_bits(row, header_to_num)
     content = replace(content, r" pf " => " of ")
     #no space before semicolon
     content = replace(content,r" +;" => ";")
+    #no _ at end of speeches
+    content = replace(content, r"_$" => "")
     row[content_num] = content
     return row
 end
