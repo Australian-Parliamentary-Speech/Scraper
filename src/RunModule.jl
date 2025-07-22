@@ -137,38 +137,14 @@ function remove_steps(output_path,remove_num)
 end
 
 function copy_sample_file(output_path,num)
-    function skip(num,fn)
-        for i in 2:num-1
-            if occursin("step$(i)",fn)
-                return false
-            end
-        end
-        return true
-    end
+    sample_dates = readlines(joinpath(dirname(output_path),"dates.csv"))
     sample_dir = joinpath(dirname(output_path),"upload")
     create_dir(sample_dir)
-    dirs = filter(isdir,readdir(output_path,join=true))   
-    for dir in dirs
-        if occursin("1977",dir)
-            run(`cp $(joinpath(dir,"1977-08-23_edit_step$(num).csv")) $sample_dir`)
-#            run(`cp $(joinpath(dir,"1977-08-23_edit_step1.csv")) $sample_dir`)
- 
-        end
-        ran = 15
-        i = 0
-        for fn in readdir(dir,join=true)
-            if i > ran
-                if occursin("step$(num)",fn)  
-                    command = `cp $fn $sample_dir`
-                    run(command)
-                    break
-                end
-            else
-                if skip(num,fn)
-                    i += 1
-                end
-            end
-        end
+    for sample_date in sample_dates
+        year = split(sample_date,"-")[1]
+        fn = joinpath([output_path,year,"$(sample_date)_edit_step$(num).csv"])
+        command = `cp $(fn) $sample_dir`
+        run(command)
     end
 end
 
