@@ -43,7 +43,7 @@ function remove_bits(row, header_to_num)
     content_num = header_to_num[:content]
     content = row[content_num]
     #removes leading dash and full stop
-    content = replace(content, r"^ +.[ ]*-+" => "")
+    content = replace(content, r"^ +\.?[ ]*-+" => "")
     #removes space before !
     content = replace(content, r" +(?=!)" => "")
     #removes space before ?

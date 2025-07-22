@@ -14,7 +14,7 @@
     #true to skip scraping, edit still remains
     csv_exist = true
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
-    year = [1904,1904]
+    year = [1901,2025]
     #false to skip both scraping and edits
     overwrite = true
     sample = true

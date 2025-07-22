@@ -1,6 +1,6 @@
 [GENERAL_OPTIONS]
 REMOVE_NUMS = []
-YEAR = [1904, 1904]
+YEAR = [1901, 2025]
 WHICH_HOUSE = "house"
 OVERWRITE = true
 SAMPLE = true
@@ -15,7 +15,7 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "18:13:50"
+TIME = "18:20:18"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/house.toml"
 DATE = "2025-07-22"
 
