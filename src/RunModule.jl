@@ -210,17 +210,21 @@ function run_xml(fn,output_path,csv_exist,edit_funcs,which_house)
             recurse(soup,date_float,PhaseType,soup,io,headers_dict)
         end
     end
-    ###Edit
-    edit_phase = detect_edit_phase(date)
-    editor = Editor(edit_funcs,edit_phase)    
-    edit_main(outputcsv,editor)
+
+    edit_csv(date,edit_funcs,outputcsv,output_path)
     open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
+
     Base.GC.gc()
     return date
 end
 
+function edit_csv(date,edit_funcs,outputcsv,output_path)
+    edit_phase = detect_edit_phase(date)
+    editor = Editor(edit_funcs,edit_phase)    
+    edit_main(outputcsv,editor)
+end
 
 """
 recurse(soup, date, PhaseType, xml_node, io, index=1, depth=0, max_depth=0, node_tree=Vector{Node}())

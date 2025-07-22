@@ -6,9 +6,15 @@ using CSV, DataFrames
 using Glob
 using BetterInputFiles
 include(joinpath(@__DIR__, "utils.jl"))
+include(joinpath(@__DIR__, "similarity_funcs.jl"))
+
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
+
+struct test_struct
+    skip_cols::Vector{Any}
+end
 
 function setup()
     tomlpath = "../Inputs/hansard/house.toml"
@@ -32,36 +38,22 @@ function get_sample_csvs(outputpath,gold_standard_csvs,sample_dir)
 end
 
 
-
-function similarity_ratio(gold_standard_csvs,sample_csv_path, testpath)
+function similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setup)
     fn = joinpath(testpath,"similarity_test.csv")
     open(fn,"w") do io
         for gs_csv in gold_standard_csvs
             gs_name = basename(gs_csv)
 
             sample_csv = joinpath(sample_csv_path,gs_name)
-            overall_ratio, content_ratio = similarity_csv(gs_csv,sample_csv)
-            @show overall_ratio
-            @show content_ratio
+            content_all_ratio, content_only_ratio = similarity_csv(gs_csv,sample_csv,test_setup)
+            @show content_all_ratio
+            @show content_only_ratio
             println(io,"\"$gs_name\",ratio")
         end
     end
 end
 
-
-function compare_outputs(gold_standard_csvs,sample_csv_path,testpath)
-    fn = joinpath(testpath,"compatibility_test.csv")
-    open(fn,"w") do io
-        for gs_csv in gold_standard_csvs
-            gs_name = basename(gs_csv)
-            sample_csv = joinpath(sample_csv_path,gs_name)
-            mismatched = compare_csv(gs_csv,sample_csv)
-            println(io,"\"$gs_name\","*mismatched)
-        end
-    end
-end
-
-function compare_gold_standard(outputpath, testpath,which_test)
+function compare_gold_standard(outputpath, testpath,which_test,test_setup)
     gold_standard_path = joinpath(testpath,"gold_standard")
     sample_csv_path = joinpath(testpath,"sample_csv")
     create_dir(sample_csv_path)
@@ -70,7 +62,7 @@ function compare_gold_standard(outputpath, testpath,which_test)
     if which_test == :debug
         compare_outputs(gold_standard_csvs, sample_csv_path,testpath)
     elseif which_test == :ratio
-        similarity_ratio(gold_standard_csvs,sample_csv_path, testpath) 
+        similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setup) 
     end
 end
 
@@ -121,7 +113,9 @@ end
 @testset verbose = true "Test set" begin
     inputpath, outputpath = setup()
     @test begin
-        compare_gold_standard(outputpath, @__DIR__,[:debug,:ratio][2])
+        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no")]
+        test_setup = test_struct(skip_cols)
+        compare_gold_standard(outputpath, @__DIR__,[:debug,:ratio][2],test_setup)
         true
     end
 
