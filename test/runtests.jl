@@ -16,8 +16,8 @@ struct test_struct
     skip_cols::Vector{Any}
 end
 
-function setup()
-    tomlpath = "../Inputs/hansard/house.toml"
+function setup(which_house)
+    tomlpath = "../Inputs/hansard/$(which_house).toml"
     toml = setup_input(tomlpath,false)
     global_options = toml["GLOBAL"]
     outputpath = global_options["OUTPUT_PATH"]
@@ -67,7 +67,7 @@ function compare_gold_standard(outputpath, testpath,which_test,test_setup)
 end
 
 
-function get_all_csv_dates(outputpath,testpath)
+function get_all_csv_dates(outputpath,testpath,which_house)
     function find_all_csv_dates(all_csv_names)
         simple_list = []
         for name in all_csv_names
@@ -80,14 +80,16 @@ function get_all_csv_dates(outputpath,testpath)
     all_csv_names = get_all_csv_subdir(outputpath)
     all_csv_dates = find_all_csv_dates(all_csv_names)
     years = [split(date,"-")[1] for date in all_csv_dates]
-    open("all_csv_dates.csv", "w") do io
+    fn = "all_csv_dates_$(which_house).csv"
+    open(fn, "w") do io
         for (x,y) in zip(years, all_csv_dates)
             println(io, "$x,$y")
         end
     end
+    return fn
 end
 
-function get_all_xml_dates(inputpath,testpath)
+function get_all_xml_dates(inputpath,testpath,which_house)
     function find_all_xml_dates(all_xml_names)
         simple_list = []
         for name in all_xml_names
@@ -101,39 +103,42 @@ function get_all_xml_dates(inputpath,testpath)
     all_xml_names = get_all_xml_subdir(inputpath)
     all_xml_dates = find_all_xml_dates(all_xml_names)
     years = [split(date,"-")[1] for date in all_xml_dates]
-    open("all_xml_dates.csv", "w") do io
+    fn = "all_xml_dates_$(which_house).csv"
+    open(fn, "w") do io
         for (x,y) in zip(years, all_xml_dates)
             println(io, "$x,$y")
         end
     end
+    return fn
 end
 
 
 
 @testset verbose = true "Test set" begin
-    inputpath, outputpath = setup()
-    @test begin
-        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no")]
-        test_setup = test_struct(skip_cols)
-        compare_gold_standard(outputpath, @__DIR__,[:debug,:ratio][2],test_setup)
-        true
-    end
-
+    which_house = :senate
+    inputpath, outputpath = setup(which_house)
 #    @test begin
-#        get_all_csv_dates(outputpath,@__DIR__)
-#        get_all_xml_dates(inputpath,@__DIR__)
-#
-#        xml = CSV.read("all_xml_dates.csv", DataFrame)
-#        csv = CSV.read("all_csv_dates.csv", DataFrame)
-#
-#        xmls = xml[:, 2]
-#        csvs = csv[:, 2]
-#        only_in_xml = setdiff(xmls, csvs)
-#        only_in_csv = setdiff(csvs, xmls)
-#        @show only_in_xml
-#        @show only_in_csv
+#        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no")]
+#        test_setup = test_struct(skip_cols)
+#        compare_gold_standard(outputpath, @__DIR__,[:debug,:ratio][2],test_setup)
 #        true
 #    end
+
+    @test begin
+        csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
+        xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
+
+        xml = CSV.read(xml_fn, DataFrame)
+        csv = CSV.read(csv_fn, DataFrame)
+
+        xmls = xml[:, 2]
+        csvs = csv[:, 2]
+        only_in_xml = setdiff(xmls, csvs)
+        only_in_csv = setdiff(csvs, xmls)
+        @show only_in_xml
+        @show only_in_csv
+        true
+    end
 end
  
 

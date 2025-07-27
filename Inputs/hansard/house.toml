@@ -12,10 +12,10 @@
 [ general_options ]
     which_house = "house"
     #true to skip scraping, edit still remains
-    csv_exist = true
+    csv_exist = false
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
     year = [1901,2025]
     #false to skip both scraping and edits
     overwrite = true
     sample = true
-    remove_nums = []
+    remove_nums = [1,2,3,4,5,6]
