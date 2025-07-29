@@ -211,7 +211,7 @@ Inputs:
 - `io`: The output stream where processed data is written.
 """
 function parse_node(node::Node,node_tree,io)
-    process_node(node,node_tree)
+   process_node(node,node_tree)
 end
 
 """
@@ -308,6 +308,7 @@ function get_talker_from_parent(node::Node,parent_node::Node)
             if node.headers_dict[header] == "N/A"
                 info = findfirst_in_subsoup(parent_node.path,xpath,soup)
                 if !isnothing(info)
+#                    @debug info.content
                     node.headers_dict[header] = info.content
                 end
             end

@@ -3,7 +3,7 @@
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "xmls/2009/2009_06_03.xml"
+#    filename = "senate_xmls/1999/1999_06_25.xml"
 
 
 [[ XML_DIR ]]
@@ -12,7 +12,10 @@
 [ general_options ]
     which_house = "senate"
     csv_exist = false
-    edit = ["re","free_node","flatten","flatten","column_decorate"]
-    year = [1901,2025]
-    overwrite = false
+    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
+    year = [1901,1901]
+    overwrite = true
     sample = false
+    remove_nums = [1,2,3,4,5,6]
+    #whether to clean the xml names
+    xml_name_clean = true

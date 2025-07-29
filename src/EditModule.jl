@@ -18,6 +18,7 @@ abstract type GenericEditPhase <: AbstractEditPhase end
 struct Editor
     edit_funcs
     edit_phase::Type{<:AbstractEditPhase}
+    logger
 end
 
 #Get Edit functions

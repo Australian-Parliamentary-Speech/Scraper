@@ -23,7 +23,6 @@ A different method to detect if the pnode is the first pnode for this phase
 """
 function is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_names,node_tree)
     if typeof(parent_node) <: Node{<:MotionnospeechNode}
-        write_test_xml(node,parent_node,"is_first_p_node_motionnospeech")
         return true
     end
     if !hasprevnode(node.node)
@@ -31,10 +30,8 @@ function is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_nam
     end
     if hasprevnode(prevnode(node.node))
         if nodename(prevnode(prevnode(node.node))) == "talker"
-            write_test_xml(node,parent_node,"is_first_p_node_talker") 
             return true
         else
-            write_test_xml(node,parent_node,"do_not_find_talker_in_parent") 
             return false
         end
     else
@@ -49,7 +46,6 @@ function is_nodetype(node, node_tree, nodetype::Type{<:PNode},phase::Type{Phase2
     name = nodename(node)
     if name in allowed_names
         if length(node_tree) == 0
-            @info "para without parent detected"
             return true
         else
             section_types = get_sections(nodetype)

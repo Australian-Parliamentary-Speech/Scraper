@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #=
 JULIA="${JULIA:-julia}"
-JULIA_CMD="${JULIA_CMD:-$JULIA --color=yes --startup-file=no --threads=8}"
+JULIA_CMD="${JULIA_CMD:-$JULIA --color=yes --startup-file=no --threads=15 --heap-size-hint=70% --gcthreads=16}"
 # below gets the directory name of the script, even if there is a symlink involved
 # from https://stackoverflow.com/questions/59895/get-the-source-directory-of-a-bash-script-from-within-the-script-itself
 SOURCE="${BASH_SOURCE[0]}"
@@ -16,7 +16,7 @@ export JULIA_LOAD_PATH=@:@stdlib  # exclude default environment
 exec env LD_LIBRARY_PATH="" $JULIA_CMD -e 'include(popfirst!(ARGS))' "$SOURCE" "$@"
 =#
 
-
+#GC.enable_logging(true)
 #using Pkg; Pkg.instantiate()
 include("src/ParlinfoSpeechScraper.jl")
 using .ParlinfoSpeechScraper

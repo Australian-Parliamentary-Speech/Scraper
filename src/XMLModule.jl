@@ -5,6 +5,42 @@ using AndExport
 
 using ..Utils
 
+@xport function clean_xml_names(xml_paths)
+    function add_zero(str)
+        if length(str) == 1
+            return "0$str"
+        end
+        return str
+    end
+    cleaned_xml_paths = []
+    for xml_path in xml_paths
+        xml_path_ = xml_path[2]
+        fn = basename(xml_path_)
+        dir = dirname(xml_path_)
+        m = match(r"(\d+)[_](\d+)[_](\d+)\.xml", fn)
+        first,second,third = m.captures
+        if length(first) < 4 && length(third) == 4
+            year = third
+            day = add_zero(first)
+            month = add_zero(second)
+       elseif length(first) == 4
+            year = first
+            month = add_zero(second)
+            day = add_zero(third)
+       else
+            @debug "xml name $(xml_path_) has invalid date format"
+        end
+        cleaned_fn = "$(year)_$(month)_$(day).xml"
+        cleaned_xml_path = joinpath(dir,cleaned_fn)
+        push!(cleaned_xml_paths,(year,cleaned_xml_path))
+        if xml_path_ != cleaned_xml_path
+            command = `mv $(xml_path_) $(cleaned_xml_path)`
+            run(command)
+        end
+    end
+    return cleaned_xml_paths
+end
+
 @xport function findall_in_subsoup(path,xpath,soup)
     return findall("$(path)$xpath",soup)
 end

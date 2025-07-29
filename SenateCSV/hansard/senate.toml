@@ -1,10 +1,12 @@
 [GENERAL_OPTIONS]
-YEAR = [1901, 2025]
+REMOVE_NUMS = [1, 2, 3, 4, 5, 6]
+XML_NAME_CLEAN = true
+YEAR = [1901, 1901]
 WHICH_HOUSE = "senate"
-OVERWRITE = false
+OVERWRITE = true
 SAMPLE = false
 CSV_EXIST = false
-EDIT = ["re", "free_node", "flatten", "flatten", "column_decorate"]
+EDIT = ["speaker_time", "re", "free_node", "flatten", "flatten", "column_decorate", "re"]
 
 [GLOBAL]
 BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/"
@@ -14,9 +16,9 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/SenateCSV/hansard"
 
 [METADATA]
-TIME = "19:11:53"
+TIME = "16:52:54"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/senate.toml"
-DATE = "2025-07-27"
+DATE = "2025-07-29"
 
 [[XML_DIR]]
 PATH = "senate_xmls"

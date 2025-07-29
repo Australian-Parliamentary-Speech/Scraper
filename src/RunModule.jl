@@ -3,6 +3,7 @@ using InteractiveUtils
 using Reexport
 using OrderedCollections
 using CSV
+using Logging
 
 export run_ParlinfoSpeechScraper
 export get_year
@@ -33,6 +34,7 @@ function get_date(fn)
     function process_fn(fn)
         return replace(basename(fn),".xml"=>"")
     end
+
     year,month,day,time = begin
         try
             xdoc = readxml(fn)
@@ -45,11 +47,11 @@ function get_date(fn)
         catch
             fn = process_fn(fn)
             year,month,day = split(fn,"_")
+            @debug("$(year)-$(month)-$(day) extracted from filename and not xml")
             time = replace(fn, "_" => "-")
             year,month,day,time
         end
     end
-    #turns dates into a float for comparison
     return date_to_float(parse(Int,year),parse(Int,month),parse(Int,day)),time
 end
 
@@ -75,6 +77,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     over_write = general_options["OVERWRITE"]
     sample_write = general_options["SAMPLE"]
     remove_num = general_options["REMOVE_NUMS"]
+    xml_name_clean = general_options["XML_NAME_CLEAN"] 
 
     xml_paths = [] 
 
@@ -104,16 +107,25 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
             end
         end
     end
-    Threads.@threads for (year,fn) in xml_paths
+
+    if xml_name_clean
+        xml_paths = clean_xml_names(xml_paths)    
+    end
+
+    log_temp_dir =joinpath(output_path,"log_temp")
+    create_dir(log_temp_dir)
+
+#    Threads.@threads for (year,fn) in xml_paths
+    for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
         date_float,date = get_date(fn)
         outputcsv = joinpath(output_path_,"$date.csv")
         if !(isfile(outputcsv))
             create_dir(output_path_)
-            run_xml(fn,output_path_,csv_exist,edit_funcs,which_house)
+            run_xml(fn,output_path_,csv_exist,edit_funcs,which_house,log_temp_dir)
         else
             if over_write
-                run_xml(fn,output_path_,csv_exist,edit_funcs,which_house)
+                run_xml(fn,output_path_,csv_exist,edit_funcs,which_house,log_temp_dir)
             end 
         end
    end
@@ -121,6 +133,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
         copy_sample_file(output_path,length(edit_funcs))
    end
    remove_steps(output_path, remove_num)
+   log_close(log_temp_dir)
 end
 
 function remove_steps(output_path,remove_num)
@@ -148,7 +161,32 @@ function copy_sample_file(output_path,num)
     end
 end
 
+function log_debug(logger,message)
+    with_logger(logger) do
+        @debug(message)
+    end
+end
 
+function log_setup(date,log_temp_dir)
+    io = open("$(joinpath(log_temp_dir,"$date.txt"))","w+")
+    function fmt(level, _module, group, id, file, ine)
+        return :white, "", ""
+    end
+    logger = ConsoleLogger(io, Logging.Debug; meta_formatter=fmt)
+    return logger
+end
+
+function log_close(log_temp_dir)
+    files = sort(filter(f -> endswith(f,".txt"),readdir(log_temp_dir)))
+    files = [joinpath(log_temp_dir,file) for file in files]
+    combined_log = join(read.(files, String), "\n")
+    open(joinpath(dirname(log_temp_dir),"log_by_year.txt"),"w") do io
+        write(io, combined_log)
+    end
+    for f in files
+        rm(f)
+    end
+end
 
 """
     run_xml(fn, output_path, csv_exist, edit_funcs)
@@ -163,7 +201,7 @@ Inputs:
 - `csv_exist`: Boolean flag indicating if a CSV file already exists.
 - `edit_funcs`: list of edit functions
 """
-function run_xml(fn,output_path,csv_exist,edit_funcs,which_house)
+function run_xml(fn,output_path,csv_exist,edit_funcs,which_house,log_temp_dir)
     error_files = []
     xdoc = nothing
     try
@@ -176,18 +214,21 @@ function run_xml(fn,output_path,csv_exist,edit_funcs,which_house)
     soup = root(xdoc)
     date_float,date = get_date(fn)
     @show date
+    logger = log_setup(date,log_temp_dir)
+    log_debug(logger, "$date debugging messages \n")
+
     PhaseType = detect_phase(date_float,which_house)
     outputcsv = joinpath(output_path,"$date.csv")
     if !(csv_exist) 
         open(outputcsv, "w") do io
             headers_dict = define_headers(PhaseType)
-            @debug methods(define_headers)
+#            @debug methods(define_headers)
             write_row_to_io(io,collect(keys(headers_dict)))
             recurse(soup,date_float,PhaseType,soup,io,headers_dict)
         end
     end
 
-    edit_csv(date,edit_funcs,outputcsv,output_path)
+    edit_csv(date,edit_funcs,outputcsv,output_path,logger)
     open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
@@ -196,9 +237,9 @@ function run_xml(fn,output_path,csv_exist,edit_funcs,which_house)
     return date
 end
 
-function edit_csv(date,edit_funcs,outputcsv,output_path)
+function edit_csv(date,edit_funcs,outputcsv,output_path,logger)
     edit_phase = detect_edit_phase(date)
-    editor = Editor(edit_funcs,edit_phase)    
+    editor = Editor(edit_funcs,edit_phase,logger) 
     edit_main(outputcsv,editor)
 end
 
@@ -239,17 +280,17 @@ function recurse(soup, date, PhaseType, xml_node, io, headers_dict, index=1,dept
    # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
         node = Node{NodeType{PhaseType}}(xml_node,index,date,soup,headers_dict)
-        @debug "NodeType: $(typeof(node))"
+#        @debug "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
 
     else
-        @debug "$(ins)NodeType: GenericNode"
+#        @debug "$(ins)NodeType: GenericNode"
         node = Node{GenericNode{GenericPhase}}(xml_node,index,date,soup,headers_dict)
     end
 
     # Next, recurse into any subnodes
     subnodes = elements(xml_node)
-    @debug"$(ins)num_subnodes: $(length(subnodes))"
+#    @debug"$(ins)num_subnodes: $(length(subnodes))"
     #       @show node_tree
     if length(subnodes) > 0
         # Add node to subnode tree
