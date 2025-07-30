@@ -72,12 +72,14 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     output_path = global_options["OUTPUT_PATH"] 
     year_range = general_options["YEAR"]
     which_house = general_options["WHICH_HOUSE"]
-    csv_exist = general_options["CSV_EXIST"]
+    xml_parsing = general_options["XML_PARSING"]
     edit_funcs = general_options["EDIT"]
-    over_write = general_options["OVERWRITE"]
+    csv_edit = general_options["CSV_EDIT"]
     sample_write = general_options["SAMPLE"]
     remove_num = general_options["REMOVE_NUMS"]
     xml_name_clean = general_options["XML_NAME_CLEAN"] 
+    run_xml = general_options["RUN_XML"] 
+
 
     xml_paths = [] 
 
@@ -115,18 +117,14 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     log_temp_dir =joinpath(output_path,"log_temp")
     create_dir(log_temp_dir)
 
-#    Threads.@threads for (year,fn) in xml_paths
-    for (year,fn) in xml_paths
+    Threads.@threads for (year,fn) in xml_paths
+#    for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
         date_float,date = get_date(fn)
         outputcsv = joinpath(output_path_,"$date.csv")
-        if !(isfile(outputcsv))
-            create_dir(output_path_)
-            run_xml(fn,output_path_,csv_exist,edit_funcs,which_house,log_temp_dir)
-        else
-            if over_write
-                run_xml(fn,output_path_,csv_exist,edit_funcs,which_house,log_temp_dir)
-            end 
+        create_dir(output_path_)
+        if run_xml
+            run_xml(fn,output_path,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
         end
    end
    if sample_write
@@ -137,11 +135,19 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
 end
 
 function remove_steps(output_path,remove_num)
-    dirs = filter(isdir,readdir(output_path,join=true))    
+    dirs = filter(isdir,readdir(output_path,join=true))   
+    function remove_check(file,num)
+        if num != 0
+            return occursin("step$(num).csv", file)
+        elseif num == 0
+            return  !(occursin("step",file))
+        end
+    end
+
     for num in remove_num
         for dir in dirs
             for file in readdir(dir)
-                if occursin("step$(num).csv", file)
+                if remove_check(file,num)
                     rm(joinpath(dir, file))
                 end
             end
@@ -201,7 +207,7 @@ Inputs:
 - `csv_exist`: Boolean flag indicating if a CSV file already exists.
 - `edit_funcs`: list of edit functions
 """
-function run_xml(fn,output_path,csv_exist,edit_funcs,which_house,log_temp_dir)
+function run_xml(fn,output_path,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
     error_files = []
     xdoc = nothing
     try
@@ -219,7 +225,7 @@ function run_xml(fn,output_path,csv_exist,edit_funcs,which_house,log_temp_dir)
 
     PhaseType = detect_phase(date_float,which_house)
     outputcsv = joinpath(output_path,"$date.csv")
-    if !(csv_exist) 
+    if xml_parsing 
         open(outputcsv, "w") do io
             headers_dict = define_headers(PhaseType)
 #            @debug methods(define_headers)
@@ -228,7 +234,9 @@ function run_xml(fn,output_path,csv_exist,edit_funcs,which_house,log_temp_dir)
         end
     end
 
-    edit_csv(date,edit_funcs,outputcsv,output_path,logger)
+    if csv_edit
+        edit_csv(date,edit_funcs,outputcsv,output_path,logger)
+    end
     open("$(output_path)/log_failed_files.txt", "w") do file
         println(file, error_files)
     end
@@ -269,9 +277,9 @@ function recurse(soup, date, PhaseType, xml_node, io, headers_dict, index=1,dept
 
     # Debug statements indented by depth
     ins = ' '^depth
-    @debug "$(ins)depth: $depth"
-    @debug "$(ins)max_depth: $max_depth"
-    @debug "$(ins)node_tree has $(length(node_tree)) elements"
+#    @debug "$(ins)depth: $depth"
+#    @debug "$(ins)max_depth: $max_depth"
+#    @debug "$(ins)node_tree has $(length(node_tree)) elements"
     # First parse the current node, if it is parsable
 
     # First get nodetype of this node
