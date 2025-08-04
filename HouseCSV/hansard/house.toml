@@ -1,13 +1,13 @@
 [GENERAL_OPTIONS]
 REMOVE_NUMS = [0, 1, 2, 3, 4, 5, 6]
 XML_NAME_CLEAN = false
-YEAR = [1901, 2025]
+YEAR = [1996, 1997]
+RUN_XML_TOGGLE = true
 WHICH_HOUSE = "house"
-XML_PARSING = false
-SAMPLE = false
-CSV_EDIT = false
+XML_PARSING = true
+SAMPLE = true
+CSV_EDIT = true
 EDIT = ["speaker_time", "re", "free_node", "flatten", "flatten", "column_decorate", "re"]
-RUN_XML = false
 
 [GLOBAL]
 BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/"
@@ -17,9 +17,9 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/HouseCSV/hansard"
 
 [METADATA]
-TIME = "14:47:37"
+TIME = "15:13:18"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/Inputs/hansard/house.toml"
-DATE = "2025-07-30"
+DATE = "2025-08-04"
 
 [[XML_DIR]]
 PATH = "house_xmls"

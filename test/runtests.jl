@@ -115,7 +115,7 @@ end
 
 
 @testset verbose = true "Test set" begin
-    which_house = :senate
+    which_house = :house
     inputpath, outputpath = setup(which_house)
 #    @test begin
 #        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no")]

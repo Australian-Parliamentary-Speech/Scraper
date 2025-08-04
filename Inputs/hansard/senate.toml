@@ -13,13 +13,13 @@
     which_house = "senate"
     year = [1901,2025]
     #false to skip scraping, edit still remains
-    xml_parsing = true
+    xml_parsing = false
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
     #false to skip edits
     csv_edit = false
     #false to skip all run xml functions and only to write samples or remove steps
     run_xml = false
-    sample = true
+    sample = false
     remove_nums = [0,1,2,3,4,5,6]
     xml_name_clean = false
 

@@ -34,21 +34,45 @@ function get_date(fn)
     function process_fn(fn)
         return replace(basename(fn),".xml"=>"")
     end
+    
+    function get_date_from_fn(fn)
+        fn = process_fn(fn)
+        year,month,day = split(fn,"_")
+        @debug("$(year)-$(month)-$(day) extracted from filename and not xml")
+        time = replace(fn, "_" => "-")
+        return year,month,day,time
+    end
 
+    function _fix_year(year)
+        if length(year) < 4
+            return "19$year"
+        else
+            return year
+        end
+    end
+
+    function get_date_from_xml(soup)
+            time_node = findfirst("//session.header/date",soup)
+            if !isnothing(time_node)
+                time = time_node.content
+                year,month,day = split(time,"-")
+                return year,month,day,time
+            else
+                hansard_date = findfirst("//hansard/@date",soup)
+                day,month,year = split(hansard_date.content,"/")
+                return _fix_year(year),month,day,"$(_fix_year(year))-$(month)-$(day)"
+            end
+        end
+  
     year,month,day,time = begin
         try
             xdoc = readxml(fn)
             soup = root(xdoc)
-            time_node = findfirst("//session.header/date",soup)
-            time = time_node.content
-            year,month,day = split(time,"-")
+            year,month,day,time = get_date_from_xml(soup)
             Base.GC.gc()
             year,month,day,time
         catch
-            fn = process_fn(fn)
-            year,month,day = split(fn,"_")
-            @debug("$(year)-$(month)-$(day) extracted from filename and not xml")
-            time = replace(fn, "_" => "-")
+            year,month,day,time = get_date_from_fn(fn)
             year,month,day,time
         end
     end
@@ -78,7 +102,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     sample_write = general_options["SAMPLE"]
     remove_num = general_options["REMOVE_NUMS"]
     xml_name_clean = general_options["XML_NAME_CLEAN"] 
-    run_xml = general_options["RUN_XML"] 
+    run_xml_toggle = general_options["RUN_XML_TOGGLE"] 
 
 
     xml_paths = [] 
@@ -117,14 +141,13 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     log_temp_dir =joinpath(output_path,"log_temp")
     create_dir(log_temp_dir)
 
-    Threads.@threads for (year,fn) in xml_paths
-#    for (year,fn) in xml_paths
+#    Threads.@threads for (year,fn) in xml_paths
+    for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
         date_float,date = get_date(fn)
-        outputcsv = joinpath(output_path_,"$date.csv")
         create_dir(output_path_)
-        if run_xml
-            run_xml(fn,output_path,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
+        if run_xml_toggle
+            run_xml(fn,output_path_,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
         end
    end
    if sample_write
