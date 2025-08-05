@@ -62,6 +62,16 @@ for dir in readdir(phase_path, join=true)
     end
 end
 
+"""
+detect_phase(date, which_house)
+
+Inputs:
+- `date`: A floating-point number representing the date to detect the phase for.
+- `house`: A string that indicates either senate or house
+
+Returns:
+- The phase associated with the provided `date`, or `AbstractPhase` if no specific phase is found.
+"""
 function detect_phase(date,which_house)
     if which_house == "senate"
         phase = detect_phase_senate(date)        
@@ -88,15 +98,6 @@ function detect_phase_senate(date)
     end
 end
 
-"""
-detect_phase(date)
-
-Inputs:
-- `date`: A floating-point number representing the date to detect the phase for.
-
-Returns:
-- The phase associated with the provided `date`, or `AbstractPhase` if no specific phase is found.
-"""
 function detect_phase_house(date)
     # See if year has specific phase
     phase = get(date_to_phase, date, nothing)
