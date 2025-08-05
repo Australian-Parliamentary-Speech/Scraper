@@ -1,7 +1,5 @@
-Inputs/**/*.xml
-HouseCSV/hansard/**/*.csv
-SenateCSV/hansard/**/*.csv
-HouseCSV/**/*.sh
+Inputs/**/*
+Outputs/**/*
 **/*.png
 **/*.pdf
 **/*.txt
@@ -9,7 +7,6 @@ HouseCSV/**/*.sh
 **/*.html
 **/*.zip
 **/*.tar.gz
-Inputs/hansard/download_utils.jl
 Analysis/*
 /docs/build/
 Manifest.toml
