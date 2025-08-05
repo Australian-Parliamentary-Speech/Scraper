@@ -27,6 +27,6 @@ makedocs(
     ]
     )
 
-deploydocs(repo = "github.com/Australian-Parliamentary-Speech/House_Scraper.git")
+deploydocs(repo = "github.com/Australian-Parliamentary-Speech/Scraper.git")
 
 #python3 -m http.server --bind localhost
