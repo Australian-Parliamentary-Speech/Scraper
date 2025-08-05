@@ -5,6 +5,7 @@ using Test
 using CSV, DataFrames
 using Glob
 using BetterInputFiles
+using Dates
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
 
@@ -80,7 +81,7 @@ function get_all_csv_dates(outputpath,testpath,which_house)
     all_csv_names = get_all_csv_subdir(outputpath)
     all_csv_dates = find_all_csv_dates(all_csv_names)
     years = [split(date,"-")[1] for date in all_csv_dates]
-    fn = "all_csv_dates_$(which_house).csv"
+    fn = joinpath("dates","all_csv_dates_$(which_house).csv")
     open(fn, "w") do io
         for (x,y) in zip(years, all_csv_dates)
             println(io, "$x,$y")
@@ -103,7 +104,7 @@ function get_all_xml_dates(inputpath,testpath,which_house)
     all_xml_names = get_all_xml_subdir(inputpath)
     all_xml_dates = find_all_xml_dates(all_xml_names)
     years = [split(date,"-")[1] for date in all_xml_dates]
-    fn = "all_xml_dates_$(which_house).csv"
+    fn = joinpath("dates","all_xml_dates_$(which_house).csv")
     open(fn, "w") do io
         for (x,y) in zip(years, all_xml_dates)
             println(io, "$x,$y")
@@ -113,10 +114,39 @@ function get_all_xml_dates(inputpath,testpath,which_house)
 end
 
 
+function read_sitting_dates(testpath)
+    csvfile = CSV.File(joinpath([testpath,"dates","sitting_dates.csv"]))
+    rows = eachrow(csvfile)
+    house = []
+    senate = []
+    for row in rows
+        row_ = @. collect(row)
+        row = row_[1]
+        date_ = row[1]
+        year,month,day = Dates.year(date_), Dates.month(date_), Dates.day(date_)
+        if month < 10
+            month = "0$month"
+        end
+        if day < 10
+            day = "0$day"
+        end
+        if_senate = row[3]
+        if_house = row[2]
+        if if_senate
+            push!(senate,Date("$(year)-$(month)-$(day)"))
+        end
+        if if_house
+            push!(house,Date("$(year)-$(month)-$(day)"))
+        end 
+    end
+    return house, senate
+end
+
 
 @testset verbose = true "Test set" begin
     which_house = :house
     inputpath, outputpath = setup(which_house)
+    sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
 #    @test begin
 #        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no")]
 #        test_setup = test_struct(skip_cols)
@@ -128,15 +158,32 @@ end
         csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
         xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
 
-        xml = CSV.read(xml_fn, DataFrame)
-        csv = CSV.read(csv_fn, DataFrame)
+        xml = CSV.read(xml_fn, DataFrame,header=false)
+        csv = CSV.read(csv_fn, DataFrame,header=false)
 
         xmls = xml[:, 2]
         csvs = csv[:, 2]
         only_in_xml = setdiff(xmls, csvs)
         only_in_csv = setdiff(csvs, xmls)
+        if which_house == :senate
+            only_in_sitting = setdiff(sitting_senate,xmls)
+        elseif which_house == :house
+            only_in_sitting = setdiff(sitting_house,xmls)
+        end
         @show only_in_xml
         @show only_in_csv
+        @show only_in_sitting
+        open(joinpath("dates","only_in_xml_$(which_house).csv"), "w") do io
+            for date in only_in_xml
+            println(io, date)
+            end
+        end
+        open(joinpath("dates","only_in_sitting_$(which_house).csv"), "w") do io
+            for date in only_in_sitting
+                println(io, date)
+            end
+        end
+ 
         true
     end
 end
