@@ -15,14 +15,14 @@ cd House_Scraper
 You would have to copy all the downloaded XML files into Inputs/hansard/, first make the directory:
 
 ```
-mkdir Inputs/hansard/<senate or house>\_xmls
+mkdir Inputs/hansard/<senate or house>_xmls
 ```
 
 ```
-mv -f ../sgml2xml/<senate or house>\_xmls/* Inputs/hansard/<senate or house>\_xmls
+mv -f ../sgml2xml/<senate or house>_xmls/* Inputs/hansard/<senate or house>_xmls
 ```
 ```
-mv -f ../Download/sitemap\_xmls\_<senate or house>/* Inputs/hansard/<senate or house>\_xmls
+mv -f ../Download/sitemap_xmls_<senate or house>/* Inputs/hansard/<senate or house>_xmls
 ```
 
 In the directory, run:
