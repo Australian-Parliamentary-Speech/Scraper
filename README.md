@@ -4,12 +4,12 @@
 
 Step one, in your preferred directory, clone this repo with HTTP or SSH:
 ```
-git clone https://github.com/Australian-Parliamentary-Speech/House_Scraper.git
+git clone https://github.com/Australian-Parliamentary-Speech/Scraper.git
 ```
 
 Go into the directory:
 ```
-cd House_Scraper
+cd Scraper
 ```
 
 You would have to copy all the downloaded XML files into Inputs/hansard/, first make the directory:
