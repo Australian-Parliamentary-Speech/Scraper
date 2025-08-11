@@ -1,5 +1,6 @@
 
 # Download the XML files
+This step downloads all the available XML files from the Hansard directly
 
 Step one, in your preferred directory, clone the Download repo with HTTP or SSH:
 ```
@@ -22,10 +23,13 @@ or
 
 The XML files should be in the directory sitemap\_xmls\_senate or sitemap\_xmls\_house.
 
-## required file
+## Required files
 XML\_download\_method1.jl
+
 utils.jl
-download\_utils.jl (hidden file)
+
+download\_utils.jl 
+
 run (bash file)
 
 ## logfile

@@ -1,4 +1,6 @@
 # Download the SGML files and convert them to XML files
+This step downloads the SGML files and converts them into XML files (they are missing from Hansard). 
+
 Step one, in your preferred directory, clone the sgml2xml repo with HTTP or SSH:
 ```
 git clone https://github.com/Australian-Parliamentary-Speech/sgml2xml.git
