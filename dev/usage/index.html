@@ -1,20 +1,102 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Usage · ParlinfoSpeechScraper Documentation</title><meta name="title" content="Usage · ParlinfoSpeechScraper Documentation"/><meta property="og:title" content="Usage · ParlinfoSpeechScraper Documentation"/><meta property="twitter:title" content="Usage · ParlinfoSpeechScraper Documentation"/><meta name="description" content="Documentation for ParlinfoSpeechScraper Documentation."/><meta property="og:description" content="Documentation for ParlinfoSpeechScraper Documentation."/><meta property="twitter:description" content="Documentation for ParlinfoSpeechScraper Documentation."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ParlinfoSpeechScraper Documentation</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">ParlinfoSpeechScraper</a></li><li><a class="tocitem" href="../download/">XML download</a></li><li><a class="tocitem" href="../sgml2xml/">XML download (1981-1997)</a></li><li class="is-active"><a class="tocitem" href>Usage</a><ul class="internal"><li><a class="tocitem" href="#Inputs"><span>Inputs</span></a></li><li><a class="tocitem" href="#Outputs"><span>Outputs</span></a></li></ul></li><li><a class="tocitem" href="../advusage/">Advanced Usage</a></li><li><a class="tocitem" href="../nodes/">Nodes</a></li><li><a class="tocitem" href="../functionreference/">Function references</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Usage</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Usage</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/Australian-Parliamentary-Speech/Scraper" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/Australian-Parliamentary-Speech/Scraper/blob/main/docs/src/usage.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Usage"><a class="docs-heading-anchor" href="#Usage">Usage</a><a id="Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Usage" title="Permalink"></a></h1><p>Here we start with the description of the user interface regarding inputs and outputs. Details about some structurally important functions are listed after.</p><h2 id="Inputs"><a class="docs-heading-anchor" href="#Inputs">Inputs</a><a id="Inputs-1"></a><a class="docs-heading-anchor-permalink" href="#Inputs" title="Permalink"></a></h2><p>The input xml files live in the directory src/Inputs/, and specifically where they live is specified in the toml file. For example, as currently stated in Inputs/hansard/hansard.toml, the xmls live in src/Inputs/hansard/xmls. You can define your own toml and your own directory of where the xmls live. To run the program, head to the src/ directory and run:</p><pre><code class="language-console hljs">./run Inputs/hansard/hansard.toml</code></pre><p>or </p><pre><code class="language-console hljs">./run &lt;insert your toml file&gt;</code></pre><h3 id="Input-toml-file"><a class="docs-heading-anchor" href="#Input-toml-file">Input toml file</a><a id="Input-toml-file-1"></a><a class="docs-heading-anchor-permalink" href="#Input-toml-file" title="Permalink"></a></h3><p>The input toml file allows the user to select options for the run. The output directory, the year range, whether the first step of the process is done and whether edit is preferred are the options that the user can edit. In terms of what files the program runs, we have two modes available when running the program. It can run one xml file or a directory of xml files. </p><p>For a single xml file:</p><pre><code class="nohighlight hljs">[ global ]
-    output_path = &quot;../../Outputs/hansard&quot;
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Usage · ParlinfoSpeechScraper Documentation</title><meta name="title" content="Usage · ParlinfoSpeechScraper Documentation"/><meta property="og:title" content="Usage · ParlinfoSpeechScraper Documentation"/><meta property="twitter:title" content="Usage · ParlinfoSpeechScraper Documentation"/><meta name="description" content="Documentation for ParlinfoSpeechScraper Documentation."/><meta property="og:description" content="Documentation for ParlinfoSpeechScraper Documentation."/><meta property="twitter:description" content="Documentation for ParlinfoSpeechScraper Documentation."/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ParlinfoSpeechScraper Documentation</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">ParlinfoSpeechScraper</a></li><li><a class="tocitem" href="../download/">XML download</a></li><li><a class="tocitem" href="../sgml2xml/">XML download (1981-1997)</a></li><li class="is-active"><a class="tocitem" href>Usage</a><ul class="internal"><li><a class="tocitem" href="#Inputs"><span>Inputs</span></a></li><li><a class="tocitem" href="#Outputs"><span>Outputs</span></a></li></ul></li><li><a class="tocitem" href="../advusage/">Advanced Usage</a></li><li><a class="tocitem" href="../nodes/">Nodes</a></li><li><a class="tocitem" href="../functionreference/">Function references</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Usage</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Usage</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/Australian-Parliamentary-Speech/Scraper" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/Australian-Parliamentary-Speech/Scraper/blob/main/docs/src/usage.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Usage"><a class="docs-heading-anchor" href="#Usage">Usage</a><a id="Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Usage" title="Permalink"></a></h1><p>Here we start with the description of the user interface regarding inputs and outputs. Details about some structurally important functions are listed after.</p><h2 id="Inputs"><a class="docs-heading-anchor" href="#Inputs">Inputs</a><a id="Inputs-1"></a><a class="docs-heading-anchor-permalink" href="#Inputs" title="Permalink"></a></h2><p>The input xml files live in the directory src/Inputs/, and specifically where they live is specified in the toml file. For example, as currently stated in Inputs/hansard/hansard.toml, the xmls live in src/Inputs/hansard/xmls. You can define your own toml and your own directory of where the xmls live. To run the program, head to the src/ directory and run:</p><pre><code class="language-console hljs">./run Inputs/hansard/hansard.toml</code></pre><p>or </p><pre><code class="language-console hljs">./run &lt;insert your toml file&gt;</code></pre><h3 id="Input-toml-file"><a class="docs-heading-anchor" href="#Input-toml-file">Input toml file</a><a id="Input-toml-file-1"></a><a class="docs-heading-anchor-permalink" href="#Input-toml-file" title="Permalink"></a></h3><p>The input toml file allows the user to select options for the run. The output directory, the year range, whether the first step of the process is done and whether edit is preferred are the options that the user can edit. In terms of what files the program runs, we have two modes available when running the program. It can run one xml file or a directory of xml files. </p><p>For a single xml file (for senate):</p><pre><code class="nohighlight hljs"># Where the output would go
+[ global ]
+    output_path = &quot;../../Outputs/SenateCSV/hansard&quot;
 
+# The XML file you run
 [[ XML ]]
-    filename = &quot;xmls/2008/2008-12-01.xml&quot;
+    filename = &quot;senate_xmls/1999/1999_06_25.xml&quot;
 
 [ general_options ]
-    csv_exist = false
-    edit = true
-    year = [1900,2024]</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls:</p><pre><code class="nohighlight hljs">[ global ]
-    output_path = &quot;../../Outputs/hansard&quot;
+    # senate or house
+    which_house = &quot;senate&quot;
+    # year range
+    year = [1901,2025]
+    # false to skip scraping, edit still remains
+    xml_parsing = true
+    # steps for editting
+    edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
+    #false to skip edits
+    csv_edit = true
+    #false to skip all run xml functions and only to write samples or remove steps
+    run_xml_toggle = true
+    sample = false
+    # whether to remove some steps once program finishes
+    remove_nums = [0,1,2,3,4,5,6]
+    # does it require xml name cleaning to ensure dates are in the right format
+    xml_name_clean = false</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls (for Senate):</p><pre><code class="nohighlight hljs"># Where the output would go
+[ global ]
+    output_path = &quot;../../Outputs/SenateCSV/hansard&quot;
 
+# Where the input xmls are stored
 [[ XML_DIR ]]
-    path = &quot;xmls&quot;
+    path = &quot;senate_xmls&quot;
 
 [ general_options ]
-    csv_exist = false
-    edit = true
-    year = [1900,2024]</code></pre><h2 id="Outputs"><a class="docs-heading-anchor" href="#Outputs">Outputs</a><a id="Outputs-1"></a><a class="docs-heading-anchor-permalink" href="#Outputs" title="Permalink"></a></h2><p>Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sgml2xml/">« XML download (1981-1997)</a><a class="docs-footer-nextpage" href="../advusage/">Advanced Usage »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Monday 11 August 2025 06:12">Monday 11 August 2025</span>. Using Julia version 1.11.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    # senate or house
+    which_house = &quot;senate&quot;
+    # year range
+    year = [1901,2025]
+    # false to skip scraping, edit still remains
+    xml_parsing = true
+    # steps for editting
+    edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
+    #false to skip edits
+    csv_edit = true
+    #false to skip all run xml functions and only to write samples or remove steps
+    run_xml_toggle = true
+    sample = false
+    # whether to remove some steps once program finishes
+    remove_nums = [0,1,2,3,4,5,6]
+    # does it require xml name cleaning to ensure dates are in the right format
+    xml_name_clean = false</code></pre><p>For a single xml file (for House):</p><pre><code class="nohighlight hljs"># Where the output would go
+[ global ]
+    output_path = &quot;../../Outputs/HouseCSV/hansard&quot;
+
+# The XML file you run
+[[ XML ]]
+    filename = &quot;house_xmls/1999/1999_06_25.xml&quot;
+
+[ general_options ]
+    # senate or house
+    which_house = &quot;house&quot;
+    # year range
+    year = [1901,2025]
+    # false to skip scraping, edit still remains
+    xml_parsing = true
+    # steps for editting
+    edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
+    #false to skip edits
+    csv_edit = true
+    #false to skip all run xml functions and only to write samples or remove steps
+    run_xml_toggle = true
+    sample = false
+    # whether to remove some steps once program finishes
+    remove_nums = [0,1,2,3,4,5,6]
+    # does it require xml name cleaning to ensure dates are in the right format
+    xml_name_clean = false</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls (for House):</p><pre><code class="nohighlight hljs"># Where the output would go
+[ global ]
+    output_path = &quot;../../Outputs/HouseCSV/hansard&quot;
+
+# Where the input xmls are stored
+[[ XML_DIR ]]
+    path = &quot;house_xmls&quot;
+
+[ general_options ]
+    # senate or house
+    which_house = &quot;house&quot;
+    # year range
+    year = [1901,2025]
+    # false to skip scraping, edit still remains
+    xml_parsing = true
+    # steps for editting
+    edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
+    #false to skip edits
+    csv_edit = true
+    #false to skip all run xml functions and only to write samples or remove steps
+    run_xml_toggle = true
+    sample = false
+    # whether to remove some steps once program finishes
+    remove_nums = [0,1,2,3,4,5,6]
+    # does it require xml name cleaning to ensure dates are in the right format
+    xml_name_clean = false</code></pre><h2 id="Outputs"><a class="docs-heading-anchor" href="#Outputs">Outputs</a><a id="Outputs-1"></a><a class="docs-heading-anchor-permalink" href="#Outputs" title="Permalink"></a></h2><p>Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sgml2xml/">« XML download (1981-1997)</a><a class="docs-footer-nextpage" href="../advusage/">Advanced Usage »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Monday 11 August 2025 06:20">Monday 11 August 2025</span>. Using Julia version 1.11.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
