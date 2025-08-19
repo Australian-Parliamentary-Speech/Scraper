@@ -1,5 +1,6 @@
-Inputs/**/*
-Outputs/**/*
+Inputs
+!Inputs/**/*.toml
+Outputs
 **/*.png
 **/*.pdf
 **/*.txt
