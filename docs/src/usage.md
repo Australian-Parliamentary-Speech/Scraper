@@ -54,7 +54,7 @@ The comprehensive toml file with all options present:
     
     # Which years to process
     # Examples: [1996,1997] processes years 1996 and 1997
-    #          [2000] processes only year 2000
+    #          [2000,2000] processes only year 2000
     #          [1990,2000] processes years 1990 through 2000
     year = [1996,1997]
     
@@ -96,6 +96,7 @@ The comprehensive toml file with all options present:
     # false = keep original filenames
     xml_name_clean = false
 ```
+Here are some quick starts:
 
 For a single xml file (for senate):
 ```
