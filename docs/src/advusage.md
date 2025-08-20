@@ -50,6 +50,35 @@ date_to_phase[(lowerbound,upperbound)] = PhaseExample
 You can then add any new definition for node processing in the "Phases/ExamplePhase/nodes" directory.
 
 ## How to add a new flag
-In order to add a new flag, or a new column of content, you would only need to interact with two functions: define\_flags and define\_headers. The dictionary that contains all information gets passed around and content gets added into it as the parsing goes on. The headers\_dict sets all headers to "N/A" to start with and they get overwritten during running. 
+To add a new flag, or a new column of content, you would only need to interact with two functions: define\_flags and define\_headers. The dictionary that contains all information gets passed around and content gets added into it as the parsing goes on. The headers\_dict sets all headers to "N/A" to start with and they get overwritten during running. 
 
+## How to add a new edit step
 
+To add a new step in editting the CSVs, head to src/edit\_funcs and create your own file, for example, your\_edit\_process.jl. For the sake of clarity, it would be good to give the same name to the julia file and this function you create (as shown below). 
+
+```julia
+# if you created your own Phase, replace the ::Type{<:AbstractEditPhase} with your own Phase
+function your_edit_process(input_fn,output_fn,::Type{<:AbstractEditPhase})
+    csvfile = CSV.File(input_fn)
+    #load all the headers such as speech_flag, content, speaker...
+    headers_ = copy(propertynames(csvfile))
+    # a dictionary to get which column to interact with. For example, if you want content, you do row[header_to_num[:content]] once you have rows
+    header_to_num = edit_set_up(headers_)
+    # a reverse dictionary of num_to_header in case it is useful
+    num_to_header = reverse_dict(header_to_num)
+    rows = eachrow(csvfile)
+    open(output_fn,"w") do io
+        write_row_to_io(io,string.(new_headers))
+        for row in rows
+            new_row = your_edit_fund(row)
+            write_row_to_io(io,new_row)
+        end
+    end
+end 
+```
+
+Once the file is written, append this name of the function into edit option, for example:
+```
+    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re", "your_edit_process"]
+ 
+```
