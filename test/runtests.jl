@@ -170,9 +170,6 @@ end
         elseif which_house == :house
             only_in_sitting = setdiff(sitting_house,xmls)
         end
-        @show only_in_xml
-        @show only_in_csv
-        @show only_in_sitting
         open(joinpath("dates","only_in_xml_$(which_house).csv"), "w") do io
             for date in only_in_xml
             println(io, date)
