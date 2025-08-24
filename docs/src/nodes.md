@@ -18,45 +18,39 @@ Each phase has different XML tag names, processing rules, and output formats.
 1. **Base behavior**: Looks for `<answer>` XML tags in parliamentary transcripts
 2. **Continuation handling**: When it finds a "continue" element, checks if the parent node is actually an answer node
 3. **Validation**: Confirms that the current XML element should be treated as an answer before processing
-4. **Phase awareness**: Uses phase-specific XPath patterns and validation rules
 
 ### AnswersToQuestionsNode.jl - Answer Collection Processing
 **What it does:**
-1. **Structure recognition**: Simply identifies `<answers.to.questions>` sections in the XML
-2. **Container role**: Acts as a marker for sections that group multiple answers together
-3. **Minimal processing**: Just recognizes this structural element across all phases
+1. **Session marker**: Identifies `<answers.to.questions>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 ### BusinessNode.jl - Business Start Processing
 **What it does:**
-1. **Session marker**: Identifies `<business.start>` tags that mark the beginning of parliamentary business
-2. **Structural role**: Acts as a boundary marker in the document hierarchy
-3. **Simple recognition**: No content extraction - just recognizes when business proceedings begin
+1. **Session marker**: Identifies `<business.start>` tags 
+2. **Simple recognition**: No content extraction - just recognizes when business proceedings begin
 
 ### ChamberNode.jl - Chamber Transcript Processing
 **What it does:**
-1. **Container identification**: Identifies `<chamber.xscript>` elements that contain chamber-level transcript data
-2. **Document structure**: Marks sections that contain chamber proceedings
-3. **Phase-neutral**: Simple recognition logic that works across all phases
+1. **Container identification**: Identifies `<chamber.xscript>` elements
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
+
 
 ### DebateNode.jl - Debate Section Processing
 **What it does:**
-1. **Section recognition**: Identifies `<debate>` sections in parliamentary transcripts
-2. **Title extraction**: Extracts debate title information from `/debateinfo/title` path within the debate
-3. **Legacy filtering**: Contains commented logic that would filter out debates titled "BILLS" (currently disabled)
-4. **Hierarchical organization**: Provides structural organization for debate-level content
-5. **Phase-specific overrides**: Different phases may have different debate structures
+1. **Session marker**: Identifies `<debate>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
+3. **Title extraction**: Extracts debate title information from `/debateinfo/title` path within the debate
+4. **Legacy filtering**: Contains commented logic that would filter out debates titled "BILLS" (currently disabled)
 
 ### DivisionNode.jl - Voting Division Processing
 **What it does:**
-1. **Voting identification**: Identifies `<division>` tags that represent parliamentary voting sessions
-2. **Structural marker**: Simple recognition for voting-related content sections
-3. **Minimal processing**: Just marks division sections for downstream processing
+1. **Session marker**: Identifies `<division>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 ### FedChamberNode.jl - Federal Chamber Processing
 **What it does:**
-1. **Multi-format support**: Identifies both `<fedchamb.xscript>` (federal chamber) and `<maincomm.xscript>` (main committee) transcript sections
-2. **Document type handling**: Processes two different types of parliamentary transcript formats
-3. **Root-level recognition**: Simple structural recognition for these high-level transcript containers
+1. **Multi-name support**: Identifies both `<fedchamb.xscript>` (federal chamber) and `<maincomm.xscript>` (main committee) transcript sections
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 ### InterTalkNode.jl - Inter-Speaker Dialogue Processing
 **What it does:**
@@ -64,16 +58,11 @@ Each phase has different XML tag names, processing rules, and output formats.
 2. **Missing content handling**: If no talk text is found, sets content to a space character
 3. **Speaker identification**: Gets talker information from the parent node in the node tree
 4. **Context validation**: Ensures the talk is happening within an interjection section
-5. **Metadata processing**: Defines various flags and metadata for the dialogue
-6. **CSV output**: Creates a complete row of data and writes it to the CSV output
-7. **Hierarchical awareness**: Works specifically within `InterjectionNode` sections
-8. **Phase-specific processing**: May have different talk text extraction rules per phase
 
 ### InterjectionNode.jl - Interjection Section Processing
 **What it does:**
-1. **Section identification**: Identifies `<interjection>` sections in parliamentary transcripts
-2. **Context provision**: Acts as a container/context for `InterTalkNode` processing
-3. **Structural organization**: Provides the framework where inter-speaker dialogue occurs
+1. **Session marker**: Identifies `<interjection>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 ### PNode.jl - Paragraph Content Processing (Most Complex, Highly Phase-Specific)
 
@@ -103,22 +92,17 @@ Each phase has different XML tag names, processing rules, and output formats.
 **What it does:**
 1. **Question identification**: Identifies `<question>` XML elements in Q&A sessions
 2. **Continuation support**: Handles "continue" elements by validating parent node context
-3. **Validation logic**: Ensures elements should be processed as part of a question
-4. **Phase compatibility**: Works across all phases with consistent logic
 
 ### SpeechNode.jl - Speech Processing
 **What it does:**
 1. **Speech recognition**: Identifies `<speech>` XML elements in parliamentary transcripts
 2. **Continuation handling**: Processes "continue" elements by checking parent node validity
-3. **Context validation**: Ensures elements are part of legitimate speech content
-4. **Structural foundation**: Provides framework for speech content processing across phases
 
 ### SubdebateNode.jl - Subdebate Processing
 **What it does:**
-1. **Hierarchical structure**: Identifies `<subdebate.1>` sections within larger debates
-2. **Title extraction**: Gets subdebate title information from `/subdebateinfo/title` path
-3. **Nested organization**: Creates hierarchical structure within debate frameworks
-4. **Multi-level debates**: Enables complex parliamentary discussion organization
+1. **Session marker**: Identifies `<subdebate.1>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
+3. **Title extraction**: Gets subdebate title information from `/subdebateinfo/title` path
 
 ## Phase-Specific Node Files
 
@@ -126,8 +110,8 @@ Each phase has different XML tag names, processing rules, and output formats.
 
 #### AdjournmentNode.jl - Phase2011 Adjournment Processing
 **What it does:**
-1. **Adjournment recognition**: Identifies `<adjournment>` tags specific to Phase2011 format
-2. **Session boundaries**: Marks adjournment periods in parliamentary sessions
+1. **Session marker**: Identifies `<adjournment>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 3. **Phase-specific structure**: Only exists in Phase2011, handles 1998-2011 adjournment format
 
 #### InterTalkNode.jl - Phase2011 Inter-Talk Processing (Disabled)
@@ -135,71 +119,59 @@ Each phase has different XML tag names, processing rules, and output formats.
 1. **Recognition only**: Identifies `<talk.start>` elements but doesn't process them
 2. **Disabled processing**: `process_node()` and `parse_node()` functions return nothing
 3. **Simple validation**: Just checks if node name matches allowed XPath patterns
-4. **Phase isolation**: Prevents Phase2011 inter-talk processing, likely due to format differences
 
 #### MotionnospeechNode.jl - Phase2011 Motion Without Speech
 **What it does:**
-1. **Motion identification**: Recognizes `<motionnospeech>` elements for Phase2011
-2. **Non-verbal motions**: Handles parliamentary motions that don't involve speeches
-3. **Structural marker**: Provides context for paragraphs that don't have traditional speakers
+1. **Session marker**: Identifies `<motionnospeech>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 #### PetitionNode.jl - Phase2011 Petition Processing
 **What it does:**
-1. **Petition recognition**: Identifies `<petition>` elements in Phase2011 format
-2. **Citizen petitions**: Handles public petitions presented to parliament
-3. **Context provision**: Provides structural context for petition-related content
+1. **Session marker**: Identifies `<petition>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 #### QuoteNode_.jl - Phase2011 Quote Processing
 **What it does:**
-1. **Quote identification**: Recognizes `<quote>` elements in Phase2011 documents
-2. **Citation handling**: Manages quoted material within parliamentary speeches
-3. **Container role**: Acts as a special container that can hold paragraph content
+1. **Session marker**: Identifies `<quote>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 ### PhaseSGML Specific Nodes (src/nodes/Phases/PhaseSGML/nodes/)
 
 #### DebateNode.jl - PhaseSGML Debate Processing
 **What it does:**
-1. **SGML debate formats**: Handles multiple debate types: `<debate>`, `<qwn>`, `<answer.to.qon>`
-2. **Question formats**: Processes "questions with notice" (`qwn`) and "answers to questions on notice" (`answer.to.qon`)
-3. **Title extraction**: Gets titles from `/title` path instead of `/debateinfo/title`
-4. **Expanded recognition**: Recognizes more debate-like structures than the base DebateNode
+1. **SGML debate formats**: Handles multiple debate names: `<debate>`, `<qwn>`, `<answer.to.qon>`
+2. **Title extraction**: Gets titles from `/title` path instead of `/debateinfo/title`
 
 #### InterTalkNode.jl - PhaseSGML Inter-Talk Processing (Disabled)
 **What it does:**
 1. **Disabled processing**: Both `process_node()` and `parse_node()` return nothing
 2. **Format incompatibility**: Inter-talk processing is turned off for SGML format
-3. **Phase isolation**: Prevents SGML inter-talk processing due to structural differences
 
 #### InterjectionNode.jl - PhaseSGML Interjection Processing
 **What it does:**
-1. **SGML interjection format**: Recognizes `<interject>` tags instead of `<interjection>`
-2. **Format adaptation**: Handles the different tag naming convention in SGML format
-3. **Context provision**: Provides the same structural role but with SGML-specific tags
+1. **Session marker**: Identifies `<interject>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 #### MotionnospeechNode.jl - PhaseSGML Motion Without Speech
 **What it does:**
-1. **SGML motion format**: Recognizes `<motionnospeech>` elements in SGML format
-2. **Consistent functionality**: Same role as Phase2011 but adapted for SGML structure
-3. **Non-speech motions**: Handles motions without associated speeches
+1. **Session marker**: Identifies `<motionnospeech>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 #### PetitionNode.jl - PhaseSGML Petition Processing
 **What it does:**
-1. **Extended petition formats**: Recognizes both `<petition>` and `<petition.grp>` elements
-2. **Grouped petitions**: Handles petition groups (`petition.grp`) unique to SGML format
-3. **SGML adaptation**: Processes petition content in the older SGML structure
+1. **Extended petition names**: Recognizes both `<petition>` and `<petition.grp>` elements
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 #### QuoteNode_.jl - PhaseSGML Quote Processing
 **What it does:**
-1. **SGML quote format**: Recognizes `<quote>` elements in SGML documents
-2. **Same functionality**: Provides quote recognition consistent with Phase2011
-3. **Format adaptation**: Handles quotes within the SGML document structure
+1. **Session marker**: Identifies `<quote>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 #### SubdebateNode.jl - PhaseSGML Subdebate Processing
 **What it does:**
-1. **Extended subdebate formats**: Recognizes both `<subdebate.1>` and `<question.block>` as subdebates
-2. **Question blocks**: Treats question blocks as subdebate-like structures
+1. **Extended subdebate names**: Recognizes both `<subdebate.1>` and `<question.block>` as subdebates
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 3. **Title extraction**: Uses `/title` path instead of `/subdebateinfo/title`
-4. **SGML hierarchy**: Handles the different hierarchical structure in SGML documents
 
 ## Phase Processing Summary
 
