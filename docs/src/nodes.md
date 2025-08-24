@@ -187,10 +187,7 @@ Each phase has different XML tag names, processing rules, and output formats.
 - **Extended Recognition**: More debate types (qwn, answer.to.qon)
 - **Different Tags**: `<interject>` instead of `<interjection>`
 - **Grouped Content**: Petition groups (`petition.grp`)
-- **Question Blocks**: Question blocks treated as subdebates
 - **Disabled Features**: InterTalkNode processing turned off
-- **Font Detection**: Uses font attributes for quote detection
-- **Nonspeech Detection**: Automatic identification of administrative content
 
 ### Processing Differences Across Phases:
 1. **Tag Names**: Different XML element names for same concepts
