@@ -11,6 +11,8 @@ The system processes parliamentary transcripts from different time periods with 
 
 Each phase has different XML tag names, processing rules, and output formats.
 
+The phase system ensures that parliamentary transcripts from different eras are processed consistently while preserving their unique structural characteristics and historical context.
+
 ## Base Node Processing Workflows
 
 ### AnswerNode.jl - Answer Processing
@@ -197,4 +199,37 @@ Each phase has different XML tag names, processing rules, and output formats.
 5. **Output Headers**: Different metadata fields in final CSV output
 6. **Validation Rules**: Phase-specific logic for determining node types
 
-The phase system ensures that parliamentary transcripts from different eras are processed consistently while preserving their unique structural characteristics and historical context.
+## Header Systems Across Phases
+
+Each phase defines different header configurations for the final CSV output:
+
+### Default Phase (GenericPhase) - `NodeModule.jl:464`
+- **question_flag**: 1 if within QuestionNode, 0 otherwise
+- **answer_flag**: 1 if within AnswerNode, 0 otherwise
+- **interjection_flag**: 1 if within InterjectionNode, 0 otherwise
+- **speech_flag**: 1 if within SpeechNode, 0 otherwise
+- **chamber_flag**: Chamber type (0=none, 1=chamber, 2=federal, 3=answers)
+- **name**: Speaker name
+- **name.id**: Speaker ID
+- **electorate**: Speaker's electorate
+- **party**: Speaker's political party
+- **role**: Speaker's parliamentary role
+- **page.no**: Page number in original document
+- **content**: Text content of the node
+- **subdebateinfo**: Title of subdebate section
+- **debateinfo**: Title of debate section
+- **path**: XML path to the node
+
+### Phase2011 (1998-2011) - `Phase2011.jl:44`
+**All default headers above, plus:**
+- **petition_flag**: 1 if within PetitionNode, 0 otherwise
+- **quote_flag**: 1 if within QuoteNode, 0 otherwise
+- **motionnospeech_flag**: 1 if within MotionnospeechNode, 0 otherwise
+
+### PhaseSGML (1981-1997) - `PhaseSGML.jl:37`
+**All Phase2011 headers above, plus:**
+- **nonspeech**: 1 for administrative content in "NOTICES"/"PAPERS" sections with no speaker, 0 otherwise
+
+The header system progressively adds more content classification capabilities in later phases while maintaining backward compatibility with core parliamentary data fields.
+
+
