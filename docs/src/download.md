@@ -36,6 +36,8 @@ run (bash file)
 The logfiles are in sitemap\_logfiles/. It contains information on how many links in total were detected (to compare with the parlinfo website) and how many missing were updated from this run.
 
 ## To update the download
+The update process does not download all files again, it downloads only the files that are not present in the current directory. 
+
 The same command above can be used again to update the XMLs:
 In the directory, run:
 ```

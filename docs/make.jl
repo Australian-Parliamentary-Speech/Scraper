@@ -23,7 +23,9 @@ makedocs(
     "Usage" => "usage.md",
     "Advanced Usage" => "advusage.md",
     "Nodes" => "nodes.md",
-    "Function references" => "functionreference.md"
+    "Function references" => "functionreference.md",
+    "Testing" => "test.md",
+    "Common errors and warnings" => "common_errors.md"
 #    "Summaries" => "summaries.md"
     ]
     )
