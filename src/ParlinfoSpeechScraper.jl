@@ -4,6 +4,7 @@ using Reexport
 # External packages
 using BetterInputFiles
 using ArgParse
+using DocStringExtensions
 
 # Internal packages
 include("RunModule.jl")
@@ -36,19 +37,12 @@ function get_args()
 end
 
 """
-main()
+$(SIGNATURES)
 
 Main function to process command-line arguments and run the program
 
 This function serves as the entry point of the script. It processes command-line arguments, retrieves the necessary parameters, and calls the main processing function with those parameters.
 
-Inputs:
-None
-
-Arguments:
-- `args`: A dictionary containing the parsed command-line arguments.
-    - `args["input"]`: Path to the input TOML file.
-    - `args["verbose"]`: Boolean flag indicating if logging verbosity should be increased.
 """
 function main()
     args = get_args()

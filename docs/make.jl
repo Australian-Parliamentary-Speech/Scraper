@@ -1,4 +1,5 @@
-using Documenter 
+using Documenter
+using DocStringExtensions
 using Pkg
 
 push!(LOAD_PATH,"../src/")
