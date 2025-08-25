@@ -8,95 +8,57 @@
     filename = &quot;senate_xmls/1999/1999_06_25.xml&quot;
 
 [ general_options ]
-    # senate or house
     which_house = &quot;senate&quot;
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
-    xml_name_clean = false</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls (for Senate):</p><pre><code class="nohighlight hljs"># Where the output would go
-[ global ]
+    xml_name_clean = false</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls (for Senate):</p><pre><code class="nohighlight hljs">[ global ]
     output_path = &quot;../../Outputs/SenateCSV/hansard&quot;
 
-# Where the input xmls are stored
 [[ XML_DIR ]]
     path = &quot;senate_xmls&quot;
 
 [ general_options ]
-    # senate or house
     which_house = &quot;senate&quot;
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
-    xml_name_clean = false</code></pre><p>For a single xml file (for House):</p><pre><code class="nohighlight hljs"># Where the output would go
-[ global ]
+    xml_name_clean = false</code></pre><p>For a single xml file (for House):</p><pre><code class="nohighlight hljs">[ global ]
     output_path = &quot;../../Outputs/HouseCSV/hansard&quot;
 
-# The XML file you run
 [[ XML ]]
     filename = &quot;house_xmls/1999/1999_06_25.xml&quot;
 
 [ general_options ]
-    # senate or house
     which_house = &quot;house&quot;
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
-    xml_name_clean = false</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls (for House):</p><pre><code class="nohighlight hljs"># Where the output would go
-[ global ]
+    xml_name_clean = false</code></pre><p>Note that if the date for the single xml is out of range from the year defined, the program might not run.</p><p>For a directory of xmls (for House):</p><pre><code class="nohighlight hljs">[ global ]
     output_path = &quot;../../Outputs/HouseCSV/hansard&quot;
 
-# Where the input xmls are stored
 [[ XML_DIR ]]
     path = &quot;house_xmls&quot;
 
 [ general_options ]
-    # senate or house
     which_house = &quot;house&quot;
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = [&quot;speaker_time&quot;,&quot;re&quot;,&quot;free_node&quot;,&quot;flatten&quot;,&quot;flatten&quot;,&quot;column_decorate&quot;,&quot;re&quot;]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
-    xml_name_clean = false</code></pre><h2 id="Outputs"><a class="docs-heading-anchor" href="#Outputs">Outputs</a><a id="Outputs-1"></a><a class="docs-heading-anchor-permalink" href="#Outputs" title="Permalink"></a></h2><p>Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sgml2xml/">« XML download (1981-1997)</a><a class="docs-footer-nextpage" href="../advusage/">Advanced Usage »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Monday 25 August 2025 05:29">Monday 25 August 2025</span>. Using Julia version 1.11.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    xml_name_clean = false</code></pre><h2 id="Outputs"><a class="docs-heading-anchor" href="#Outputs">Outputs</a><a id="Outputs-1"></a><a class="docs-heading-anchor-permalink" href="#Outputs" title="Permalink"></a></h2><p>Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../sgml2xml/">« XML download (1981-1997)</a><a class="docs-footer-nextpage" href="../advusage/">Advanced Usage »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Monday 25 August 2025 05:33">Monday 25 August 2025</span>. Using Julia version 1.11.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
