@@ -87,11 +87,9 @@ In this section, we give a comprehensive explanation of all the toml options, an
 
 For a single xml file (for senate):
 ```
-# Where the output would go
 [ global ]
     output_path = "../../Outputs/SenateCSV/hansard"
 
-# The XML file you run
 [[ XML ]]
     filename = "senate_xmls/1999/1999_06_25.xml"
 
