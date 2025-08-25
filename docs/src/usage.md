@@ -96,22 +96,14 @@ For a single xml file (for senate):
     filename = "senate_xmls/1999/1999_06_25.xml"
 
 [ general_options ]
-    # senate or house
     which_house = "senate"
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
     xml_name_clean = false
 ```
 Note that if the date for the single xml is out of range from the year defined, the program might not run.
@@ -119,60 +111,40 @@ Note that if the date for the single xml is out of range from the year defined, 
 For a directory of xmls (for Senate):
 
 ```
-# Where the output would go
 [ global ]
     output_path = "../../Outputs/SenateCSV/hansard"
 
-# Where the input xmls are stored
 [[ XML_DIR ]]
     path = "senate_xmls"
 
 [ general_options ]
-    # senate or house
     which_house = "senate"
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
     xml_name_clean = false
 ```
 For a single xml file (for House):
 ```
-# Where the output would go
 [ global ]
     output_path = "../../Outputs/HouseCSV/hansard"
 
-# The XML file you run
 [[ XML ]]
     filename = "house_xmls/1999/1999_06_25.xml"
 
 [ general_options ]
-    # senate or house
     which_house = "house"
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
     xml_name_clean = false
 ```
 Note that if the date for the single xml is out of range from the year defined, the program might not run.
@@ -180,31 +152,21 @@ Note that if the date for the single xml is out of range from the year defined, 
 For a directory of xmls (for House):
 
 ```
-# Where the output would go
 [ global ]
     output_path = "../../Outputs/HouseCSV/hansard"
 
-# Where the input xmls are stored
 [[ XML_DIR ]]
     path = "house_xmls"
 
 [ general_options ]
-    # senate or house
     which_house = "house"
-    # year range
     year = [1901,2025]
-    # false to skip scraping, edit still remains
     xml_parsing = true
-    # steps for editting
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
-    #false to skip edits
     csv_edit = true
-    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = false
-    # whether to remove some steps once program finishes
     remove_nums = [0,1,2,3,4,5,6]
-    # does it require xml name cleaning to ensure dates are in the right format
     xml_name_clean = false
 ```
 
