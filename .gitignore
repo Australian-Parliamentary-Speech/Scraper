@@ -1,6 +1,7 @@
 #Inputs
 Inputs/**/*.xml
-Outputs
+Outputs/HouseCSV/hansard/
+Outputs/SenateCSV/hansard/
 **/*.png
 **/*.pdf
 **/*.txt
