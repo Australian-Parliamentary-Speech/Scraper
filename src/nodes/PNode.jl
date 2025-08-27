@@ -58,6 +58,7 @@ function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
+ 
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         if !(is_free_node(node,parent_node))
             get_talker_from_parent(node,parent_node)
@@ -71,6 +72,10 @@ function process_node(node::Node{<:PNode},node_tree)
             node.headers_dict["name"] = "FREE NODE"
         end
     end 
+    if node.headers_dict["name.id"] == "N/A"
+        find_talker_in_p(node)
+    end
+
     define_flags(node,parent_node,node_tree)
     return construct_row(node,node_tree)
 end
@@ -106,9 +111,14 @@ function find_talker_in_p(p_node::Node{<:PNode})
     if isnothing(p_talker_soup)
         p_with_a_as_parent(p_node)
     else
-        p_talker  = findfirst_in_subsoup(p_talker_soup.path,"/@type",p_node.soup)
+        p_talker = p_talker_soup.content
+
+        if length(p_talker) < 1
+            p_talker  = findfirst_in_subsoup(p_talker_soup.path,"/@type",p_node.soup)
+       end
+
         p_talker_id = findfirst_in_subsoup(p_talker_soup.path,"/@href",p_node.soup)
-        p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
+#        p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
         p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
         p_node.headers_dict["name"] = clean_text(p_talker)
         p_node.headers_dict["name.id"] = clean_text(p_talker_id)
@@ -128,6 +138,7 @@ function p_with_a_as_parent(p_node)
         return path_end == 'a' || path_end == "a" || occursin(r"^a\[\d+\]$", path_end)
     end
     parent_path = p_node.node.parentnode.path
+ 
     if parent_path_check(parent_path)
         p_talker  = findfirst_in_subsoup(parent_path,"/@type",soup)
         p_talker_id = findfirst_in_subsoup(parent_path,"/@href",soup)
@@ -154,7 +165,7 @@ get_sections(::Type{<:PNode})
 In which sections are the p_node wanted as default.
 """
 function get_sections(::Type{<:PNode})
-    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode}]
+    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:DebateNode},Node{<:SubdebateNode}]
 end
 
 """
