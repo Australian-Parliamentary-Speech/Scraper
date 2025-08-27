@@ -68,9 +68,9 @@ function is_nodetype(node, node_tree, nodetype::Type{<:InterTalkNode},phase::Typ
     end
 end
 
+
 function parse_node(node::Node{<:InterTalkNode},node_tree,io)
     row = process_node(node,node_tree)
     write_row_to_io(io,row)
 end
-
 

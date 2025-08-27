@@ -10,7 +10,10 @@ function re(input_fn,output_fn,::Type{<:AbstractEditPhase})
             row_ = @. collect(row)
             row = row_[1]
             row = edit_row(row,header_to_num)
-            write_row_to_io(io,row)
+            content = row[header_to_num[:content]]
+            if content != ""
+                write_row_to_io(io,row)
+            end
         end
     end
 end
