@@ -17,7 +17,7 @@ exec env LD_LIBRARY_PATH="" $JULIA_CMD -e 'include(popfirst!(ARGS))' "$SOURCE" "
 =#
 
 #GC.enable_logging(true)
-using Pkg; Pkg.instantiate()
+#using Pkg; Pkg.instantiate()
 include("src/ParlinfoSpeechScraper.jl")
 using .ParlinfoSpeechScraper
 main()
