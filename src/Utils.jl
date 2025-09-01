@@ -34,6 +34,7 @@ function edit_row(row)
 end
 
 function replace_empty_string(row)
+    @assert length(collect(skipmissing(row))) == length(row)
     return map(x -> isempty(x) ? "N/A" : x, row)
 end
 
