@@ -62,8 +62,11 @@ function remove_bits(row, header_to_num)
     #removes trailing spaces in the end
     content = replace(content, r" +$" => "")
     #removes leading spaces
-    content = replace(content, r"^ +" => "")  
-
+    content = replace(content, r"^ +" => "") 
+    #removes leading dashes or dots
+    content = replace(content, r"^\s*[.-]+\s*" => "")
+    #removes leading =
+    content = replace(content, r"\s*=\s*" => "")
     row[content_num] = content
     return row
 end
