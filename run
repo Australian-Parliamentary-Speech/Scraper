@@ -13,6 +13,13 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 export JULIA_PROJECT=$DIR # $DIR is the scripts directory, so we go up a level to get to the base project directory
 export JULIA_LOAD_PATH=@:@stdlib  # exclude default environment
+
+if [ -f Manifest.toml ]; then
+    julia -e 'using Pkg; Pkg.activate("."); println("Manifest.toml exists, skipping instantiate")' 
+else
+    julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
+fi
+
 exec env LD_LIBRARY_PATH="" $JULIA_CMD -e 'include(popfirst!(ARGS))' "$SOURCE" "$@"
 =#
 
