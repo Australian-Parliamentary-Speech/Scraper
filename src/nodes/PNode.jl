@@ -116,7 +116,6 @@ function p_inline_name(p_node::Node{<:PNode})
         p_inline_content = p_inline.content
         if is_name_inline(p_inline_content)
             p_node.headers_dict["name"] = clean_text(p_inline_content)
-            @show clean_name(p_inline_content)
         end
     else
         p_node.headers_dict["name"] = "N/A"

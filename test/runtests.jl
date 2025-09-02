@@ -6,6 +6,7 @@ using CSV, DataFrames
 using Glob
 using BetterInputFiles
 using Dates
+using Random
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
 
@@ -15,6 +16,8 @@ using ParlinfoSpeechScraper.RunModule.EditModule
 
 struct test_struct
     skip_cols::Vector{Any}
+    which_test::Symbol
+    fuzzy_search::Vector{Int64}
 end
 
 function setup(which_house)
@@ -46,25 +49,21 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setu
             gs_name = basename(gs_csv)
 
             sample_csv = joinpath(sample_csv_path,gs_name)
-            content_all_ratio, content_only_ratio = similarity_csv(gs_csv,sample_csv,test_setup)
-            @show content_all_ratio
-            @show content_only_ratio
-            println(io,"\"$gs_name\",ratio")
-        end
+            @show "Comparing now $gs_name to $sample_csv"
+            ratio = similarity_csv(gs_csv,sample_csv,test_setup,testpath)
+            @show ratio
+            println(io,"\"$gs_name\",$ratio") 
+       end
     end
 end
 
-function compare_gold_standard(outputpath, testpath,which_test,test_setup)
+function compare_gold_standard(outputpath, testpath,test_setup)
     gold_standard_path = joinpath(testpath,"gold_standard")
     sample_csv_path = joinpath(testpath,"sample_csv")
     create_dir(sample_csv_path)
     gold_standard_csvs = get_all_csvnames(gold_standard_path)
     get_sample_csvs(outputpath,gold_standard_csvs,sample_csv_path)
-    if which_test == :debug
-        compare_outputs(gold_standard_csvs, sample_csv_path,testpath)
-    elseif which_test == :ratio
-        similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setup) 
-    end
+    similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setup) 
 end
 
 
@@ -147,43 +146,44 @@ end
     which_house = :house
     inputpath, outputpath = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
-#    @test begin
-#        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no")]
-#        test_setup = test_struct(skip_cols)
-#        compare_gold_standard(outputpath, @__DIR__,[:debug,:ratio][2],test_setup)
-#        true
-#    end
-
     @test begin
-        csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
-        xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
-
-        xml = CSV.read(xml_fn, DataFrame,header=false)
-        csv = CSV.read(csv_fn, DataFrame,header=false)
-
-        xmls = xml[:, 2]
-        csvs = csv[:, 2]
-        only_in_xml = setdiff(xmls, csvs)
-        only_in_csv = setdiff(csvs, xmls)
-        if which_house == :senate
-            only_in_sitting = setdiff(sitting_senate,xmls)
-        elseif which_house == :house
-            only_in_sitting = setdiff(sitting_house,xmls)
-        end
-        open(joinpath("dates","only_in_xml_$(which_house).csv"), "w") do io
-            for date in only_in_xml
-            println(io, date)
-            end
-        end
-        open(joinpath("dates","only_in_sitting_$(which_house).csv"), "w") do io
-            for date in only_in_sitting
-                println(io, date)
-            end
-        end
- 
+        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:Other]
+        which_test = [:exact,:fuzzy][2]
+        fuzzy_search = [2,5]
+        test_setup = test_struct(skip_cols,which_test,fuzzy_search)
+        compare_gold_standard(outputpath, @__DIR__,test_setup)
         true
     end
+
+#    @test begin
+#        csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
+#        xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
+#
+#        xml = CSV.read(xml_fn, DataFrame,header=false)
+#        csv = CSV.read(csv_fn, DataFrame,header=false)
+#
+#        xmls = xml[:, 2]
+#        csvs = csv[:, 2]
+#        only_in_xml = setdiff(xmls, csvs)
+#        only_in_csv = setdiff(csvs, xmls)
+#        if which_house == :senate
+#            only_in_sitting = setdiff(sitting_senate,xmls)
+#        elseif which_house == :house
+#            only_in_sitting = setdiff(sitting_house,xmls)
+#        end
+#        open(joinpath("dates","only_in_xml_$(which_house).csv"), "w") do io
+#            for date in only_in_xml
+#            println(io, date)
+#            end
+#        end
+#        open(joinpath("dates","only_in_sitting_$(which_house).csv"), "w") do io
+#            for date in only_in_sitting
+#                println(io, date)
+#            end
+#        end
+# 
+#        true
+#    end
 end
- 
 
 
