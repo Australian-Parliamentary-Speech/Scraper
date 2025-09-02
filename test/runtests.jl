@@ -150,7 +150,7 @@ end
     @test begin
         skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:Other,:electorate,:party,:role]
         which_test = [:exact,:fuzzy][2]
-        fuzzy_search = [2,5]
+        fuzzy_search = [5,5]
         test_setup = test_struct(skip_cols,which_test,fuzzy_search)
         test_output_path = joinpath(@__DIR__,"test_outputs")
         create_dir(test_output_path)
