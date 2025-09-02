@@ -20,22 +20,6 @@ function speaker_time(input_fn,output_fn,::Type{<:AbstractEditPhase})
     end
 end
 
-function is_name(name)
-    if name in ["Bill", "Committee"]
-        return false
-    end
-    
-    number = length(split(name," "))
-    if number > 5
-        return false
-    end
-
-    if occursin(r"\d",name)
-        return false
-    end
-    return true    
-end
-
 function other_information(row,header_to_num)
     name = row[header_to_num[:name]]
     function return_row(row,other_content)
