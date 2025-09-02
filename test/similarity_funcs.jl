@@ -35,15 +35,13 @@ function gs_sample_content_match(gs_content,sample_content,test_setup)
     end
 end
 
-function similarity_csv(gs_csv,sample_csv,test_setup,testpath)
+function similarity_csv(gs_csv,sample_csv,test_setup,test_output_path)
     sample_csvfile = CSV.File(sample_csv)
     gs_rows = eachrow(CSV.File(gs_csv))
     headers = copy(propertynames(sample_csvfile)) 
     sample_rows = eachrow(sample_csvfile)
     header_to_num = edit_set_up(headers)
     success = 0
-    test_output_path = joinpath(testpath,"test_outputs")
-    create_dir(test_output_path)
     fn_found = joinpath(test_output_path,"found_similarity_output_$(basename(gs_csv))")
     found_lines = []
     fn_missing = joinpath(test_output_path,"missing_output_$(basename(gs_csv))")
@@ -59,10 +57,9 @@ function similarity_csv(gs_csv,sample_csv,test_setup,testpath)
                     success += 1
                 else
                     gs_content = gs_row[header_to_num[:content]]
-                    symbols = collect(split(gs_content))
-                    symbol_length = length(symbols)
-                    symbol = symbols[1:min(symbol_length, 8)]
-                    push!(found_lines,[i,join(symbol," ")])
+                    line = [i, gs_content]
+
+                    push!(found_lines,edit_row(line))
                 end
             end
         end

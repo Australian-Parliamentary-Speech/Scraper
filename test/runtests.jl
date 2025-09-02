@@ -13,6 +13,7 @@ include(joinpath(@__DIR__, "similarity_funcs.jl"))
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
+using ParlinfoSpeechScraper.RunModule.Utils
 
 struct test_struct
     skip_cols::Vector{Any}
@@ -41,30 +42,6 @@ function get_sample_csvs(outputpath,gold_standard_csvs,sample_dir)
     end
 end
 
-
-function similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setup)
-    fn = joinpath(testpath,"similarity_test.csv")
-    open(fn,"w") do io
-        for gs_csv in gold_standard_csvs
-            gs_name = basename(gs_csv)
-
-            sample_csv = joinpath(sample_csv_path,gs_name)
-            @show "Comparing now $gs_name to $sample_csv"
-            ratio = similarity_csv(gs_csv,sample_csv,test_setup,testpath)
-            @show ratio
-            println(io,"\"$gs_name\",$ratio") 
-       end
-    end
-end
-
-function compare_gold_standard(outputpath, testpath,test_setup)
-    gold_standard_path = joinpath(testpath,"gold_standard")
-    sample_csv_path = joinpath(testpath,"sample_csv")
-    create_dir(sample_csv_path)
-    gold_standard_csvs = get_all_csvnames(gold_standard_path)
-    get_sample_csvs(outputpath,gold_standard_csvs,sample_csv_path)
-    similarity_ratio(gold_standard_csvs,sample_csv_path, testpath,test_setup) 
-end
 
 
 function get_all_csv_dates(outputpath,testpath,which_house)
@@ -141,17 +118,43 @@ function read_sitting_dates(testpath)
     return house, senate
 end
 
+function compare_gold_standard(outputpath, testpath,test_setup,test_output_path)
+    gold_standard_path = joinpath(testpath,"gold_standard")
+    sample_csv_path = joinpath(testpath,"sample_csv")
+    create_dir(sample_csv_path)
+    gold_standard_csvs = get_all_csvnames(gold_standard_path)
+    get_sample_csvs(outputpath,gold_standard_csvs,sample_csv_path)
+    similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup) 
+end
+
+function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup)
+    fn = joinpath(test_output_path,"similarity_test.csv")
+    open(fn,"w") do io
+        for gs_csv in gold_standard_csvs
+            gs_name = basename(gs_csv)
+
+            sample_csv = joinpath(sample_csv_path,gs_name)
+            @show "Comparing now $gs_name to $sample_csv"
+            ratio = similarity_csv(gs_csv,sample_csv,test_setup,test_output_path)
+            @show ratio
+            println(io,"\"$gs_name\",$ratio") 
+       end
+    end
+end
+
 
 @testset verbose = true "Test set" begin
     which_house = :house
     inputpath, outputpath = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
     @test begin
-        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:Other]
+        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:Other,:electorate,:party,:role]
         which_test = [:exact,:fuzzy][2]
         fuzzy_search = [2,5]
         test_setup = test_struct(skip_cols,which_test,fuzzy_search)
-        compare_gold_standard(outputpath, @__DIR__,test_setup)
+        test_output_path = joinpath(@__DIR__,"test_outputs")
+        create_dir(test_output_path)
+        compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
         true
     end
 

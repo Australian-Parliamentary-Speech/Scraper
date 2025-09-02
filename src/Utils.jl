@@ -3,6 +3,7 @@ module Utils
 export write_row_to_io
 export create_dir
 export date_to_float
+export edit_row
 
 function date_to_float(year,month,day)
     return round(year + month/120 + day/3100,digits=6)
