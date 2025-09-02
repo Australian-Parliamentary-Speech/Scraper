@@ -2,16 +2,16 @@
     output_path = "../../Outputs/HouseCSV/hansard"
 
 ###choose one: XML or XML_DIR
-#[[ XML ]]
-#    filename = "house_xmls/2013/2013_02_13.xml"
+[[ XML ]]
+    filename = "house_xmls/1902/1902_01_22.xml"
 
 
-[[ XML_DIR ]]
-    path = "house_xmls"
+#[[ XML_DIR ]]
+#    path = "house_xmls"
 
 [ general_options ]
     which_house = "house"
-    year = [1901,1901]
+    year = [1902,1902]
     xml_parsing = true
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
     csv_edit = true

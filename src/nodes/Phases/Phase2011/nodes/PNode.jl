@@ -84,10 +84,12 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
                 if node.headers_dict["name"] == "N/A"
                     find_talker_in_p(node)
                 end
-
             end
         else
-            node.headers_dict["name"] = "FREE NODE"
+            find_talker_in_p(node)
+            if node.headers_dict["name"] == "N/A"
+                node.headers_dict["name"] = "FREE NODE"
+            end
         end
 
         if typeof(parent_node) <: Node{<:InterTalkNode}

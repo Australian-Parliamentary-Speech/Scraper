@@ -16,6 +16,7 @@ export detect_phase
 export GenericPhase
 export AbstractPhase
 export define_headers
+export is_name
 
 abstract type AbstractPhase end
 
@@ -572,6 +573,22 @@ function write_test_xml(trigger_node, parent_node, edge_case)
     end
 end
 
+
+function is_name(name)
+    if name in ["Bill", "Committee"]
+        return false
+    end
+    
+    number = length(split(name," "))
+    if number > 5
+        return false
+    end
+
+    if occursin(r"\d",name)
+        return false
+    end
+    return true    
+end
 
 
 end

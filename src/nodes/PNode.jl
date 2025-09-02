@@ -100,6 +100,30 @@ function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_t
     end
 end
 
+function is_name_inline(content)
+    possible_titles = ["Mr","Ms","Miss","Mrs"]
+    if true in occursin.(possible_titles, content)
+        splits = split(content, " ")
+        return is_name(content)
+    end
+    return false
+end
+
+ 
+function p_inline_name(p_node::Node{<:PNode})
+    p_inline = findfirst_in_subsoup(p_node.node.path, "//inline",p_node.soup)
+    if !isnothing(p_inline)
+        p_inline_content = p_inline.content
+        if is_name_inline(p_inline_content)
+            p_node.headers_dict["name"] = clean_text(p_inline_content)
+            @show clean_name(p_inline_content)
+        end
+    else
+        p_node.headers_dict["name"] = "N/A"
+    end
+    p_node.headers_dict["name.id"] = "N/A"
+end
+
 
 """
 find_talker_in_p(p_node)
@@ -110,6 +134,9 @@ function find_talker_in_p(p_node::Node{<:PNode})
     p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker_soup)
         p_with_a_as_parent(p_node)
+        if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"
+            p_inline_name(p_node)
+        end
     else
         p_talker = p_talker_soup.content
 

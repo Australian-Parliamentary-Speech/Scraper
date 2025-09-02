@@ -70,9 +70,19 @@ end
 #    return s
 #end
 #
+@xport function clean_name(str::AbstractString)
+    str = clean_text(str)
+    unwanted_char = ["(",")",".","-"]
+    for char in unwanted_char
+        str = replace(str, char => "")
+    end
+    return str
+end
+
 @xport function clean_text(str::AbstractString)
     # Replace newline characters with an empty string
     filtered_str = replace(str, "\n" => "")
+
 #    filtered_str = replace.(str, r"^[ \.]?-+" => "")
     # Replace multiple spaces with a single space, excluding spaces between words
     filtered_str = replace(filtered_str, r"\s+" => " ")

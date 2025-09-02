@@ -159,22 +159,6 @@ function fill_row(new_headers, row_dict)
 end
 
 
-function is_name(name)
-    if name in ["Bill", "Committee"]
-        return false
-    end
-    
-    number = length(split(name," "))
-    if number > 5
-        return false
-    end
-
-    if occursin(r"\d",name)
-        return false
-    end
-    return true    
-end
-
 
 
 end
