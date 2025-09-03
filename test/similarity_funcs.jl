@@ -1,10 +1,11 @@
 function fuzzy_bar_match(gs_cell, sample_cell,test_setup)
     fuzzy_bars = sample_bars(gs_cell,test_setup)
-    if !(false in @. occursin(fuzzy_bars, sample_cell))
-        return content_distance(gs_cell,sample_cell)
-    else
-        return false
+    for fuzzy_bar in fuzzy_bars        
+        if !occursin(fuzzy_bar,sample_cell)
+           return missing
+        end
     end
+    return content_distance(gs_cell,sample_cell)
 end
 
 function count_words(content)
@@ -17,19 +18,19 @@ function count_words(content)
     end
 end
 
-function sample_bars(gs_content::String,test_setup)
+function sample_bars(gs_content,test_setup)
     fuzzy_bar_length, fuzzy_interval = test_setup.fuzzy_search
     bar_length = minimum([fuzzy_bar_length, count_words(gs_content)])
     if bar_length > 1
         pattern = Regex("\\b\\w+(?:\\s+\\w+){$(bar_length-1)}")
     else
-        pattern = pattern = Regex("[A-Za-z]{$bar_length}")
+        pattern =  r"(?<= )([A-Za-z]+)(?= )"
     end
     matches = collect(eachmatch(pattern, gs_content))
     if isempty(matches)
         return [gs_content]
     else
-        chosen = [matches[i].match for i in 1:5:length(matches)]
+        chosen = [matches[i].match for i in 1:fuzzy_interval:length(matches)]
         return chosen
     end
 end
@@ -84,12 +85,20 @@ function content_distance(gs_cell,sample_cell)
     end
  
     if gs_cell == sample_cell
-        return 1
+        return 0
     else
         gs_words = cell_to_words(gs_cell)
         sample_words = cell_to_words(sample_cell)
-        measure = length(setdiff(gs_words,sample_words)) + length(setdiff(sample_words,gs_words))
+        measure = (length(setdiff(gs_words,sample_words)) + length(setdiff(sample_words,gs_words)))/2
         return measure
+    end
+end
+
+function content_distance_score(gs_cell,sample_cell)
+    if gs_cell == sample_cell
+        return 1
+    else
+        return 0
     end
 end
 
@@ -101,10 +110,11 @@ function cell_score(sample_row,gs_row,skip_nums,content_num,i)
 
     sample_cell = sample_row[i]
     if i == content_num
-        score = content_distance(gs_cell,sample_cell)
+        score = content_distance_score(gs_cell,sample_cell)
+        @assert score <= 1
         if score != 1
-            @show gs_cell
-            @show sample_cell
+#            @show gs_cell
+#            @show sample_cell
             return score, "failed"
         else
             return score, "passed"
@@ -118,30 +128,34 @@ function cell_score(sample_row,gs_row,skip_nums,content_num,i)
     end
 end
 
+function find_correct_row(sample_rows,content_num,gs_content,test_setup)
+    the_correct_row = (0,1e5)
+    for i in 1:length(sample_rows)
+        sample_row = get_row(sample_rows[i])
+        sample_content = sample_row[content_num]
+        gs_sample_distance = gs_sample_content_match(gs_content,sample_content,test_setup)
+        if !ismissing(gs_sample_distance)
+            if gs_sample_distance < the_correct_row[2]
+                the_correct_row = (i,gs_sample_distance)
+            end
+        end
+    end
+    return the_correct_row
+end
+
 
 function compare_row(sample_rows, gs_row, header_to_num,test_setup)
     skip_cols = test_setup.skip_cols
     skip_nums = [header_to_num[col] for col in skip_cols]
     content_num = header_to_num[:content]
-
-    the_correct_row = (0,0)
     gs_content = gs_row[content_num]
     if gs_content == "N/A"
         return 1,[]
     end
-
-    for i in 1:length(sample_rows)
-        sample_row = get_row(sample_rows[i])
-        sample_content = sample_row[content_num]
-        gs_sample_distance =  gs_sample_content_match(gs_content,sample_content,test_setup) 
-        if gs_sample_distance != false 
-            if gs_sample_distance > the_correct_row[2]
-                the_correct_row = (i,gs_sample_distance)
-            end
-        end
-    end
-
-    if the_correct_row != (0,0) 
+    
+    the_correct_row = find_correct_row(sample_rows,content_num,gs_content,test_setup)
+#    @show the_correct_row
+    if the_correct_row[1] != 0
         sample_row = get_row(sample_rows[the_correct_row[1]])
         row_score = 0
         failed_indices = []
