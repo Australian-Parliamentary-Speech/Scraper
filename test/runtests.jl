@@ -6,7 +6,6 @@ using CSV, DataFrames
 using Glob
 using BetterInputFiles
 using Dates
-using Random
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
 
@@ -148,9 +147,9 @@ end
     inputpath, outputpath = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
     @test begin
-        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:Other,:electorate,:party,:role]
+        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:electorate,:party,:role]
         which_test = [:exact,:fuzzy][2]
-        fuzzy_search = [5,5]
+        fuzzy_search = [8,10]
         test_setup = test_struct(skip_cols,which_test,fuzzy_search)
         test_output_path = joinpath(@__DIR__,"test_outputs")
         create_dir(test_output_path)
