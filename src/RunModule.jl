@@ -185,8 +185,12 @@ function copy_sample_file(output_path,num)
     for sample_date in sample_dates
         year = split(sample_date,"-")[1]
         fn = joinpath([output_path,year,"$(sample_date)_edit_step$(num).csv"])
-        command = `cp $(fn) $sample_dir`
-        run(command)
+        if isfile(fn)
+            command = `cp $(fn) $sample_dir`
+            run(command)
+        else
+            @warning "Uploading $(fn) failed: file not found"
+        end
     end
 end
 
