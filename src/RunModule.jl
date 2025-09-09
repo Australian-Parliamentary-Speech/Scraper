@@ -189,7 +189,7 @@ function copy_sample_file(output_path,num)
             command = `cp $(fn) $sample_dir`
             run(command)
         else
-            @warning "Uploading $(fn) failed: file not found"
+            @info "Uploading $(fn) failed: file not found"
         end
     end
 end

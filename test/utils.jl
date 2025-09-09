@@ -18,13 +18,6 @@ function edit_set_up(headers)
 end
 
 
-
-function create_dir(directory_path::String)
-    if !isdir(directory_path)
-        mkpath(directory_path)
-    end
-end
-
 function check_csv(curr,correct)
     file_curr = open(curr, "r") do f
         readlines(f)
