@@ -148,10 +148,19 @@ function compare_gold_standard(outputpath, testpath,test_setup,test_output_path)
     similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup) 
 end
 
+function fix_gold_standard(gs_csv)
+    #delete spaces after the content
+end
+
+function locate_diff(text1,text2)
+    #find what is wrong between two texts, this is to add before they write it to the output
+end
+
 function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup)
     fn = joinpath(test_output_path,"similarity_test.csv")
     open(fn,"w") do io
         for gs_csv in gold_standard_csvs
+            fix_gold_standard(gs_csv)
             gs_name = basename(gs_csv)
             sample_name = from_gs_to_sample(gs_name,test_setup)
             sample_csv = joinpath(sample_csv_path,sample_name)

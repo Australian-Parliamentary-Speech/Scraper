@@ -113,8 +113,15 @@ function cell_score(sample_row,gs_row,skip_nums,content_num,i)
         score = content_distance_score(gs_cell,sample_cell)
         @assert score <= 1
         if score != 1
-#            @show gs_cell
-#            @show sample_cell
+            #for testing
+            if false
+                if length(collect(split(sample_cell))) < 300
+                    @show gs_cell
+                    print("\n")
+                    @show sample_cell
+                    print("\n")
+                end
+            end
             return score, "failed"
         else
             return score, "passed"
@@ -137,7 +144,11 @@ function find_correct_row(sample_rows,content_num,gs_content,test_setup)
         if !ismissing(gs_sample_distance)
             if gs_sample_distance < the_correct_row[2]
                 the_correct_row = (i,gs_sample_distance)
-            end
+                # to turn off the selection after iteration of the whole CSV
+                if false
+                    return the_correct_row
+                end
+           end
         end
     end
     return the_correct_row
