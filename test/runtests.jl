@@ -8,6 +8,8 @@ using BetterInputFiles
 using Dates
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
+include(joinpath(@__DIR__, "clean_gs.jl"))
+
 
 
 const RunModule = ParlinfoSpeechScraper.RunModule
@@ -177,6 +179,7 @@ end
     which_house = :house
     inputpath, outputpath, toml = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
+    clean_gs_files()
     @test begin
         skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:electorate,:party,:role]
         which_test = [:exact,:fuzzy][2]
