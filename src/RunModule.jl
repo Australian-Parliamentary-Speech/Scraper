@@ -310,7 +310,7 @@ function recurse(soup, date, PhaseType, xml_node, io, headers_dict, index=1,dept
     # First parse the current node, if it is parsable
 
     # First get nodetype of this node
-    NodeType = detect_node_type(xml_node, node_tree, date,soup,PhaseType)
+    NodeType = detect_node_type(xml_node, node_tree,soup,PhaseType)
 
    # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)

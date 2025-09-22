@@ -1,6 +1,0 @@
-#[submodule "Inputs"]
-#	path = Inputs
-#	url = git@github.com:Australian-Parliamentary-Speech/Inputs.git
-#[submodule "Outputs"]
-#	path = Outputs
-#	url = git@github.com:Australian-Parliamentary-Speech/Outputs.git

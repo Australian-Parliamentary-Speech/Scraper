@@ -187,14 +187,13 @@ default setting:
 Inputs:
 - `node`: The XML node to determine the type for.
 - `node_tree`: A vector representing a tree of nodes
-- `date`: The date associated with the node.
 - `soup`: The root node.
 - `PhaseType`: The phase type determined from the date of XML.
 
 Returns:
 - The detected node type (`NodeType`).
 """
-function detect_node_type(node, node_tree,date,soup,PhaseType)
+function detect_node_type(node, node_tree,soup,PhaseType)
     for NodeType in all_subtypes
         if is_nodetype(node, node_tree, NodeType, PhaseType,soup)
             return NodeType

@@ -58,7 +58,8 @@ function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
- 
+
+
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         if !(is_free_node(node,parent_node))
             get_talker_from_parent(node,parent_node)
