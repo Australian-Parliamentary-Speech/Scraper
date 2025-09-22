@@ -87,7 +87,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
        """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
 
        """quote acts like a para node"""
-        if typeof(parent_node) <: Node{<:QuoteNode_}
+       if typeof(node_tree[end]) <: Node{<:QuoteNode_}
             talker_parent = node_tree[end-1]
         else
             talker_parent = parent_node
@@ -111,10 +111,10 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
             end
         end
 
-        if typeof(parent_node) <: Node{<:InterTalkNode}
+        if typeof(node_tree[end]) <: Node{<:InterTalkNode}
             flag_parent = node_tree[end-1]
         else
-            flag_parent = parent_node
+            flag_parent = node_tree[end]
         end
         define_flags(node,flag_parent,node_tree)
     else
