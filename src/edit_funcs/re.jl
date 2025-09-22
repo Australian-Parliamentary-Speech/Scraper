@@ -98,13 +98,14 @@ function edit_interjections(row,header_to_num)
 end
 
 function replace_known_beginning(s,beginning)
-   cell = try
-        Regex("^$(raw"$beginning"):")
+    cell1, cell2 = try
+        Regex("^$(raw"$beginning"):"), Regex("^\\Q$(beginning)\\E")
     catch e
         @show beginning
         @show e
     end
-    regs = [cell,r"The SPEAKER:",r"Mr SPEAKER"]
+
+    regs = [cell1, cell2, r"The SPEAKER:",r"Mr SPEAKER"]
     for reg in regs
         m = match(reg, s)
         if m !== nothing
@@ -113,6 +114,7 @@ function replace_known_beginning(s,beginning)
             continue
         end
     end
+
     return s
 end
 
