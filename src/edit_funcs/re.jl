@@ -68,7 +68,7 @@ function remove_bits(row, header_to_num)
     #removes leading =
     content = replace(content, r"\s*=\s*" => "")
     #removes leading ( name )
-    content = replace(content, r"\([^)]+\)(?:\s*:)?" => "")
+    content = replace(content, r"^\([^)]+\)(?:\s*:)?" => "")
     row[content_num] = content
     return row
 end

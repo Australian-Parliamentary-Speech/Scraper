@@ -27,6 +27,8 @@ function edit_row_gs(row,header_to_num)
     content = row[content_num]
     #removes trailing spaces in the end
     content = replace(content, r" +$" => "")
+    #removes leading dashes or dots
+    content = replace(content, r"^\s*[.\-—–]+\s*" => "")
     row[content_num] = content
     return row
 end

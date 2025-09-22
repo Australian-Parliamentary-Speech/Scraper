@@ -113,10 +113,16 @@ end
  
 function p_inline_name(p_node::Node{<:PNode})
     p_inline = findfirst_in_subsoup(p_node.node.path, "//inline",p_node.soup)
+    p_content = p_node.node.content
     if !isnothing(p_inline)
         p_inline_content = p_inline.content
         if is_name_inline(p_inline_content)
-            p_node.headers_dict["name"] = clean_text(p_inline_content)
+            regex = Regex("^\\Q$(p_inline_content)\\E:?")
+            find_name = match(regex,p_inline_content)
+            location = findfirst(find_name.match, clean_text(p_content))
+            if location[1] < 3
+                p_node.headers_dict["name"] = clean_text(p_inline_content)
+            end
         end
     else
         p_node.headers_dict["name"] = "N/A"
