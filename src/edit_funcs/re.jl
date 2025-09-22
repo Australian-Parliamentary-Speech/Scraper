@@ -67,6 +67,8 @@ function remove_bits(row, header_to_num)
     content = replace(content, r"^\s*[.-]+\s*" => "")
     #removes leading =
     content = replace(content, r"\s*=\s*" => "")
+    #removes leading ( name )
+    content = replace(content, r"\([^)]+\)(?:\s*:)?" => "")
     row[content_num] = content
     return row
 end
@@ -98,14 +100,14 @@ function edit_interjections(row,header_to_num)
 end
 
 function replace_known_beginning(s,beginning)
-    cell1, cell2 = try
-        Regex("^$(raw"$beginning"):"), Regex("^\\Q$(beginning)\\E")
+    cell = try
+        Regex("^\\Q$(beginning)\\E:?")
     catch e
         @show beginning
         @show e
     end
 
-    regs = [cell1, cell2, r"The SPEAKER:",r"Mr SPEAKER"]
+    regs = [cell, r"The SPEAKER:",r"Mr SPEAKER"]
     for reg in regs
         m = match(reg, s)
         if m !== nothing
