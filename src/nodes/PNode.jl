@@ -119,7 +119,11 @@ function p_inline_name(p_node::Node{<:PNode})
         if is_name_inline(p_inline_content)
             regex = Regex("^\\Q$(p_inline_content)\\E:?")
             find_name = match(regex,p_inline_content)
-            location = findfirst(find_name.match, clean_text(p_content))
+            location = findfirst(clean_text(find_name.match), clean_text(p_content))
+#            if isnothing(location)
+#                @show find_name
+#                @show clean_text(p_content)
+#            end
             if location[1] < 3
                 p_node.headers_dict["name"] = clean_text(p_inline_content)
             end
