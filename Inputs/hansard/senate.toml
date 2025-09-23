@@ -2,12 +2,12 @@
     output_path = "../../Outputs/SenateCSV/hansard"
 
 ###choose one: XML or XML_DIR
-[[ XML ]]
-    filename = "senate_xmls/2020/2020_02_12.xml"
+#[[ XML ]]
+#    filename = "senate_xmls/2020/2020_02_12.xml"
 
 
-#[[ XML_DIR ]]
-#    path = "senate_xmls"
+[[ XML_DIR ]]
+    path = "senate_xmls"
 
 [ general_options ]
     which_house = "senate"
