@@ -11,11 +11,7 @@
 
 [ general_options ]
     which_house = "house"
-<<<<<<< HEAD
-    year = [1980,2025]
-=======
-    year = [1918,2025]
->>>>>>> parent of b0b2b6e (deleted intertalk node)
+    year = [1901,2025]
     xml_parsing = true
     edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
     csv_edit = true
