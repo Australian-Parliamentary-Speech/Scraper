@@ -429,11 +429,7 @@ function find_section_title(node_tree,soup,section_type)
 end
 
 function find_p_node_parent(node::Node{<:PNode},node_tree)
-    if node_tree[end] isa Node{<:InterTalkNode}
-        return node_tree[end-1]
-    else
-        return node_tree[end]
-    end
+    return node_tree[end]
 end
 
 function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
