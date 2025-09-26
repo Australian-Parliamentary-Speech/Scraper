@@ -13,7 +13,7 @@ get_sections(::Type{PNode{Phase2011}})
 Allowed sections for PNodes.
 """
 function get_sections(::Type{PNode{Phase2011}})
-    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:InterjectionNode},Node{<:MotionnospeechNode},Node{<:DebateNode},Node{<:QuoteNode_},Node{<:PetitionNode},Node{<:InterTalkNode},Node{<:SubdebateNode},Node{<:AdjournmentNode}]
+    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:InterjectionNode},Node{<:MotionnospeechNode},Node{<:DebateNode},Node{<:QuoteNode_},Node{<:PetitionNode},Node{<:SubdebateNode},Node{<:AdjournmentNode}]
 end
 
 """
@@ -111,11 +111,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
             end
         end
 
-        if typeof(node_tree[end]) <: Node{<:InterTalkNode}
-            flag_parent = node_tree[end-1]
-        else
-            flag_parent = node_tree[end]
-        end
+        flag_parent = node_tree[end]
         define_flags(node,flag_parent,node_tree)
     else
         define_flags(node,node,node_tree)
