@@ -3,7 +3,7 @@
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "house_xmls/1990/1990_05_16.xml"
+#    filename = "house_xmls/2023/2023_05_11.xml"
 
 
 [[ XML_DIR ]]
@@ -13,9 +13,9 @@
     which_house = "house"
     year = [1901,2025]
     xml_parsing = true
-    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
+    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate"]
     csv_edit = true
     run_xml_toggle = true
     sample = true
-    remove_nums = [0,1,2,3,4,5,6]
+    remove_nums = [0,1,2,3,4,5]
     xml_name_clean = false
