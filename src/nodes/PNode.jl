@@ -59,6 +59,7 @@ function process_node(node::Node{<:PNode},node_tree)
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
 
+    p_interjecting_name(node::Node{<:PNode})
 
     if is_first_node_type(node,parent_node,allowed_names,node_tree)
         if !(is_free_node(node,parent_node))
@@ -110,6 +111,19 @@ function is_name_inline(content)
     return false
 end
 
+function p_interjecting_name(p_node::Node{<:PNode})
+    p_spans  = findall_in_subsoup(p_node.node.path,"//span",p_node.soup)
+    for p_span in p_spans
+        class = findfirst_in_subsoup(p_span.path,"/@class",p_node.soup)
+        if !isnothing(class)
+            if class.content == "HPS-OfficeInterjecting"
+                name = p_span.content
+                p_node.headers_dict["name"] = clean_text(name)
+            end
+        end
+    end
+end
+
  
 function p_inline_name(p_node::Node{<:PNode})
     p_inline = findfirst_in_subsoup(p_node.node.path, "//inline",p_node.soup)
@@ -147,6 +161,10 @@ function find_talker_in_p(p_node::Node{<:PNode})
         if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"
             p_inline_name(p_node)
         end
+        if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"            
+            p_interjecting_name(p_node::Node{<:PNode})
+        end
+
     else
         p_talker = p_talker_soup.content
 

@@ -22,9 +22,9 @@ function column_decorate(input_fn, output_fn, ::Type{<:AbstractEditPhase})
 
            if is_stage_direction(row,header_to_num)
 
-                row_dict[:stage_direction_flag] = 1
+                row_dict[:non_speech_flag] = 1
             else
-                row_dict[:stage_direction_flag] = 0
+                row_dict[:non_speech_flag] = 0
             end
             row_ = @. collect(row)
             row = row_[1]
@@ -65,7 +65,7 @@ end
 
 function add_header(num_to_header)
     flag_max = last(sort([k for k in keys(num_to_header) if occursin("flag", string(num_to_header[k]))]))
-    additions = [(flag_max+1,:stage_direction_flag),(flag_max+2,:speaker_no)]
+    additions = [(flag_max+1,:non_speech_flag),(flag_max+2,:speaker_no)]
 
     new_num_to_header = add_header_to_num(num_to_header,additions)
     new_headers = [new_num_to_header[i] for i in 1:length(new_num_to_header)]
