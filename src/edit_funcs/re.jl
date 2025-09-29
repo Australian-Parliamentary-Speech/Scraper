@@ -30,12 +30,15 @@ end
 
 function find_speaker_content(row,header_to_num)
     content = row[header_to_num[:content]]
-    speaker = match(r"^The DEPUTY SPEAKER \([^)]+\):",content)
-    if !isnothing(speaker)
-        speaker = speaker.match
-        row[header_to_num[:name]] = clean_text(speaker)
-        content = replace_known_beginning(content,speaker)
-        row[header_to_num[:content]] = content
+    res = [r"^The DEPUTY SPEAKER \([^)]+\):?",r"^The SPEAKER \([^)]+\):?"]
+    for re in res
+        speaker = match(re,content)
+        if !isnothing(speaker)
+            speaker = speaker.match
+            row[header_to_num[:name]] = clean_text(speaker)
+            content = replace_known_beginning(content,speaker)
+            row[header_to_num[:content]] = content
+        end
     end
     return row 
 end

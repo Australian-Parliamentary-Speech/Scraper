@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root><session.header>
+    <date>2025-02-12</date>
+    <parliament.no>2</parliament.no>
+    <session.no>1</session.no>
+    <period.no>0</period.no>
+    <chamber>House of Reps</chamber>
+    <page.no>0</page.no>
+    <proof>0</proof>
+  </session.header><speech>
+          <talk.start>
+            <talker>
+              <page.no>747</page.no>
+              <time.stamp/>
+              <name role="metadata">Kearney, Ged MP</name>
+              <name.id>LTU</name.id>
+              <electorate>Cooper</electorate>
+              <party>ALP</party>
+              <in.gov/>
+              <first.speech/>
+            </talker>
+          </talk.start>
+          <talk.text>
+            <body xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" background="" style=""><p class="HPS-Normal" style="direction:ltr;unicode-bidi:normal;">
+                <span class="HPS-Normal">
+                  <a href="LTU" type="MemberSpeech">
+                    <span class="HPS-MemberSpeech">Ms KEARNEY</span>
+                  </a> (<span class="HPS-Electorate">Cooper</span>—<span class="HPS-MinisterialTitles">Assistant Minister for Health and Aged Care and Assistant Minister for Indigenous Health</span>) (<span class="HPS-Time">09:01</span>):  I'm very pleased to speak in this chamber today on women's health. I've had the great privilege of travelling around the country listening to women about their experiences in the health system, and I have learned that every single woman has a story. From the Torres Strait to Melbourne's outer suburbs, from Hobart to the Northern Territory, to inner-city Adelaide, every woman has a story about gender bias in the health system, about being dismissed or having their symptoms minimised or about an experience of medical misogyny. Most women, sadly, have many. There are heartbreaking tales of continued pain and of ongoing suffering on women's long journeys to diagnosis. Just last week I spoke about one of my Cooper constituents, Carmen, who was told, as a young 13-year-old with crippling abdominal pain, 'Bad luck, love; women just have pain.' This is not the message our young girls should be hearing as they enter puberty.</span>
+              </p></body>
+          </talk.text>
+        </speech></root>
