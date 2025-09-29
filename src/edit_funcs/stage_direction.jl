@@ -4,7 +4,7 @@ function stage_direction(input_fn,output_fn,::Type{<:AbstractEditPhase})
     header_to_num = edit_set_up(headers_)
     rows = eachrow(csvfile)
 
-    stage_directions = ["A division having been called in the House of Representatives","Sitting suspended from"]
+    stage_directions = ["A division having been called in the House of Representatives","Sitting suspended from","Debate adjourned", "Federation Chamber adjourned at"]
   
     open(output_fn, "w") do io
         write_row_to_io(io,string.(headers_))

@@ -9,7 +9,7 @@ function final_re(input_fn,output_fn,::Type{<:AbstractEditPhase})
         for row in rows
             row_ = @. collect(row)
             row = row_[1]
-            row = edit_row(row,header_to_num)
+            row = edit_row_final(row,header_to_num)
             content = row[header_to_num[:content]]
             if content != ""
                 write_row_to_io(io,row)
@@ -18,7 +18,12 @@ function final_re(input_fn,output_fn,::Type{<:AbstractEditPhase})
     end
 end
 
-function edit_row(row,header_to_num)
-    row = remove_bits(row,header_to_num)
+function edit_row_final(row,header_to_num)
+    content_num = header_to_num[:content]
+    content = row[content_num]
+    #removes leading dashes or dots
+    content = replace(content, r"^\s*[.\-—–]+\s*" => "")
+    row[content_num] = content
+    return row
 end
 
