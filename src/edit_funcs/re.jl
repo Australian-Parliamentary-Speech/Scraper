@@ -60,6 +60,13 @@ function has_letters(s::AbstractString)
 end
 
 function edit_interjections(row,header_to_num)
+    function edit_flag(row,header_to_num)
+        flag_indices,all_flags = find_all_flags(row,header_to_num)
+        for i in flag_indices
+            row[i] = 0
+        end
+        row[header_to_num[:interjection_flag]] = 1 
+    end
     content = row[header_to_num[:content]]
     if content != "N/A"
         m = match(r"[iI]nterjecting", content)
@@ -67,6 +74,7 @@ function edit_interjections(row,header_to_num)
             split_content = split(content,m.match)
             talker = split_content[1]
             row[header_to_num[:name]] = clean_text(talker)
+            edit_flag(row,header_to_num)
        end
     elseif content == "N/A"
         talker = row[header_to_num[:name]]
@@ -75,6 +83,7 @@ function edit_interjections(row,header_to_num)
             split_content = split(talker,m.match)
             row[header_to_num[:name]] = split_content[1]
             row[header_to_num[:content]] = clean_text(talker)
+            edit_flag(row,header_to_num)
         end
     end
     return row
