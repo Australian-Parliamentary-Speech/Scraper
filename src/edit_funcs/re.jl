@@ -22,9 +22,22 @@ function edit_row(row,header_to_num)
     row = remove_the_speaker(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
-    row = delete_talker_from_content(row,header_to_num) 
+    row = delete_talker_from_content(row,header_to_num)
+    row = find_speaker_content(row,header_to_num)
     row = remove_bits(row,header_to_num)
     return row
+end
+
+function find_speaker_content(row,header_to_num)
+    content = row[header_to_num[:content]]
+    speaker = match(r"^The DEPUTY SPEAKER \([^)]+\):",content)
+    if !isnothing(speaker)
+        speaker = speaker.match
+        row[header_to_num[:name]] = clean_text(speaker)
+        content = replace_known_beginning(content,speaker)
+        row[header_to_num[:content]] = content
+    end
+    return row 
 end
 
 
