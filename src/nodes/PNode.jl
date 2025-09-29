@@ -60,27 +60,45 @@ function process_node(node::Node{<:PNode},node_tree)
     parent_node = node_tree[end]
 
     p_interjecting_name(node::Node{<:PNode})
-
-    if is_first_node_type(node,parent_node,allowed_names,node_tree)
-        if !(is_free_node(node,parent_node))
-            get_talker_from_parent(node,parent_node)
-            if node.headers_dict["name"] == "N/A"
-                name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
-                if !isnothing(name)
-                    node.headers_dict["name"] = name.content
-                end
-            end
-        else
-            node.headers_dict["name"] = "FREE NODE"
-        end
-    end 
-    if node.headers_dict["name.id"] == "N/A"
-        find_talker_in_p(node)
+    if node.headers_dict["name"] != "N/A"
+        edge_case = "PNode_span_interjection"
+        write_test_xml(node,parent_node,edge_case)
     end
 
+    if node.headers_dict["name"] == "N/A"
+        find_talker_in_p(node)
+        if node.headers_dict["name"] != "N/A"
+            if is_name(node.headers_dict["name"])
+                edge_case = "PNode_name_in_pnode"
+                write_test_xml(node,parent_node,edge_case)                
+            end
+        end
+    end
+
+    if node.headers_dict["name"] == "N/A"
+        #only the first node takes after the name in the parent node
+        if is_first_node_type(node,parent_node,allowed_names,node_tree)
+            if !(is_free_node(node,parent_node))
+                get_talker_from_parent(node,parent_node)
+                if node.headers_dict["name"] == "N/A"
+                    name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
+                    if !isnothing(name)
+                        node.headers_dict["name"] = name.content           
+                        edge_case = "PNode_first_node_in_parent"
+                        write_test_xml(node,parent_node,edge_case)                    
+                    end
+                end
+            elseif is_free_node(node,parent_node) && node.headers_dict["name"] == "N/A"
+                node.headers_dict["name"] = "FREE NODE"
+                edge_case = "PNode_FREE_NODE"
+                write_test_xml(node,parent_node,edge_case) 
+            end
+        end 
+    end
     define_flags(node,parent_node,node_tree)
     return construct_row(node,node_tree)
 end
+
 
 """
 is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_tree)
@@ -114,6 +132,8 @@ end
 function p_interjecting_name(p_node::Node{<:PNode})
     p_spans  = findall_in_subsoup(p_node.node.path,"//span",p_node.soup)
     for p_span in p_spans
+#        @show p_span.path
+        #2011 9 13
         class = findfirst_in_subsoup(p_span.path,"/@class",p_node.soup)
         if !isnothing(class)
             if class.content == "HPS-OfficeInterjecting"

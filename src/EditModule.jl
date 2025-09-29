@@ -159,37 +159,6 @@ function fill_row(new_headers, row_dict)
 end
 
 
-function remove_bits(row, header_to_num)
-    content_num = header_to_num[:content]
-    content = row[content_num]
-    #removes leading dash and full stop
-    content = replace(content, r"^ +\.?[ ]*-+" => "")
-    #removes space before !
-    content = replace(content, r" +(?=!)" => "")
-    #removes space before ?
-    content = replace(content, r" +(?=\?)" => "") 
-    #adds space in front of ( if missing
-    content = replace(content, r"(?<! )\(" => " (")
-    #change pf to of
-    content = replace(content, r" pf " => " of ")
-    #no space before semicolon
-    content = replace(content,r" +;" => ";")
-    #no _ at end of speeches
-    content = replace(content, r"_$" => "")
-    #removes trailing spaces in the end
-    content = replace(content, r" +$" => "")
-    #removes leading spaces
-    content = replace(content, r"^ +" => "") 
-    #removes leading dashes or dots
-    content = replace(content, r"^\s*[.\-—–]+\s*" => "")
-    #removes leading =
-    content = replace(content, r"\s*=\s*" => "")
-    #removes leading ( name )
-    content = replace(content, r"^\([^)]+\)(?:\s*:)?" => "")
-    row[content_num] = content
-    return row
-end
-
 
 
 
