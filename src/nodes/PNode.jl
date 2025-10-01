@@ -59,11 +59,11 @@ function process_node(node::Node{<:PNode},node_tree)
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
 
-    p_interjecting_name(node::Node{<:PNode})
-    if node.headers_dict["name"] != "N/A"
-        edge_case = "PNode_span_interjection"
-        write_test_xml(node,parent_node,edge_case)
-    end
+#    p_interjecting_name(node::Node{<:PNode})
+#    if node.headers_dict["name"] != "N/A"
+#        edge_case = "PNode_span_interjection"
+#        write_test_xml(node,parent_node,edge_case)
+#    end
 
     if node.headers_dict["name"] == "N/A"
         find_talker_in_p(node)
@@ -181,10 +181,6 @@ function find_talker_in_p(p_node::Node{<:PNode})
         if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"
             p_inline_name(p_node)
         end
-        if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"            
-            p_interjecting_name(p_node::Node{<:PNode})
-        end
-
     else
         p_talker = p_talker_soup.content
 
