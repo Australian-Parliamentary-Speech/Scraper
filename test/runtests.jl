@@ -17,6 +17,7 @@ using ParlinfoSpeechScraper.RunModule.EditModule
 using ParlinfoSpeechScraper.RunModule.Utils
 import ParlinfoSpeechScraper.RunModule.Utils.create_dir as create_dir
 
+
 struct test_struct
     skip_cols::Vector{Any}
     which_test::Symbol
@@ -25,7 +26,7 @@ struct test_struct
 end
 
 function setup(which_house)
-    tomlpath = "../Inputs/hansard/$(which_house).toml"
+    tomlpath = "$(which_house).toml"
     toml = setup_input(tomlpath,false)
     global_options = toml["GLOBAL"]
     outputpath = global_options["OUTPUT_PATH"]
@@ -65,6 +66,24 @@ function get_sample_csvs(outputpath,gold_standard_csvs,sample_dir,test_setup)
     end
 end
 
+
+function remove_files(output_path,remove_num)
+    function remove_check(file,num)
+        if num != 0
+            return occursin("step$(num).csv", file)
+        elseif num == 0
+            return occursin(r"\d", file) && !(occursin("step", file))
+        end
+    end
+
+    for num in remove_num
+        for file in readdir(output_path)
+            if remove_check(file,num)
+                rm(joinpath(output_path, file))
+            end
+        end
+    end
+end
 
 
 function get_all_csv_dates(outputpath,testpath,which_house)
@@ -150,14 +169,6 @@ function compare_gold_standard(outputpath, testpath,test_setup,test_output_path)
     similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup) 
 end
 
-function fix_gold_standard(gs_csv)
-    #delete spaces after the content
-end
-
-function locate_diff(text1,text2)
-    #find what is wrong between two texts, this is to add before they write it to the output
-end
-
 function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup)
     fn = joinpath(test_output_path,"similarity_test.csv")
     open(fn,"w") do io
@@ -174,20 +185,73 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,t
     end
 end
 
+function check_csv(curr,correct)
+    file_curr = open(curr, "r") do f
+        readlines(f)
+    end
+
+    file_correct = open(correct, "r") do f
+        readlines(f)
+    end
+
+    return file_curr == file_correct
+end
 
 @testset verbose = true "Test set" begin
     which_house = :house
     inputpath, outputpath, toml = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
     clean_gs_files()
+    #gold standard
+#    @test begin
+#        print("Gold standard test running ...")
+#        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:electorate,:party,:role]
+#        which_test = [:exact,:fuzzy][2]
+#        fuzzy_search = [8,2]
+#        test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
+#        test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
+#        create_dir(test_output_path)
+#        compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
+#        true
+#    end
+    
+    #Test XML samples
     @test begin
-        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:electorate,:party,:role]
-        which_test = [:exact,:fuzzy][2]
-        fuzzy_search = [8,2]
-        test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
-        test_output_path = joinpath(@__DIR__,"test_outputs")
-        create_dir(test_output_path)
-        compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
+        print("Test XML test running ...")
+        general_options = toml["GENERAL_OPTIONS"] 
+        edit_funcs = general_options["EDIT"]
+        remove_nums = general_options["REMOVE_NUMS"]
+        csv_edit = general_options["CSV_EDIT"]
+        xml_parsing = general_options["XML_PARSING"]
+
+        for Phase in ["AbstractPhase","Phase2011","PhaseSGML"]
+            test_dir = joinpath(@__DIR__,"xmls/$(Phase)/")
+            !isdir(test_dir) && continue
+            files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
+            test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs","current_outputs",Phase])
+            create_dir(test_output_path)
+            for file in files
+                date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),test_output_path,xml_parsing,csv_edit,edit_funcs,String(which_house),test_output_path)
+                remove_files(test_output_path, remove_nums)
+                sample_file = filter(contains(date), readdir(test_output_path))[1]
+                mv(joinpath(test_output_path,sample_file),joinpath(test_output_path,"$(file[1:end-4])_sample.csv"),force=true)
+            end
+
+            gs_files = filter(f -> endswith(f,".csv"),readdir(joinpath("xml_gold_standard",Phase)))
+            gs_csvs = filter(f -> endswith(f, ".csv"), gs_files)
+            for gs_csv in gs_csvs
+                curr = joinpath(test_output_path,gs_csv)
+                correct = joinpath(joinpath("xml_gold_standard",Phase),gs_csv)
+                pass = check_csv(curr,correct)
+                print("$(gs_csv) is $(pass) \n")
+            end
+        end
+        true
+    end
+
+
+    @test begin
+        print("Test CSV test running ...")
         true
     end
 
