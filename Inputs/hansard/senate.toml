@@ -11,7 +11,7 @@
 
 [ general_options ]
     which_house = "senate"
-    year = [2025,2025]
+    year = [1901,2025]
     #false to skip scraping, edit still remains
     xml_parsing = true
     edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
