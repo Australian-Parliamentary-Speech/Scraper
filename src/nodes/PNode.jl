@@ -59,11 +59,11 @@ function process_node(node::Node{<:PNode},node_tree)
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
 
-#    p_interjecting_name(node::Node{<:PNode})
-#    if node.headers_dict["name"] != "N/A"
-#        edge_case = "PNode_span_interjection"
-#        write_test_xml(node,parent_node,edge_case)
-#    end
+    p_interjecting_name(node::Node{<:PNode},parent_node)
+    if node.headers_dict["name"] != "N/A"
+        edge_case = "PNode_span_interjection"
+        write_test_xml(node,parent_node,edge_case)
+    end
 
     if node.headers_dict["name"] == "N/A"
         find_talker_in_p(node)
@@ -129,17 +129,20 @@ function is_name_inline(content)
     return false
 end
 
-function p_interjecting_name(p_node::Node{<:PNode})
+function p_interjecting_name(p_node::Node{<:PNode},parent_node)
     p_spans  = findall_in_subsoup(p_node.node.path,"//span",p_node.soup)
     for p_span in p_spans
-#        @show p_span.path
-        #2011 9 13
-        class = findfirst_in_subsoup(p_span.path,"/@class",p_node.soup)
-        if !isnothing(class)
-            if class.content == "HPS-OfficeInterjecting"
-                name = p_span.content
-                p_node.headers_dict["name"] = clean_text(name)
+        if !occursin("v:", p_span.path)
+            class = findfirst_in_subsoup(p_span.path,"/@class",p_node.soup)
+            if !isnothing(class)
+                if class.content == "HPS-OfficeInterjecting"
+                    name = p_span.content
+                    p_node.headers_dict["name"] = clean_text(name)
+                end
             end
+        else
+            edge_case = "Undefined_namespace_error"
+            write_test_xml(p_node,parent_node,edge_case)                
         end
     end
 end
