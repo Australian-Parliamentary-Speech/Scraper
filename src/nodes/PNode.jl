@@ -78,6 +78,7 @@ function process_node(node::Node{<:PNode},node_tree)
     if node.headers_dict["name"] == "N/A"
         #only the first node takes after the name in the parent node
         if is_first_node_type(node,parent_node,allowed_names,node_tree)
+#                @show parent_node
             if !(is_free_node(node,parent_node))
                 get_talker_from_parent(node,parent_node)
                 if node.headers_dict["name"] == "N/A"

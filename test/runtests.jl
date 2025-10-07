@@ -185,18 +185,18 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,t
     end
 end
 
-function check_csv(curr,correct)
-    file_curr = open(curr, "r") do f
-        readlines(f)
-    end
-
-    file_correct = open(correct, "r") do f
-        readlines(f)
-    end
-
-    return file_curr == file_correct
-end
-
+#function check_csv(curr,correct)
+#    file_curr = open(curr, "r") do f
+#        readlines(f)
+#    end
+#
+#    file_correct = open(correct, "r") do f
+#        readlines(f)
+#    end
+#
+#    return file_curr == file_correct
+#end
+#
 @testset verbose = true "Test set" begin
     which_house = :house
     inputpath, outputpath, toml = setup(which_house)
@@ -231,10 +231,12 @@ end
             test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs","current_outputs",Phase])
             create_dir(test_output_path)
             for file in files
+#                if file == "PNode_Undefined_namespace_error.xml"
                 date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),test_output_path,xml_parsing,csv_edit,edit_funcs,String(which_house),test_output_path)
                 remove_files(test_output_path, remove_nums)
                 sample_file = filter(contains(date), readdir(test_output_path))[1]
                 mv(joinpath(test_output_path,sample_file),joinpath(test_output_path,"$(file[1:end-4])_sample.csv"),force=true)
+#            end
             end
 
             gs_files = filter(f -> endswith(f,".csv"),readdir(joinpath("xml_gold_standard",Phase)))
