@@ -9,7 +9,7 @@ using Dates
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
 include(joinpath(@__DIR__, "clean_gs.jl"))
-
+include(joinpath(@__DIR__, "summary.jl"))
 
 
 const RunModule = ParlinfoSpeechScraper.RunModule
@@ -54,111 +54,6 @@ function from_gs_to_sample(gs_name,test_setup)
     return sample_name
 end
  
-
-function get_sample_csvs(outputpath,gold_standard_csvs,sample_dir,test_setup)
-   for gs_csv in gold_standard_csvs
-        gs_name = basename(gs_csv)
-        year = split(gs_name,"-")[1]
-        sample_name = from_gs_to_sample(gs_name,test_setup)
-        sample_file_name = joinpath([outputpath, year, sample_name])
-        dir_file_name = joinpath(sample_dir, sample_name)
-        cp(sample_file_name, dir_file_name,force=true)
-    end
-end
-
-
-function remove_files(output_path,remove_num)
-    function remove_check(file,num)
-        if num != 0
-            return occursin("step$(num).csv", file)
-        elseif num == 0
-            return occursin(r"\d", file) && !(occursin("step", file))
-        end
-    end
-
-    for num in remove_num
-        for file in readdir(output_path)
-            if remove_check(file,num)
-                rm(joinpath(output_path, file))
-            end
-        end
-    end
-end
-
-
-function get_all_csv_dates(outputpath,testpath,which_house)
-    function find_all_csv_dates(all_csv_names)
-        simple_list = []
-        for name in all_csv_names
-            date_match = match(r"\d+-\d+-\d+",name)
-            date = date_match.match
-            push!(simple_list,date) 
-        end
-        return unique(simple_list)
-    end
-    all_csv_names = get_all_csv_subdir(outputpath)
-    all_csv_dates = find_all_csv_dates(all_csv_names)
-    years = [split(date,"-")[1] for date in all_csv_dates]
-    fn = joinpath("dates","all_csv_dates_$(which_house).csv")
-    open(fn, "w") do io
-        for (x,y) in zip(years, all_csv_dates)
-            println(io, "$x,$y")
-        end
-    end
-    return fn
-end
-
-function get_all_xml_dates(inputpath,testpath,which_house)
-    function find_all_xml_dates(all_xml_names)
-        simple_list = []
-        for name in all_xml_names
-            date_match = match(r"\d+_\d+_\d+",name)
-            date = date_match.match
-            date = replace(date, "_" => "-")
-            push!(simple_list,date) 
-        end
-        return unique(simple_list)
-    end
-    all_xml_names = get_all_xml_subdir(inputpath)
-    all_xml_dates = find_all_xml_dates(all_xml_names)
-    years = [split(date,"-")[1] for date in all_xml_dates]
-    fn = joinpath("dates","all_xml_dates_$(which_house).csv")
-    open(fn, "w") do io
-        for (x,y) in zip(years, all_xml_dates)
-            println(io, "$x,$y")
-        end
-    end
-    return fn
-end
-
-
-function read_sitting_dates(testpath)
-    csvfile = CSV.File(joinpath([testpath,"dates","sitting_dates.csv"]))
-    rows = eachrow(csvfile)
-    house = []
-    senate = []
-    for row in rows
-        row_ = @. collect(row)
-        row = row_[1]
-        date_ = row[1]
-        year,month,day = Dates.year(date_), Dates.month(date_), Dates.day(date_)
-        if month < 10
-            month = "0$month"
-        end
-        if day < 10
-            day = "0$day"
-        end
-        if_senate = row[3]
-        if_house = row[2]
-        if if_senate
-            push!(senate,Date("$(year)-$(month)-$(day)"))
-        end
-        if if_house
-            push!(house,Date("$(year)-$(month)-$(day)"))
-        end 
-    end
-    return house, senate
-end
 
 function compare_gold_standard(outputpath, testpath,test_setup,test_output_path)
     gold_standard_path = joinpath(testpath,"gold_standard")
