@@ -392,12 +392,32 @@ Returns:
 - An array of flags indicating characteristics of `node`
 """
 function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,node_tree)
-    ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
-    headers = ["question_flag","answer_flag","interjection_flag","speech_flag"]
-    flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
-    header_and_flag = zip(headers,flags)
-    for couple in header_and_flag
-        node.headers_dict[couple[1]] = couple[2]
+    function is_interjecting(node)
+        a_soup = findfirst_in_subsoup(node.node.path,"//a",node.soup)
+        if !isnothing(a_soup)
+            p_talker  = findfirst_in_subsoup(a_soup.path,"/@type",node.soup)
+            if !isnothing(p_talker)
+                if occursin("Interjecting", p_talker.content)
+                    node.headers_dict["interjection_flag"] = 1
+                    return true
+                end
+            end
+        end
+        return false
+    end
+    if !is_interjecting(node)
+        ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
+        headers = ["question_flag","answer_flag","interjection_flag","speech_flag"]
+        flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
+        header_and_flag = zip(headers,flags)
+        for couple in header_and_flag
+            node.headers_dict[couple[1]] = couple[2]
+        end
+    else
+        headers = ["question_flag","answer_flag","speech_flag"]
+        for header in headers
+            node.headers_dict[header] = 0
+        end 
     end
     chamber = find_chamber(node,node_tree)
 end

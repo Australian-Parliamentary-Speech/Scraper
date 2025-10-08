@@ -58,7 +58,6 @@ function process_node(node::Node{<:PNode},node_tree)
     nodetype = typeof(node).parameters[1]
     allowed_names = get_xpaths(nodetype)
     parent_node = node_tree[end]
-
     p_interjecting_name(node::Node{<:PNode},parent_node)
     if node.headers_dict["name"] != "N/A"
         edge_case = "PNode_span_interjection"
