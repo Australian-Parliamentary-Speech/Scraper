@@ -184,19 +184,8 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,t
     end
 end
 
-#function check_csv(curr,correct)
-#    file_curr = open(curr, "r") do f
-#        readlines(f)
-#    end
-#
-#    file_correct = open(correct, "r") do f
-#        readlines(f)
-#    end
-#
-#    return file_curr == file_correct
-#end
-#
-@testset verbose = true "Test set" begin
+
+@testset verbose = true "Gold standard set" begin
     which_house = :house
     inputpath, outputpath, toml = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
@@ -228,7 +217,7 @@ end
             test_dir = joinpath(@__DIR__,"xmls/$(Phase)/")
             !isdir(test_dir) && continue
             files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
-            test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs","current_outputs",Phase])
+            test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs",Phase])
             create_dir(test_output_path)
             for file in files
                 date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),test_output_path,xml_parsing,csv_edit,edit_funcs,String(which_house),test_output_path)
@@ -255,6 +244,9 @@ end
         true
     end
 
+end
+
+#@testset verbose = true "Gold standard set" begin
 #    @test begin
 #        csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
 #        xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
@@ -284,6 +276,6 @@ end
 # 
 #        true
 #    end
-end
 
-
+#end
+ 
