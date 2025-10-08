@@ -78,9 +78,8 @@ function process_node(node::Node{<:PNode},node_tree)
     if node.headers_dict["name"] == "N/A"
         #only the first node takes after the name in the parent node
         if is_first_node_type(node,parent_node,allowed_names,node_tree)
-#                @show parent_node
+            get_talker_from_parent(node,parent_node)
             if !(is_free_node(node,parent_node))
-                get_talker_from_parent(node,parent_node)
                 if node.headers_dict["name"] == "N/A"
                     name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
                     if !isnothing(name)
@@ -244,7 +243,7 @@ get_sections(::Type{<:PNode})
 In which sections are the p_node wanted as default.
 """
 function get_sections(::Type{<:PNode})
-    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:DebateNode},Node{<:SubdebateNode}]
+    return [Node{<:SpeechNode},Node{<:QuestionNode},Node{<:AnswerNode},Node{<:BusinessNode},Node{<:DebateNode},Node{<:SubdebateNode},Node{<:DebateTextNode}]
 end
 
 """

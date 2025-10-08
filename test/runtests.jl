@@ -173,7 +173,6 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,t
     fn = joinpath(test_output_path,"similarity_test.csv")
     open(fn,"w") do io
         for gs_csv in gold_standard_csvs
-            fix_gold_standard(gs_csv)
             gs_name = basename(gs_csv)
             sample_name = from_gs_to_sample(gs_name,test_setup)
             sample_csv = joinpath(sample_csv_path,sample_name)
@@ -202,19 +201,20 @@ end
     inputpath, outputpath, toml = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
     clean_gs_files()
+    skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role]
+    which_test = [:exact,:fuzzy][2]
+    fuzzy_search = [8,2]
+    test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
+ 
     #gold standard
 #    @test begin
 #        print("Gold standard test running ...")
-#        skip_cols = [:speaker_no,:stage_direction_flag,Symbol("page.no"),:electorate,:party,:role]
-#        which_test = [:exact,:fuzzy][2]
-#        fuzzy_search = [8,2]
-#        test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
-#        test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
+#       test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
 #        create_dir(test_output_path)
 #        compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
 #        true
 #    end
-    
+   
     #Test XML samples
     @test begin
         print("Test XML test running ...")
@@ -231,12 +231,10 @@ end
             test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs","current_outputs",Phase])
             create_dir(test_output_path)
             for file in files
-#                if file == "PNode_Undefined_namespace_error.xml"
                 date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),test_output_path,xml_parsing,csv_edit,edit_funcs,String(which_house),test_output_path)
                 remove_files(test_output_path, remove_nums)
                 sample_file = filter(contains(date), readdir(test_output_path))[1]
                 mv(joinpath(test_output_path,sample_file),joinpath(test_output_path,"$(file[1:end-4])_sample.csv"),force=true)
-#            end
             end
 
             gs_files = filter(f -> endswith(f,".csv"),readdir(joinpath("xml_gold_standard",Phase)))
