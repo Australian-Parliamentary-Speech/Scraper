@@ -314,7 +314,8 @@ function recurse(soup, date, PhaseType, xml_node, io, headers_dict, index=1,dept
 
    # If NodeType is not nothing, then we can parse this node
     if !isnothing(NodeType)
-        node = Node{NodeType{PhaseType}}(xml_node,index,date,soup,headers_dict)
+        headers_dict_new = deepcopy(headers_dict)
+        node = Node{NodeType{PhaseType}}(xml_node,index,date,soup,headers_dict_new)
 #        @debug "NodeType: $(typeof(node))"
         parse_node(node, node_tree, io)
 

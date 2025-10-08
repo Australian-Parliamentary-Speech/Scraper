@@ -31,7 +31,7 @@ struct Node{N <: AbstractNode}
     index::Int64
     date::Float64
     soup
-    headers_dict::OrderedDict{String,Any}
+    headers_dict::OrderedDict
 end
 
 get_nodetype(::Node{N}) where {N} = N
@@ -484,7 +484,7 @@ end
 
 function define_headers(::Type{<:AbstractPhase})
     headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
-    headers_dict = OrderedDict(headers .=> ["N/A" for h in headers])
+    headers_dict = OrderedDict(headers .=> ["N/A" for h in headers]) 
     return headers_dict
 end
 
