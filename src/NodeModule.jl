@@ -393,15 +393,21 @@ Returns:
 """
 function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,node_tree)
     function is_interjecting(node)
+        if node.headers_dict["interjection_flag"] == 1
+            return true
+        end
         a_soup = findfirst_in_subsoup(node.node.path,"//a",node.soup)
         if !isnothing(a_soup)
             p_talker  = findfirst_in_subsoup(a_soup.path,"/@type",node.soup)
             if !isnothing(p_talker)
                 if occursin("Interjecting", p_talker.content)
                     node.headers_dict["interjection_flag"] = 1
+                    edge_case = "Interjecting_in_a"
+                    write_test_xml(node,parent_node,edge_case)                 
                     return true
                 end
             end
+        else 
         end
         return false
     end

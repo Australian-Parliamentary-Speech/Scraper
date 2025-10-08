@@ -137,6 +137,7 @@ function p_interjecting_name(p_node::Node{<:PNode},parent_node)
                 if class.content == "HPS-OfficeInterjecting"
                     name = p_span.content
                     p_node.headers_dict["name"] = clean_text(name)
+                    p_node.headers_dict["interjection_flag"] = 1
                 end
             end
         else
