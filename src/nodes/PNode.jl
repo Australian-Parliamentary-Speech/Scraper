@@ -22,7 +22,6 @@ function construct_row(node::Node{<:PNode},node_tree)
     phase = get_phasetype(node)
     debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
     subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
-
     label = find_item(node)
     if !isnothing(label)
         content = label*node.node.content

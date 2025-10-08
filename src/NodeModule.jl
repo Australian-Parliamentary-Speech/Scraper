@@ -31,7 +31,7 @@ struct Node{N <: AbstractNode}
     index::Int64
     date::Float64
     soup
-    headers_dict::OrderedDict
+    headers_dict::OrderedDict{String,Any}
 end
 
 get_nodetype(::Node{N}) where {N} = N
