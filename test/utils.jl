@@ -44,35 +44,3 @@ function get_all_xml_subdir(path)
     all = readdir(glob"*/*.xml", path)
     return all
 end
-
-
-function get_sample_csvs(outputpath,gold_standard_csvs,sample_dir,test_setup)
-   for gs_csv in gold_standard_csvs
-        gs_name = basename(gs_csv)
-        year = split(gs_name,"-")[1]
-        sample_name = from_gs_to_sample(gs_name,test_setup)
-        sample_file_name = joinpath([outputpath, year, sample_name])
-        dir_file_name = joinpath(sample_dir, sample_name)
-        cp(sample_file_name, dir_file_name,force=true)
-    end
-end
-
-
-function remove_files(output_path,remove_num)
-    function remove_check(file,num)
-        if num != 0
-            return occursin("step$(num).csv", file)
-        elseif num == 0
-            return occursin(r"\d", file) && !(occursin("step", file))
-        end
-    end
-
-    for num in remove_num
-        for file in readdir(output_path)
-            if remove_check(file,num)
-                rm(joinpath(output_path, file))
-            end
-        end
-    end
-end
-
