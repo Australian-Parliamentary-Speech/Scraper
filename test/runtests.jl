@@ -9,7 +9,7 @@ using Dates
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
 include(joinpath(@__DIR__, "clean_gs.jl"))
-
+include(joinpath(@__DIR__, "csv_test.jl"))
 
 
 const RunModule = ParlinfoSpeechScraper.RunModule
@@ -194,54 +194,57 @@ end
     which_test = [:exact,:fuzzy][2]
     fuzzy_search = [8,2]
     test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
- 
+
     #gold standard
-#    @test begin
-#        print("Gold standard test running ...")
-#       test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
-#        create_dir(test_output_path)
-#        compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
-#        true
-#    end
-   
-    #Test XML samples
-    @test begin
-        print("Test XML test running ...")
-        general_options = toml["GENERAL_OPTIONS"] 
-        edit_funcs = general_options["EDIT"]
-        remove_nums = general_options["REMOVE_NUMS"]
-        csv_edit = general_options["CSV_EDIT"]
-        xml_parsing = general_options["XML_PARSING"]
-
-        for Phase in ["AbstractPhase","Phase2011","PhaseSGML"]
-            test_dir = joinpath(@__DIR__,"xmls/$(Phase)/")
-            !isdir(test_dir) && continue
-            files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
-            test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs",Phase])
+    if false
+        @test begin
+            print("Gold standard test running ...")
+            test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
             create_dir(test_output_path)
-            for file in files
-                date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),test_output_path,xml_parsing,csv_edit,edit_funcs,String(which_house),test_output_path)
-                remove_files(test_output_path, remove_nums)
-                sample_file = filter(contains(date), readdir(test_output_path))[1]
-                mv(joinpath(test_output_path,sample_file),joinpath(test_output_path,"$(file[1:end-4])_sample.csv"),force=true)
-            end
-
-            gs_files = filter(f -> endswith(f,".csv"),readdir(joinpath("xml_gold_standard",Phase)))
-            gs_csvs = filter(f -> endswith(f, ".csv"), gs_files)
-            for gs_csv in gs_csvs
-                curr = joinpath(test_output_path,gs_csv)
-                correct = joinpath(joinpath("xml_gold_standard",Phase),gs_csv)
-                pass = check_csv(curr,correct)
-                print("$(gs_csv) is $(pass) \n")
-            end
+            compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
+            true
         end
-        true
     end
 
+    if false
+        #Test XML samples
+        @test begin
+            print("Test XML test running ...")
+            general_options = toml["GENERAL_OPTIONS"] 
+            edit_funcs = general_options["EDIT"]
+            remove_nums = general_options["REMOVE_NUMS"]
+            csv_edit = general_options["CSV_EDIT"]
+            xml_parsing = general_options["XML_PARSING"]
+
+            for Phase in ["AbstractPhase","Phase2011","PhaseSGML"]
+                test_dir = joinpath(@__DIR__,"xmls/$(Phase)/")
+                !isdir(test_dir) && continue
+                files = filter(!isdir,readdir(joinpath(@__DIR__,"xmls/$(Phase)/")))
+                test_output_path = joinpath([@__DIR__,"test_outputs","xml_test_outputs",Phase])
+                create_dir(test_output_path)
+                for file in files
+                    date = RunModule.run_xml(joinpath(@__DIR__,"xmls/$(Phase)/$file"),test_output_path,xml_parsing,csv_edit,edit_funcs,String(which_house),test_output_path)
+                    remove_files(test_output_path, remove_nums)
+                    sample_file = filter(contains(date), readdir(test_output_path))[1]
+                    mv(joinpath(test_output_path,sample_file),joinpath(test_output_path,"$(file[1:end-4])_sample.csv"),force=true)
+                end
+
+                gs_files = filter(f -> endswith(f,".csv"),readdir(joinpath("xml_gold_standard",Phase)))
+                gs_csvs = filter(f -> endswith(f, ".csv"), gs_files)
+                for gs_csv in gs_csvs
+                    curr = joinpath(test_output_path,gs_csv)
+                    correct = joinpath(joinpath("xml_gold_standard",Phase),gs_csv)
+                    pass = check_csv(curr,correct)
+                    print("$(gs_csv) is $(pass) \n")
+                end
+            end
+            true
+        end
+    end
 
     @test begin
         print("Test CSV test running ...")
-        true
+        check_csv(outputpath)
     end
 
 end
