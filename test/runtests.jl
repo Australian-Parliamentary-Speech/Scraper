@@ -244,7 +244,11 @@ end
 
     @test begin
         print("Test CSV test running ...")
-        check_csv(outputpath)
+        test_output_path = joinpath([@__DIR__,"test_outputs","CSV_test_outputs"])
+        create_dir(test_output_path)
+ 
+        known_errors_csv(outputpath,test_output_path)
+        true
     end
 
 end

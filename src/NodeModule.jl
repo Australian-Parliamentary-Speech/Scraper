@@ -596,7 +596,7 @@ end
 
 
 function is_name(name)
-    if name in ["Bill", "Committee"]
+    if name in ["Bill", "Committee", "Mr", "Miss", "Ms", "Dr"]
         return false
     end
     

@@ -19,18 +19,41 @@ function re(input_fn,output_fn,::Type{<:AbstractEditPhase})
 end
 
 function edit_row(row,header_to_num)
-    row = remove_the_speaker(row,header_to_num)
+    row = find_speaker_content(row,header_to_num)
+#    row = remove_the_speaker(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
     row = delete_talker_from_content(row,header_to_num)
-    row = find_speaker_content(row,header_to_num)
     row = remove_bits(row,header_to_num)
     return row
 end
 
+function speaker_regs()
+    res = [r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?DEPUTY\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?SPEAKER\s*(?:\([^)]+\))?:?", r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?ACTING\s*(?:DEPUTY)?\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^10000\s*SPEAKER"]
+    return res
+end
+
+function speaker_regs_anywhere()
+    res = [r"(?:The\s*)?DEPUTY SPEAKER (?:\([^)]+\))?:?",r"(?:Mr\.?\s*)?DEPUTY SPEAKER (?:\([^)]+\))?:?",r"(?:The\s*)?SPEAKER (?:\([^)]+\))?:?", r"Mr\.?\s*SPEAKER\.?:?", r"Mr\.?\s*ACTING\s*DEPUTY\s*SPEAKER\.?:?",r"\(The\s*SPEAKER\)",r"\(The\s*DEPUTY\s*SPEAKER\)"]
+    return res
+end
+
+function not_just_title(s)
+    t = replace(s, "Mr" => "", "Mrs" => "", "Miss" => "", "Ms" => "", "Dr" => "")
+    return occursin(r"[A-Za-z]", t) ? true : false
+end
+
+function is_name(speaker)
+    if isnothing(speaker)
+        return false
+    else
+        return not_just_title(speaker)
+    end
+end
+
 function find_speaker_content(row,header_to_num)
-    content = row[header_to_num[:content]]
-    res = [r"^The DEPUTY SPEAKER \([^)]+\):?",r"^The SPEAKER \([^)]+\):?"]
+   content = row[header_to_num[:content]]
+    res = speaker_regs()
     for re in res
         speaker = match(re,content)
         if !isnothing(speaker)
@@ -46,7 +69,7 @@ end
 
 function remove_the_speaker(row,header_to_num)
     name_num = header_to_num[:name]
-    patterns = [r"\(The\s+SPEAKER\)",r"\(The\s+DEPUTY\s+SPEAKER\)"]
+    patterns = speaker_regs_anywhere()
     for pattern in patterns
         row[name_num] = replace(row[name_num], pattern => "")
     end
@@ -100,7 +123,7 @@ function replace_known_beginning(s,beginning)
         @show e
     end
 
-    regs = [cell, r"The SPEAKER:",r"Mr SPEAKER"]
+    regs = [cell, r"^The SPEAKER:",r"^Mr SPEAKER"]
     for reg in regs
         m = match(reg, s)
         if m !== nothing
