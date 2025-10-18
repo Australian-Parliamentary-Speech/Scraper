@@ -93,6 +93,7 @@ function process_node(node::Node{<:PNode},node_tree)
             end
         end 
     end
+
     define_flags(node,parent_node,node_tree)
     return construct_row(node,node_tree)
 end
@@ -119,7 +120,7 @@ function is_first_node_type(node::Node{<:PNode},parent_node,allowed_names,node_t
 end
 
 function is_name_inline(content)
-    possible_titles = ["Mr","Ms","Miss","Mrs"]
+    possible_titles = ["Mr","Ms","Miss","Mrs","Dr"]
     if true in occursin.(possible_titles, content)
         splits = split(content, " ")
         return is_name(content)

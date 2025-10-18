@@ -29,7 +29,7 @@ function edit_row(row,header_to_num)
 end
 
 function speaker_regs()
-    res = [r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?DEPUTY\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?SPEAKER\s*(?:\([^)]+\))?:?", r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?ACTING\s*(?:DEPUTY)?\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^10000\s*SPEAKER",r"^Opposition\s+members",r"^(?:Mr|Mrs|Miss|Ms|Dr)\.?\s*[a-zA-Z]+(?:\s*\([^)]+\))?:?"]
+    res = [r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?DEPUTY\s*SPEAK\s*ER\s*(?:\([^)]+\))?:?",r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?SPEAKER\s*(?:\([^)]+\))?:?", r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?ACTING\s*(?:DEPUTY)?\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^10000\s*SPEAKER",r"^Opposition\s+members",r"^(?:Mr|Mrs|Miss|Ms|Dr)\.?\s*[a-zA-Z'-]+(?:\s*\([^)]+\))?:?"]
     return res
 end
 
@@ -41,14 +41,6 @@ end
 function not_just_title(s)
     t = replace(s, "Mr" => "", "Mrs" => "", "Miss" => "", "Ms" => "", "Dr" => "")
     return occursin(r"[A-Za-z]", t) ? true : false
-end
-
-function is_name(speaker)
-    if isnothing(speaker)
-        return false
-    else
-        return not_just_title(speaker)
-    end
 end
 
 function find_speaker_content(row,header_to_num)

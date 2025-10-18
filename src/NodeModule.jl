@@ -596,10 +596,10 @@ end
 
 
 function is_name(name)
-    if name in ["Bill", "Committee", "Mr", "Miss", "Ms", "Dr"]
+    if isnothing(name)
         return false
     end
-    
+ 
     number = length(split(name," "))
     if number > 5
         return false
@@ -608,7 +608,9 @@ function is_name(name)
     if occursin(r"\d",name)
         return false
     end
-    return true    
+
+    occurs = @. occursin(["Bill","Committee"],name)
+    return iszero(occurs)
 end
 
 
