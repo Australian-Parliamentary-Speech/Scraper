@@ -84,32 +84,47 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
         parent_node = find_parent(node,node_tree)
         c = node.node.content
 
-       """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
+        """otherwise it might go below and find the first speaker from below, essentially, if para lives under debate, there is no speaker"""
 
-       """quote acts like a para node"""
-       if typeof(node_tree[end]) <: Node{<:QuoteNode_}
+        """quote acts like a para node"""
+        if typeof(node_tree[end]) <: Node{<:QuoteNode_}
             talker_parent = node_tree[end-1]
         else
             talker_parent = parent_node
         end
- 
-        if !(is_free_node(node,talker_parent))
-            get_talker_from_parent(node,talker_parent)
-            if node.headers_dict["name.id"] == "N/A"
-                name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
-                if !isnothing(name)
-                    node.headers_dict["name"] = name.content
-                end
-                if node.headers_dict["name"] == "N/A"
-                    find_talker_in_p(node)
-                end
-            end
-        else
+
+        p_interjecting_name(node::Node{<:PNode},parent_node)
+        if node.headers_dict["name"] == "N/A"
             find_talker_in_p(node)
-            if node.headers_dict["name"] == "N/A"
-                node.headers_dict["name"] = "FREE NODE"
+            if node.headers_dict["name"] != "N/A"
+                if is_name(node.headers_dict["name"])
+                    edge_case = "PNode_name_in_pnode"
+                    write_test_xml(node,parent_node,edge_case)                
+                end
             end
         end
+
+        if node.headers_dict["name"] == "N/A"
+            #only the first node takes after the name in the parent node
+            if is_first_node_type(node,parent_node,allowed_names,node_tree)
+                get_talker_from_parent(node,parent_node)
+                if !(is_free_node(node,parent_node))
+                    if node.headers_dict["name"] == "N/A"
+                        name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
+                        if !isnothing(name)
+                            node.headers_dict["name"] = name.content           
+                            edge_case = "PNode_first_node_in_parent"
+                            write_test_xml(node,parent_node,edge_case)                    
+                        end
+                    end
+                elseif is_free_node(node,parent_node) && node.headers_dict["name"] == "N/A"
+                    node.headers_dict["name"] = "FREE NODE"
+                    edge_case = "PNode_FREE_NODE"
+                    write_test_xml(node,parent_node,edge_case) 
+                end
+            end 
+        end
+
 
         if typeof(node_tree[end]) <: Node{<:InterTalkNode}
             flag_parent = node_tree[end-1]
@@ -120,9 +135,9 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
     else
         define_flags(node,node,node_tree)
     end
-#    if occursin("Convention for facilitating International Circulation of Films of Educational character",c)
-#        @show node.headers_dict["name"]
-#    end
+    #    if occursin("Convention for facilitating International Circulation of Films of Educational character",c)
+    #        @show node.headers_dict["name"]
+    #    end
 
     return construct_row(node,node_tree)
 end

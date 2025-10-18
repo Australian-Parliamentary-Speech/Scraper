@@ -3,11 +3,11 @@
 
 ###choose one: XML or XML_DIR
 [[ XML ]]
-    filename = "house_xmls/2022/2022_02_16.xml"
+    filename = "house_xmls/1974/1974_03_13.xml"
 
 
-#[[ XML_DIR ]]
-#    path = "house_test_xmls"
+[[ XML_DIR ]]
+    path = "house_test_xmls"
 
 [ general_options ]
     which_house = "house"
@@ -17,5 +17,5 @@
     csv_edit = true
     run_xml_toggle = true
     sample = true
-    remove_nums = []
+    remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false

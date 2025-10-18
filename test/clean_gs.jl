@@ -30,6 +30,8 @@ function edit_row_gs(row,header_to_num)
     #removes leading dashes or dots
     content = replace(content, r"^\s*[.\-—–]+\s*" => "")
     row[content_num] = content
+    #replace missing values with "N/A"
+    row = [ismissing(cell) ? "N/A" : cell for cell in row]
     return row
 end
 

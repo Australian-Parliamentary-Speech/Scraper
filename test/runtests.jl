@@ -196,7 +196,7 @@ end
     test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
 
     #gold standard
-    if false
+    if true
         @test begin
             print("Gold standard test running ...")
             test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
@@ -242,13 +242,15 @@ end
         end
     end
 
-    @test begin
-        print("Test CSV test running ...")
-        test_output_path = joinpath([@__DIR__,"test_outputs","CSV_test_outputs"])
-        create_dir(test_output_path)
- 
-        known_errors_csv(outputpath,test_output_path)
-        true
+    if false
+        @test begin
+            print("Test CSV test running ...")
+            test_output_path = joinpath([@__DIR__,"test_outputs","CSV_test_outputs"])
+            create_dir(test_output_path)
+
+            known_errors_csv(outputpath,test_output_path)
+            true
+        end
     end
 
 end

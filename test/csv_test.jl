@@ -13,8 +13,8 @@ function known_errors_csv(outputpath,test_outputpath)
                 row = row_[1]
                 flagged,flag = if_flag(row,header_to_num)
                 if flagged
-                    pushfirst!(row, input_fn, flag)
-                    println(io, row)
+                    pushfirst!(row,basename(input_fn), String(nameof(flag)))
+                    println(io, join("\"" .* string.(row) .* "\"", ","))
                 end
             end
         end
