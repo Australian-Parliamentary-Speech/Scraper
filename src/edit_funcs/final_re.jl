@@ -23,6 +23,8 @@ function edit_row_final(row,header_to_num)
     content = row[content_num]
     #removes leading dashes or dots
     content = replace(content, r"^\s*[.\-—–]+\s*" => "")
+    #removes spaces in the end.
+    content = replace(content, r" +$" => "")
     row[content_num] = content
     return row
 end
