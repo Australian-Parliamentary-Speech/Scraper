@@ -6,8 +6,15 @@
 #    filename = "house_xmls/2022/2022_02_16.xml"
 
 
+#[[ XML_DIR ]]
+#    path = "house_test_xmls"
+
 [[ XML_DIR ]]
-    path = "house_test_xmls"
+    path = "../../../../Download/house_xmls"
+
+[[ XML_DIR ]]
+    path = "../../../../sgml2xml/house_xmls"
+
 
 [ general_options ]
     which_house = "house"
