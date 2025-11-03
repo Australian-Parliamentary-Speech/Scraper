@@ -141,7 +141,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     log_temp_dir =joinpath(output_path,"log_temp")
     create_dir(log_temp_dir)
 
-#    Threads.@threads for (year,fn) in xml_paths
+    #    Threads.@threads for (year,fn) in xml_paths
     for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
         date_float,date = get_date(fn)
@@ -149,31 +149,23 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
         if run_xml_toggle
             run_xml(fn,output_path_,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
         end
-   end
-   if sample_write
+        remove_steps(output_path_,remove_num,basename(fn))
+    end
+    if sample_write
         copy_sample_file(output_path,length(edit_funcs))
-   end
-   remove_steps(output_path, remove_num)
-   log_close(log_temp_dir)
+    end
+    log_close(log_temp_dir)
 end
 
-function remove_steps(output_path,remove_num)
-    dirs = filter(isdir,readdir(output_path,join=true))   
-    function remove_check(file,num)
-        if num != 0
-            return occursin("step$(num).csv", file)
-        elseif num == 0
-            return  !(occursin("step",file))
-        end
-    end
-
+function remove_steps(output_path_,remove_num,file)
+    file = replace(file,"_" => "-")
     for num in remove_num
-        for dir in dirs
-            for file in readdir(dir)
-                if remove_check(file,num)
-                    rm(joinpath(dir, file))
-                end
-            end
+        if num == 0
+            path = joinpath(output_path_,"$(split(file,".")[1]).csv")
+            rm(path)
+        else
+            path = joinpath([output_path_,"$(split(file,".")[1])_edit_step$(num).csv"])
+           rm(path)
         end
     end
 end

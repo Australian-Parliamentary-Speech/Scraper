@@ -6,14 +6,14 @@
 #    filename = "house_xmls/1943/1943_02_05.xml"
 
 
-[[ XML_DIR ]]
-    path = "house_test_xmls"
+#[[ XML_DIR ]]
+#    path = "house_xmls"
 
-#[[ XML_DIR ]]
-#    path = "../../../Download/house_xmls"
+[[ XML_DIR ]]
+    path = "../../../Download/house_xmls"
 #
-#[[ XML_DIR ]]
-#    path = "../../../sgml2xml/house_xmls"
+[[ XML_DIR ]]
+    path = "../../../sgml2xml/house_xmls"
 
 
 [ general_options ]
@@ -24,5 +24,5 @@
     csv_edit = true
     run_xml_toggle = true
     sample = true
-    remove_nums = []
+    remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false
