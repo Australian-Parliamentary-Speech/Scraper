@@ -467,6 +467,7 @@ function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
         content = get_node_content(node,content)
         node.headers_dict["content"] = content
     end
+
     node.headers_dict["subdebateinfo"] = subdebateinfo
     node.headers_dict["debateinfo"] = debateinfo
     node.headers_dict["path"] = node.node.path
@@ -479,6 +480,7 @@ function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
             push!(row_,clean_text(r))
         end
     end
+
     return row_
 end
 
@@ -489,11 +491,13 @@ function define_headers(::Type{<:AbstractPhase})
 end
 
 function get_node_content(node::Node{<:AbstractNode{<:AbstractPhase}},content)
-    inlines = findall_in_subsoup(node.node.path,"//inline",node.soup)
-    if !isnothing(inlines)
-        inline_contents = [inline.content for inline in inlines]
-        for inline_content in inline_contents
-            content = replace(content, inline_content => " $(inline_content) ")
+    content = ""
+    for element in nodes(node.node)
+        if nodename(element) == "inline"
+            ele_content = " $(nodecontent(element)) "
+            content = content*ele_content
+        else
+            content = content*nodecontent(element)
         end
     end
     return content

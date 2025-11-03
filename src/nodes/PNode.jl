@@ -44,6 +44,7 @@ function construct_row(node::Node{<:PNode},node_tree)
             push!(row_,clean_text(r))
         end
     end
+
     return row_
 end
 
