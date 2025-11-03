@@ -37,7 +37,7 @@ end
 
 function gs_sample_content_match(gs_content,sample_content,test_setup)
     if test_setup.which_test == :exact
-        return sample_content == gs_content
+        return content_distance_score(gs_content,sample_cell)
     elseif test_setup.which_test == :fuzzy
         return fuzzy_bar_match(gs_content,sample_content,test_setup)
     end

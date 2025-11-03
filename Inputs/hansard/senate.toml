@@ -10,7 +10,12 @@
     path = ["senate_xmls"]
 
 #[[ XML_DIR ]]
-#    path = 
+#    path = "../../../Download/senate_xmls"
+#
+#[[ XML_DIR ]]
+#    path = "../../../sgml2xml/senate_xmls"
+
+
 
 [ general_options ]
     which_house = "senate"

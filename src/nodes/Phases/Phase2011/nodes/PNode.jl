@@ -22,11 +22,16 @@ is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_names,node_t
 A different method to detect if the pnode is the first pnode for this phase
 """
 function is_first_node_type(node::Node{PNode{Phase2011}},parent_node,allowed_names,node_tree)
+
     if typeof(parent_node) <: Node{<:MotionnospeechNode}
         return true
     end
     if !hasprevnode(node.node)
         return true
+    else
+        if nodename(prevnode(node.node)) == "talker"
+            return true
+        end
     end
     if hasprevnode(prevnode(node.node))
         if nodename(prevnode(prevnode(node.node))) == "talker"
@@ -105,9 +110,9 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
         end
 
         if node.headers_dict["name"] == "N/A"
-            #only the first node takes after the name in the parent node
+           #only the first node takes after the name in the parent node
             if is_first_node_type(node,parent_node,allowed_names,node_tree)
-                get_talker_from_parent(node,parent_node)
+               get_talker_from_parent(node,parent_node)
                 if !(is_free_node(node,parent_node))
                     if node.headers_dict["name"] == "N/A"
                         name = findfirst_in_subsoup(parent_node.node.path,"//name",node.soup)
