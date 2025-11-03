@@ -29,6 +29,8 @@ function edit_row_gs(row,header_to_num)
     content = replace(content, r" +$" => "")
     #removes leading dashes or dots
     content = replace(content, r"^\s*[.\-—–]+\s*" => "")
+    #change any double space to single space
+    content = replace(content, r" +" => " ")
     row[content_num] = content
     #replace missing values with "N/A"
     row = [ismissing(cell) ? "N/A" : cell for cell in row]

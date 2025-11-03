@@ -25,6 +25,8 @@ function edit_row_final(row,header_to_num)
     content = replace(content, r"^\s*[.\-—–]+\s*" => "")
     #removes spaces in the end.
     content = replace(content, r" +$" => "")
+    #change double space to single space
+    content = replace(content, r" +" => " ")
     row[content_num] = content
     return row
 end
