@@ -23,23 +23,19 @@ function free_node(input_fn, output_fn,::Type{<:AbstractEditPhase})
                 id = row[id_pos]
                 debate, subdebate = row[header_to_num[:debateinfo]],row[header_to_num[:subdebateinfo]]
                 if debate == prev_debate && subdebate == prev_subdebate
-                    if cell_not_null(talker) 
-                        prev_talker = talker
-                        if id != "N/A"
-                            prev_id = id
-                        end
-                    end
-                    prev_row = get_row(rows, row_index-1)
-                    row = free_node_op(row,prev_row,prev_talker,prev_id,header_to_num,talker)
-                    row = speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,talker)
- 
-                else
-                    prev_talker = "None"
+                  prev_row = get_row(rows, row_index-1)
+                   row = free_node_op(row,prev_talker,prev_id,header_to_num,talker)
+                   row = speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,talker)
                 end
                 prev_debate = debate
                 prev_subdebate = subdebate
-
-            else
+                if cell_not_null(talker) && row[header_to_num[:interjection_flag]] == 0
+                    prev_talker = talker
+                    if id != "N/A"
+                        prev_id = id
+                    end
+                end 
+           else
                 row_ = @. collect(row)
                 row = row_[1]
             end
@@ -53,7 +49,7 @@ function free_node(input_fn, output_fn,::Type{<:AbstractEditPhase})
 end
 
 """if it is free flowing, check if it is same debate and add it to the previous one"""
-function free_node_op(row,prev_row,prev_talker,prev_id,header_to_num,talker)
+function free_node_op(row,prev_talker,prev_id,header_to_num,talker)
     name_pos = header_to_num[:name]
     id_pos = header_to_num[Symbol("name.id")] 
     if talker == "FREE NODE" 
@@ -69,10 +65,10 @@ function speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,tal
     name_pos = header_to_num[:name]
     id_pos = header_to_num[Symbol("name.id")]
     if :quote_flag in keys(header_to_num) 
-        if row[header_to_num[:speech_flag]] == 1 && prev_row[header_to_num[:quote_flag]] == 1 && (!cell_not_null(talker)) && cell_not_null(prev_talker) 
+        if (row[header_to_num[:speech_flag]] == 1 || row[header_to_num[:question_flag]] == 1 || row[header_to_num[:answer_flag]] == 1) && prev_row[header_to_num[:quote_flag]] == 1 && (!cell_not_null(talker)) && cell_not_null(prev_talker) 
             row[name_pos] = prev_talker
             row[id_pos] = prev_id
-        elseif row[header_to_num[:quote_flag]] == 1 && cell_not_null(prev_talker) && (!cell_not_null(talker))
+        elseif row[header_to_num[:quote_flag]] == 1 && cell_not_null(prev_talker) && (!cell_not_null(talker)) 
             row[name_pos] = prev_talker
             row[id_pos] = prev_id 
         end
