@@ -149,7 +149,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
         if run_xml_toggle
             run_xml(fn,output_path_,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
         end
-        remove_steps(output_path_,remove_num,basename(fn))
+        remove_steps(output_path_,remove_num,date)
     end
     if sample_write
         copy_sample_file(output_path,length(edit_funcs))
@@ -157,14 +157,13 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     log_close(log_temp_dir)
 end
 
-function remove_steps(output_path_,remove_num,file)
-    file = replace(file,"_" => "-")
+function remove_steps(output_path_,remove_num,date)
     for num in remove_num
         if num == 0
-            path = joinpath(output_path_,"$(split(file,".")[1]).csv")
+            path = joinpath(output_path_,"$(date).csv")
             rm(path)
         else
-            path = joinpath([output_path_,"$(split(file,".")[1])_edit_step$(num).csv"])
+            path = joinpath([output_path_,"$(date)_edit_step$(num).csv"])
            rm(path)
         end
     end
