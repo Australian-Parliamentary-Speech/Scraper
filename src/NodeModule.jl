@@ -329,6 +329,7 @@ function get_talker_from_parent(node::Node,parent_node::Node)
         end
 
     end
+
 end
 
 """
@@ -613,7 +614,7 @@ function is_name(name)
         return false
     end
 
-    occurs = @. occursin(["Bill","Committee"],name)
+    occurs = @. occursin(["Committee"],name)
     return iszero(occurs)
 end
 

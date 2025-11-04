@@ -190,7 +190,7 @@ end
     inputpath, outputpath, toml = setup(which_house)
     sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
     clean_gs_files()
-    skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role]
+    skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
     which_test = [:exact,:fuzzy][2]
     fuzzy_search = [8,2]
     test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)

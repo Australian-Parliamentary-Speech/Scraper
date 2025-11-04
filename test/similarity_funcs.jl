@@ -104,7 +104,7 @@ end
 
 function cell_score(sample_row,gs_row,skip_nums,content_num,i)
     if i in skip_nums
-        return 0,"skipped"
+        return 1,"skipped"
     end
     gs_cell = gs_row[i]
 
@@ -177,7 +177,7 @@ function compare_row(sample_rows, gs_row, header_to_num,test_setup)
                 push!(failed_indices,j)
             end
         end
-        final_score = row_score/(length(gs_row)-length(skip_cols))
+        final_score = row_score/length(gs_row)
         @assert final_score <= 1 "Final score for this row is $final_score"
         return final_score,failed_indices
     else

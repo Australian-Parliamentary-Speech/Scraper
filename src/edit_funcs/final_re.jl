@@ -10,12 +10,24 @@ function final_re(input_fn,output_fn,::Type{<:AbstractEditPhase})
             row_ = @. collect(row)
             row = row_[1]
             row = edit_row_final(row,header_to_num)
+#            row = if_speaker_then_speech(row,header_to_num)
             content = row[header_to_num[:content]]
             if content != ""
                 write_row_to_io(io,row)
             end
         end
     end
+end
+
+function if_speaker_then_speech(row,header_to_num)
+    speaker, id = row[header_to_num[:name]],row[header_to_num[Symbol("name.id")]]
+    if speaker != "N/A" || id != "N/A"
+        if row[header_to_num[:non_speech_flag]] == 1
+            row[header_to_num[:non_speech_flag]] == 0
+            row[header_to_num[:speech_flag]] = 1
+        end
+    end
+    return row
 end
 
 function edit_row_final(row,header_to_num)
