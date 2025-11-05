@@ -1,19 +1,19 @@
 [ global ]
-    output_path = "../../Outputs/SenateCSV/hansard"
+    output_path = "../Outputs/SenateCSV/hansard"
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "senate_xmls/2020/2020_02_12.xml"
+#    filename = "hansard/senate_xmls/2020/2020_02_12.xml"
 
 
 [[ XML_DIR ]]
-    path = ["senate_xmls"]
+    path = "hansard/senate_xmls"
 
 #[[ XML_DIR ]]
-#    path = "../../../Download/senate_xmls"
+#    path = "../../Download/senate_xmls"
 #
 #[[ XML_DIR ]]
-#    path = "../../../sgml2xml/senate_xmls"
+#    path = "../../sgml2xml/senate_xmls"
 
 
 
