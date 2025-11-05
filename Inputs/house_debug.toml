@@ -5,19 +5,15 @@
 #[[ XML ]]
 #    filename = "hansard/house_xmls/2010/2010_02_10.xml"
 
-[[ XML_DIR ]]
-    path = "../../Download/house_xmls"
 
 [[ XML_DIR ]]
-    path = "../../sgml2xml/house_reserve_xmls"
+    path = "hansard/house_xmls"
 
-[[ XML_DIR ]]
-    path = "../../sgml2xml/house_xmls"
 
 
 [ general_options ]
     which_house = "house"
-    year = [1901,2025]
+    year = [1983,1983]
     xml_parsing = true
     edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
     csv_edit = true
