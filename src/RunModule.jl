@@ -126,10 +126,14 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
             path = joinpath(input_path,path)
         end
         for year in readdir(path)
-            if year_range[1] <= parse(Int,year) <= year_range[2]
-                for filename in readdir(joinpath(path,year))
-                    push!(xml_paths,(year,joinpath(joinpath(path,year),filename)))
+            if occursin(r"^\d+$",year)
+                if year_range[1] <= parse(Int,year) <= year_range[2]
+                    for filename in readdir(joinpath(path,year))
+                        push!(xml_paths,(year,joinpath(joinpath(path,year),filename)))
+                    end
                 end
+            else
+                @info "$year is not a valid input directory"
             end
         end
     end
