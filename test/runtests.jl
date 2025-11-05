@@ -272,12 +272,12 @@ end
 #        elseif which_house == :house
 #            only_in_sitting = setdiff(sitting_house,xmls)
 #        end
-#        open(joinpath("dates","only_in_xml_$(which_house).csv"), "w") do io
+#        open(joinpath(["test_outputs","dates","only_in_xml_$(which_house).csv")], "w") do io
 #            for date in only_in_xml
 #            println(io, date)
 #            end
 #        end
-#        open(joinpath("dates","only_in_sitting_$(which_house).csv"), "w") do io
+#        open(joinpath(["test_outputs","dates","only_in_sitting_$(which_house).csv")], "w") do io
 #            for date in only_in_sitting
 #                println(io, date)
 #            end

@@ -161,10 +161,18 @@ function remove_steps(output_path_,remove_num,date)
     for num in remove_num
         if num == 0
             path = joinpath(output_path_,"$(date).csv")
-            rm(path)
+            if isfile(path) 
+                rm(path)
+            else
+                @info "$path is not there to remove"
+            end
         else
             path = joinpath([output_path_,"$(date)_edit_step$(num).csv"])
-           rm(path)
+            if isfile(path)
+                rm(path)
+            else
+                @info "$path is not there to remove"
+            end
         end
     end
 end
