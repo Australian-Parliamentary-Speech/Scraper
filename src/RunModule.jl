@@ -122,6 +122,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     xml_dirs = get(toml,"XML_DIR",[])
     for xml_dir in xml_dirs
         path = xml_dir["PATH"]
+        @info "$path is being read ..."
         if ! isabspath(path)
             path = joinpath(input_path,path)
         end

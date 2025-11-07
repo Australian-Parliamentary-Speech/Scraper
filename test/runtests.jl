@@ -133,7 +133,7 @@ end
 
 
 function read_sitting_dates(testpath)
-    csvfile = CSV.File(joinpath([testpath,"dates","sitting_dates.csv"]))
+    csvfile = CSV.File(joinpath([testpath,"test_outputs","dates","sitting_dates.csv"]))
     rows = eachrow(csvfile)
     house = []
     senate = []
