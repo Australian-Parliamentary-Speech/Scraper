@@ -29,7 +29,7 @@ function edit_row(row,header_to_num)
 end
 
 function speaker_regs()
-    res = [r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?DEPUTY\s*SPEAK\s*ER\s*(?:\([^)]+\))?:?",r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?SPEAKER\s*(?:\([^)]+\))?:?", r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?ACTING\s*(?:DEPUTY)?\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^10000\s*SPEAKER",r"^Opposition\s+members",r"^(?:Mr|Mrs|Miss|Ms|Dr)\.?\s*(?:[a-zA-Z'-]+\s+[a-zA-Z'-]+.*?:|[a-zA-Z'-]+:)"]
+    res = [r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?DEPUTY\s*SPEAK\s*ER\s*(?:\([^)]+\))?:?",r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?SPEAKER\s*(?:\([^)]+\))?:?", r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?ACTING\s*(?:DEPUTY)?\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^10000\s*SPEAKER",r"^Opposition\s+members",r"^(?:Mr|Mrs|Miss|Ms|Dr|Sir|Prof|Minister|The Hon|The Honourable)\.?\s*(?:[a-zA-Z'-]+\s+[a-zA-Z'-]+.*?:|[a-zA-Z'-]+:)"]
     return res
 end
 
@@ -170,6 +170,8 @@ function remove_bits(row, header_to_num)
     content = replace(content, r"\s*=\s*" => "")
     #removes leading ( name )
     content = replace(content, r"^\([^)]+\)(?:\s*:)?" => "")
+    #removes '- 
+    content = replace(content, r"^'-\s*" => "")
     row[content_num] = content
     return row
 end
