@@ -32,7 +32,7 @@ function setup(which_house)
     outputpath = global_options["OUTPUT_PATH"]
     xml_path_toml = toml["XML_DIR"][1]
     xml_path = xml_path_toml["PATH"]
-    inputpath = joinpath(dirname(tomlpath),xml_path)
+    inputpath = joinpath("..","Inputs",xml_path)
     return inputpath,outputpath,toml
 end
 
@@ -99,7 +99,7 @@ function get_all_csv_dates(outputpath,testpath,which_house)
     all_csv_names = get_all_csv_subdir(outputpath)
     all_csv_dates = find_all_csv_dates(all_csv_names)
     years = [split(date,"-")[1] for date in all_csv_dates]
-    fn = joinpath("dates","all_csv_dates_$(which_house).csv")
+    fn = joinpath("test_outputs","dates","all_csv_dates_$(which_house).csv")
     open(fn, "w") do io
         for (x,y) in zip(years, all_csv_dates)
             println(io, "$x,$y")
@@ -122,7 +122,7 @@ function get_all_xml_dates(inputpath,testpath,which_house)
     all_xml_names = get_all_xml_subdir(inputpath)
     all_xml_dates = find_all_xml_dates(all_xml_names)
     years = [split(date,"-")[1] for date in all_xml_dates]
-    fn = joinpath("dates","all_xml_dates_$(which_house).csv")
+    fn = joinpath("test_outputs","dates","all_xml_dates_$(which_house).csv")
     open(fn, "w") do io
         for (x,y) in zip(years, all_xml_dates)
             println(io, "$x,$y")
@@ -253,38 +253,36 @@ end
         end
     end
 
+    if false
+        print("Dates...")
+        @test begin
+            csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
+            xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
+
+            xml = CSV.read(xml_fn, DataFrame,header=false)
+            csv = CSV.read(csv_fn, DataFrame,header=false)
+
+             xmls = xml[:, 2]
+            csvs = csv[:, 2]
+            only_in_xml = setdiff(xmls, csvs)
+            only_in_csv = setdiff(csvs, xmls)
+            if which_house == :senate
+                only_in_sitting = setdiff(sitting_senate,xmls)
+            elseif which_house == :house
+                only_in_sitting = setdiff(sitting_house,xmls)
+            end
+            open(joinpath(["test_outputs","dates","only_in_xml_$(which_house).csv"]), "w") do io
+                for date in only_in_xml
+                    println(io, date)
+                end
+            end
+            open(joinpath(["test_outputs","dates","only_in_sitting_$(which_house).csv"]), "w") do io
+                for date in only_in_sitting
+                    println(io, date)
+                end
+            end
+            true
+        end
+    end
 end
 
-#@testset verbose = true "Gold standard set" begin
-#    @test begin
-#        csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
-#        xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
-#
-#        xml = CSV.read(xml_fn, DataFrame,header=false)
-#        csv = CSV.read(csv_fn, DataFrame,header=false)
-#
-#        xmls = xml[:, 2]
-#        csvs = csv[:, 2]
-#        only_in_xml = setdiff(xmls, csvs)
-#        only_in_csv = setdiff(csvs, xmls)
-#        if which_house == :senate
-#            only_in_sitting = setdiff(sitting_senate,xmls)
-#        elseif which_house == :house
-#            only_in_sitting = setdiff(sitting_house,xmls)
-#        end
-#        open(joinpath(["test_outputs","dates","only_in_xml_$(which_house).csv")], "w") do io
-#            for date in only_in_xml
-#            println(io, date)
-#            end
-#        end
-#        open(joinpath(["test_outputs","dates","only_in_sitting_$(which_house).csv")], "w") do io
-#            for date in only_in_sitting
-#                println(io, date)
-#            end
-#        end
-# 
-#        true
-#    end
-
-#end
- 
