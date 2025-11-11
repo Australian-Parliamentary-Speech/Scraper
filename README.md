@@ -8,7 +8,9 @@ git clone https://github.com/Australian-Parliamentary-Speech/Scraper.git
 ```
 
 
-## Step two, edit the toml file located in ~/Inputs/house.toml [or senate.toml]
+## Step two, edit the toml configuration file. 
+
+It is located in `~/Inputs/house.toml` or `~/Inputs/senate.toml`
 
 Ensure that your global path is where you want to save your outputs (for example):
 ```
