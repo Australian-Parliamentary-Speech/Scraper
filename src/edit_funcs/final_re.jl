@@ -12,6 +12,7 @@ function final_re(input_fn,output_fn,::Type{<:AbstractEditPhase})
             row = edit_row_final(row,header_to_num)
 #            row = if_speaker_then_speech(row,header_to_num)
             row = final_name_attempt(row,header_to_num)
+            row = final_add_from_Speaker(row,header_to_num)
             content = row[header_to_num[:content]]
             if content != ""
                 write_row_to_io(io,row)
@@ -19,6 +20,16 @@ function final_re(input_fn,output_fn,::Type{<:AbstractEditPhase})
         end
     end
 end
+
+function final_add_from_Speaker(row,header_to_num)
+    Speaker = row[header_to_num[:Speaker]] 
+    if Speaker != "N/A" && row[header_to_num[:name]] == "N/A"
+        row[header_to_num[:name]] == Speaker
+        @info Speaker
+    end
+    return row
+end
+
 
 function if_speaker_then_speech(row,header_to_num)
     speaker, id = row[header_to_num[:name]],row[header_to_num[Symbol("name.id")]]
@@ -39,7 +50,6 @@ function final_name_attempt(row,header_to_num)
         occur = @. occursin(["Mr","Mrs","Miss","Ms","Dr","Sir","Prof","Minister","The Hon","The Honourable","THE ACTING","CHAIRMAN","Opposition Members","The DEPUTY"], maybe_name)
         if !iszero(occur)
             row[header_to_num[:name]] = maybe_name
-            @info maybe_name
             content = replace_known_beginning(content,maybe_name)
             row[header_to_num[:content]] = content
         end
