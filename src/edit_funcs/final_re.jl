@@ -36,7 +36,7 @@ function final_name_attempt(row,header_to_num)
     split_content = split(content,r"\.\s*-")
     maybe_name = clean_text(split_content[1])
     if length(split_content) == 2 && is_name(maybe_name) && row[header_to_num[:name]] == "N/A"
-        occur = @. occursin(["Mr","Mrs","Miss","Ms","Dr","Sir","Prof","Minister","The Hon","The Honourable"], maybe_name)
+        occur = @. occursin(["Mr","Mrs","Miss","Ms","Dr","Sir","Prof","Minister","The Hon","The Honourable","THE ACTING","CHAIRMAN","Opposition Members","The DEPUTY"], maybe_name)
         if !iszero(occur)
             row[header_to_num[:name]] = maybe_name
             @info maybe_name

@@ -606,7 +606,7 @@ function is_name(name)
     end
  
     number = length(split(name," "))
-    if number > 8
+    if number > 5
         return false
     end
 
