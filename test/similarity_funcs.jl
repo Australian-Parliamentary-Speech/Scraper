@@ -43,6 +43,70 @@ function gs_sample_content_match(gs_content,sample_content,test_setup)
     end
 end
 
+function Date_to_Dict(gold_standard_csvs)
+    date_to_d = Dict()
+    for gs in gold_standard_csvs
+        date = find_date(gs)
+        gs_df = CSV.read(gs, DataFrame)
+        gs_id_col = filter(!=("N/A"),gs_df[!,Symbol("name.id")])
+        MP_to_count_ = MP_to_count(gs_id_col)
+        date_to_d[date] = MP_to_count_
+    end
+    return date_to_d
+end
+
+function MP_to_count(col)
+    MP_to_count_ = Dict()
+    for id in col
+        MP_to_count_[id] = get(MP_to_count_,id,0) + 1
+    end
+    return MP_to_count_
+end
+
+function Date_to_ImpftDict(date_to_list)
+    date_to_impfct_namedict = Dict()
+    for (date,list) in date_to_list
+        id_to_count = MP_to_count(list)
+        date_to_impfct_namedict[date] = id_to_count
+    end
+    return date_to_impfct_namedict
+end
+
+function MPs_not_perfect(dates,gs_test_output_dir)
+    date_to_list = Dict()
+    for date in dates
+        sim_csv = filter(f -> occursin("similarity", f) && occursin(date, f), readdir(gs_test_output_dir))[1]
+        miss_csv = filter(f -> occursin("missing", f) && occursin(date, f), readdir(gs_test_output_dir))[1]
+ 
+        sim_df = CSV.read(joinpath(gs_test_output_dir, sim_csv), DataFrame,header=false)
+        if sim_df == DataFrame()
+            sim_list = []
+        else
+            sim_list =filter(!=("N/A"), sim_df[:,1])
+        end
+
+        miss_df = CSV.read(joinpath(gs_test_output_dir, miss_csv), DataFrame,header=false) 
+#        if isempty(miss_df)
+        if miss_df == DataFrame()
+            miss_list = []
+        else
+            miss_list = filter(!=("N/A"), miss_df[:,1])
+        end
+        list = vcat(sim_list, miss_list)
+        date_to_list[date] = list
+    end
+    return date_to_list
+end
+
+function all_GS_dates(gold_standard_csvs)
+    dates = String[]
+    for gs_csv in gold_standard_csvs
+        gs_name = basename(gs_csv)
+        push!(dates,find_date(gs_name)) 
+    end
+    return dates
+end
+
 function similarity_csv(gs_csv,sample_csv,test_setup,test_output_path)
     sample_csvfile = CSV.File(sample_csv)
     gs_rows = eachrow(CSV.File(gs_csv))
@@ -58,15 +122,18 @@ function similarity_csv(gs_csv,sample_csv,test_setup,test_output_path)
     for gs_row in gs_rows
         gs_row = get_row(gs_row)
         score, failed_indices = compare_row(sample_rows,gs_row,header_to_num,test_setup) 
+        gs_content = gs_row[header_to_num[:content]]
+        gs_speaker = gs_row[header_to_num[Symbol("name.id")]]
+
         if failed_indices == "missing"
-            push!(missing_lines,"\"$(gs_row[header_to_num[:content]])\"")
+            line =[gs_speaker,gs_content] 
+            push!(missing_lines,edit_row(line))
         else
             if isempty(failed_indices)
                 total_score += score
             else
                 total_score += score
-                gs_content = gs_row[header_to_num[:content]]
-                line = [gs_content,failed_indices...]
+                line = [gs_speaker,gs_content,failed_indices...]
                 push!(found_lines,edit_row(line))
             end
         end

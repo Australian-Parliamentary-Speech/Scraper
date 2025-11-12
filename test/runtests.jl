@@ -10,7 +10,7 @@ include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
 include(joinpath(@__DIR__, "clean_gs.jl"))
 include(joinpath(@__DIR__, "csv_test.jl"))
-
+include(joinpath(@__DIR__, "read_dates.jl"))
 
 const RunModule = ParlinfoSpeechScraper.RunModule
 using ParlinfoSpeechScraper.RunModule.EditModule
@@ -36,12 +36,13 @@ function setup(which_house)
     return inputpath,outputpath,toml
 end
 
-function from_gs_to_sample(gs_name,test_setup)
-   function find_date(str)
-        m = match(r"\d+-\d+-\d+", str)
-        return m.match
-    end
+function find_date(str)
+    m = match(r"\d+-\d+-\d+", str)
+    return m.match
+end
 
+
+function from_gs_to_sample(gs_name,test_setup)
     function sample_name_(date,step_num)
         return "$(date)_edit_step$(step_num).csv"
     end
@@ -86,91 +87,15 @@ function remove_files(output_path,remove_num)
 end
 
 
-function get_all_csv_dates(outputpath,testpath,which_house)
-    function find_all_csv_dates(all_csv_names)
-        simple_list = []
-        for name in all_csv_names
-            date_match = match(r"\d+-\d+-\d+",name)
-            date = date_match.match
-            push!(simple_list,date) 
-        end
-        return unique(simple_list)
-    end
-    all_csv_names = get_all_csv_subdir(outputpath)
-    all_csv_dates = find_all_csv_dates(all_csv_names)
-    years = [split(date,"-")[1] for date in all_csv_dates]
-    fn = joinpath("test_outputs","dates","all_csv_dates_$(which_house).csv")
-    open(fn, "w") do io
-        for (x,y) in zip(years, all_csv_dates)
-            println(io, "$x,$y")
-        end
-    end
-    return fn
-end
-
-function get_all_xml_dates(inputpath,testpath,which_house)
-    function find_all_xml_dates(all_xml_names)
-        simple_list = []
-        for name in all_xml_names
-            date_match = match(r"\d+_\d+_\d+",name)
-            date = date_match.match
-            date = replace(date, "_" => "-")
-            push!(simple_list,date) 
-        end
-        return unique(simple_list)
-    end
-    all_xml_names = get_all_xml_subdir(inputpath)
-    all_xml_dates = find_all_xml_dates(all_xml_names)
-    years = [split(date,"-")[1] for date in all_xml_dates]
-    fn = joinpath("test_outputs","dates","all_xml_dates_$(which_house).csv")
-    open(fn, "w") do io
-        for (x,y) in zip(years, all_xml_dates)
-            println(io, "$x,$y")
-        end
-    end
-    return fn
-end
-
-
-function read_sitting_dates(testpath)
-    csvfile = CSV.File(joinpath([testpath,"test_outputs","dates","sitting_dates.csv"]))
-    rows = eachrow(csvfile)
-    house = []
-    senate = []
-    for row in rows
-        row_ = @. collect(row)
-        row = row_[1]
-        date_ = row[1]
-        year,month,day = Dates.year(date_), Dates.month(date_), Dates.day(date_)
-        if month < 10
-            month = "0$month"
-        end
-        if day < 10
-            day = "0$day"
-        end
-        if_senate = row[3]
-        if_house = row[2]
-        if if_senate
-            push!(senate,Date("$(year)-$(month)-$(day)"))
-        end
-        if if_house
-            push!(house,Date("$(year)-$(month)-$(day)"))
-        end 
-    end
-    return house, senate
-end
-
-function compare_gold_standard(outputpath, testpath,test_setup,test_output_path)
-    gold_standard_path = joinpath(testpath,"gold_standard")
+function compare_gold_standard(outputpath, testpath,test_setup,test_output_path_csv,gold_standard_csvs)
     sample_csv_path = joinpath(testpath,"sample_csv")
     create_dir(sample_csv_path)
-    gold_standard_csvs = get_all_csvnames(gold_standard_path)
     get_sample_csvs(outputpath,gold_standard_csvs,sample_csv_path,test_setup)
-    similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup) 
+    similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path_csv,test_setup) 
 end
 
 function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup)
-    fn = joinpath(test_output_path,"similarity_test.csv")
+    fn = joinpath(test_output_path,"overall_score.csv")
     open(fn,"w") do io
         for gs_csv in gold_standard_csvs
             gs_name = basename(gs_csv)
@@ -185,25 +110,69 @@ function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,t
 end
 
 
-@testset verbose = true "Gold standard set" begin
+@testset verbose = true "Entire set" begin
     which_house = :house
     inputpath, outputpath, toml = setup(which_house)
-    sitting_house, sitting_senate = read_sitting_dates(@__DIR__)
-    clean_gs_files()
-    skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
-    which_test = [:exact,:fuzzy][2]
-    fuzzy_search = [8,2]
-    test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
+    test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
+    create_dir(test_output_path)
 
     #gold standard
     if true
         @test begin
             print("Gold standard test running ...")
-            test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
-            create_dir(test_output_path)
-            compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path)
+            skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
+            which_test = [:exact,:fuzzy][2]
+            fuzzy_search = [8,2]
+            test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
+            gold_standard_path = joinpath(@__DIR__,"gold_standard")
+            clean_gs_files()
+            gold_standard_csvs = get_all_csvnames(gold_standard_path)
+            test_output_path_csv = joinpath(test_output_path,"CSVs")
+            create_dir(test_output_path_csv)
+
+            if false
+                compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path_csv,gold_standard_csvs)
+            end
+
+            if true
+                print("Gold standard MP-specific test running ...")
+                dates = all_GS_dates(gold_standard_csvs)
+                date_to_list = MPs_not_perfect(dates,test_output_path_csv)
+                date_to_impfct_namedict = Date_to_ImpftDict(date_to_list)
+                date_to_namedict = Date_to_Dict(gold_standard_csvs)
+                for (date,dict) in date_to_impfct_namedict
+                    names = []
+                    ratios = []
+                    wrongs = []
+                    totals = []
+                    date_test_output_path = joinpath(test_output_path,date)
+                    create_dir(date_test_output_path)
+                    name_to_total = date_to_namedict[date]
+                    for (id,count) in name_to_total
+                        name = id
+                        wrong =get(dict,id,"N/A")
+                        if wrong == "N/A"
+                            wrong = 0
+                        end
+                        total = count
+                        ratio = 1-(wrong/total)
+                        push!(names,name)
+                        push!(ratios,ratio)
+                        push!(wrongs,wrong)
+                        push!(totals,total)
+                    end
+                    df = DataFrame(id=names,ratio=ratios,wrong=wrongs,total=totals)
+                    if df!=DataFrame()
+                        CSV.write(joinpath(date_test_output_path,"$(date)_each_MP.csv"), df)
+                    else
+                        @show date
+                    end
+                end
+
+            end
             true
         end
+
     end
 
     if false
@@ -256,13 +225,14 @@ end
     if false
         print("Dates...")
         @test begin
+            sitting_house, sitting_senate = read_sitting_dates(@__DIR__) 
             csv_fn = get_all_csv_dates(outputpath,@__DIR__,which_house)
             xml_fn = get_all_xml_dates(inputpath,@__DIR__,which_house)
 
             xml = CSV.read(xml_fn, DataFrame,header=false)
             csv = CSV.read(csv_fn, DataFrame,header=false)
 
-             xmls = xml[:, 2]
+            xmls = xml[:, 2]
             csvs = csv[:, 2]
             only_in_xml = setdiff(xmls, csvs)
             only_in_csv = setdiff(csvs, xmls)
