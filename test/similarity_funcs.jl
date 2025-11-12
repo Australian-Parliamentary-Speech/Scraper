@@ -224,7 +224,7 @@ end
 
 function compare_row(sample_rows, gs_row, header_to_num,test_setup)
     skip_cols = test_setup.skip_cols
-    skip_nums = [header_to_num[col] for col in skip_cols]
+    skip_nums = [get(header_to_num,col,"N/A") for col in skip_cols]
     content_num = header_to_num[:content]
     gs_content = gs_row[content_num]
     if gs_content == "N/A"
