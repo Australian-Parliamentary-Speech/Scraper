@@ -97,14 +97,19 @@ end
 function similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path,test_setup)
     fn = joinpath(test_output_path,"overall_score.csv")
     open(fn,"w") do io
+        row = ["gs_name","ratio","max_ratio","gs/max"]
+        println(io,edit_row(row))
         for gs_csv in gold_standard_csvs
             gs_name = basename(gs_csv)
             sample_name = from_gs_to_sample(gs_name,test_setup)
             sample_csv = joinpath(sample_csv_path,sample_name)
             @show "Comparing now $gs_name to $sample_csv"
             ratio = similarity_csv(gs_csv,sample_csv,test_setup,test_output_path)
-            @show ratio
-            println(io,"\"$gs_name\",$ratio") 
+            max_ratio = similarity_csv(sample_csv,sample_csv,test_setup,test_output_path)
+            @show ratio 
+            @show max_ratio
+            row = edit_row([gs_name,ratio,max_ratio,ratio/max_ratio])
+            println(io,row) 
        end
     end
 end
@@ -120,7 +125,11 @@ end
     if true
         @test begin
             print("Gold standard test running ...")
-            skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
+            if true
+                skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
+            else
+                skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other,:question_flag,:answer_flag,:injection_flag,:speech_flag,:petition_flag,:quote_flag,:motionnospeech_flag,:chamber_flag,:subdebateinfo,:debateinfo]
+            end
             which_test = [:exact,:fuzzy][2]
             fuzzy_search = [8,2]
             test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
@@ -130,7 +139,7 @@ end
             test_output_path_csv = joinpath(test_output_path,"CSVs")
             create_dir(test_output_path_csv)
 
-            if false
+            if true
                 compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path_csv,gold_standard_csvs)
             end
 
