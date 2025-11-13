@@ -23,11 +23,26 @@ function edit_row(row,header_to_num)
 #    row = remove_the_speaker(row,header_to_num)
     row = delete_semicolon(row,header_to_num)
     row = edit_interjections(row,header_to_num)
+    row = final_name_attempt(row,header_to_num)
     row = delete_talker_from_content(row,header_to_num)
     row = remove_bits(row,header_to_num)
     return row
 end
 
+function final_name_attempt(row,header_to_num)
+    content = row[header_to_num[:content]]
+    split_content = split(content,r"\.\s*-")
+    maybe_name = clean_text(split_content[1])
+    if length(split_content) == 2 && is_name(maybe_name) && row[header_to_num[:name]] == "N/A"
+        occur = @. occursin(["Mr","Mrs","Miss","Ms","Dr","Sir","Prof","Minister","The Hon","The Honourable","THE ACTING","CHAIRMAN","Opposition Members","The DEPUTY"], maybe_name)
+        if !iszero(occur)
+            row[header_to_num[:name]] = maybe_name
+            content = replace_known_beginning(content,maybe_name)
+            row[header_to_num[:content]] = content
+        end
+    end
+    return row
+end
 function speaker_regs()
     res = [r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?DEPUTY\s*SPEAK\s*ER\s*(?:\([^)]+\))?:?",r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?SPEAKER\s*(?:\([^)]+\))?:?", r"^(?:(?:(?:Th\s*e)|(?:Mr)|(?:Madam))\.?\s*)?ACTING\s*(?:DEPUTY)?\s*SPEAKER\s*(?:\([^)]+\))?:?",r"^10000\s*SPEAKER",r"^Opposition\s+members",r"^(?:Mr|Mrs|Miss|Ms|Dr|Sir|Prof|Minister|The Hon|The Honourable)\.?\s*(?:[A-Za-z'-]+(?:\s+[A-Za-z'-]+){0,1})(?:\s*\([^)]*\))?:"]
     return res

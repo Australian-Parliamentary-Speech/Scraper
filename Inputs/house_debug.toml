@@ -7,13 +7,13 @@
 
 
 [[ XML_DIR ]]
-    path = "hansard/house_xmls"
+    path = "hansard/house_test_xmls"
 
 
 
 [ general_options ]
     which_house = "house"
-    year = [1901,2025]
+    year = [1902,1902]
     xml_parsing = true
     edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
     csv_edit = true
