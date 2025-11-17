@@ -34,13 +34,13 @@ function get_date(fn)
     function process_fn(fn)
         return replace(basename(fn),".xml"=>"")
     end
-    
+
     function get_date_from_fn(fn)
+        #had to change from year to fn_year, WHAT???
         fn = process_fn(fn)
-        year,month,day = split(fn,"_")
-        @debug("$(year)-$(month)-$(day) extracted from filename and not xml")
-        time = replace(fn, "_" => "-")
-        return year,month,day,time
+        fn_year,fn_month,fn_day = split(fn,"_")
+        fn_time = replace(fn, "_" => "-")
+        return fn_year,fn_month,fn_day,fn_time
     end
 
     function _fix_year(year)
@@ -52,30 +52,35 @@ function get_date(fn)
     end
 
     function get_date_from_xml(soup)
-            time_node = findfirst("//session.header/date",soup)
-            if !isnothing(time_node)
-                time = time_node.content
-                year,month,day = split(time,"-")
-                return year,month,day,time
-            else
-                hansard_date = findfirst("//hansard/@date",soup)
+        time_node = findfirst("//session.header/date",soup)
+        if !isnothing(time_node)
+            time = time_node.content
+            year,month,day = split(time,"-")
+            return year,month,day,time
+        else
+            hansard_date = findfirst("//hansard/@date",soup)
+            if !isnothing(hansard_date)
                 day,month,year = split(hansard_date.content,"/")
                 return _fix_year(year),month,day,"$(_fix_year(year))-$(month)-$(day)"
+            else
+                return nothing
             end
         end
-  
-    year,month,day,time = begin
-        try
-            xdoc = readxml(fn)
-            soup = root(xdoc)
-            year,month,day,time = get_date_from_xml(soup)
-            Base.GC.gc()
-            year,month,day,time
-        catch
-            year,month,day,time = get_date_from_fn(fn)
-            year,month,day,time
-        end
     end
+
+    xdoc = readxml(fn)
+    soup = root(xdoc)
+    if !isnothing(get_date_from_xml(soup))
+        year,month,day,time = get_date_from_xml(soup)
+        fn_year,fn_month,fn_day,fn_time = get_date_from_fn(fn)
+        if year != fn_year || month != fn_month || day != fn_day
+            @info "XML and Filename do not agree on dates: year$fn_year,month$fn_month,day$fn_day"
+        end 
+    else
+        year,month,day,time = get_date_from_fn(fn)
+        @info "Failure retrieving date from XML: year$year,month$month,day$day"
+    end
+    Base.GC.gc()
     return date_to_float(parse(Int,year),parse(Int,month),parse(Int,day)),time
 end
 
