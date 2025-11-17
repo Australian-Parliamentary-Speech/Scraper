@@ -23,7 +23,7 @@ include("EditModule.jl")
 
 
 """
-    get_date(fn)
+get_date(fn)
 
 Get the date from the xml file
 
