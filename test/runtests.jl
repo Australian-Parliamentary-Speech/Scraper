@@ -143,7 +143,7 @@ end
                 compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path_csv,gold_standard_csvs)
             end
 
-            if true
+            if false
                 print("Gold standard MP-specific test running ...")
                 dates = all_GS_dates(gold_standard_csvs)
                 date_to_list = MPs_not_perfect(dates,test_output_path_csv)

@@ -97,13 +97,6 @@ function define_flags(node::Node{PNode{PhaseSGML}},parent_node,node_tree)
     end
  
 
-    # add a non-speech node in there
-    title = find_section_title(node_tree,node.soup,DebateNode{PhaseSGML})
-    if !(1 ∈ flags) && (node.headers_dict["name"] =="N/A") && (title == "NOTICES" || title == "PAPERS")
-        node.headers_dict["nonspeech"] = 1
-    else
-        node.headers_dict["nonspeech"] = 0
-    end
 end
 
 

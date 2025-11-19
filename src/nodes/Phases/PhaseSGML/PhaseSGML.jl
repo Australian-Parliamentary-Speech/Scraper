@@ -23,18 +23,18 @@ function define_flags(node::Node{<:AbstractNode{PhaseSGML}},parent_node,node_tre
     end
     chamber = find_chamber(node,node_tree)
 
-    # add a non-speech node in there
-    title = find_section_title(node_tree,node.soup,DebateNode{PhaseSGML})
-    if !(1 ∈ flags) && (node.headers_dict["name"] =="N/A") && (title == "NOTICES" || title == "PAPERS")
-        node.headers_dict["nonspeech"] = 1
-    else
-        node.headers_dict["nonspeech"] = 0
-    end
+#    # add a non-speech node in there
+#    title = find_section_title(node_tree,node.soup,DebateNode{PhaseSGML})
+#    if !(1 ∈ flags) && (node.headers_dict["name"] =="N/A") && (title == "NOTICES" || title == "PAPERS")
+#        node.headers_dict["nonspeech"] = 1
+#    else
+#        node.headers_dict["nonspeech"] = 0
+#    end
 end
 
 
 function define_headers(::Type{PhaseSGML})
-    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag","chamber_flag","nonspeech","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
     headers_dict = OrderedDict(headers .=> ["N/A" for h in headers])
     return headers_dict
 end

@@ -413,15 +413,15 @@ function define_flags(node::Node{<:AbstractNode{<:AbstractPhase}},parent_node,no
         return false
     end
     if !is_interjecting(node)
-        ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode]
-        headers = ["question_flag","answer_flag","interjection_flag","speech_flag"]
+        ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode,PetitionNode,QuoteNode_,MotionnospeechNode]
+        headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag"]
         flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
         header_and_flag = zip(headers,flags)
         for couple in header_and_flag
             node.headers_dict[couple[1]] = couple[2]
         end
     else
-        headers = ["question_flag","answer_flag","speech_flag"]
+        headers = ["question_flag","answer_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag"]
         for header in headers
             node.headers_dict[header] = 0
         end 
@@ -459,34 +459,34 @@ function find_p_node_parent(node::Node{<:PNode},node_tree)
     return node_tree[end]
 end
 
-function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
-    phase = get_phasetype(node)
-    debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
-    subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
-    if node.headers_dict["content"] == "N/A"
-        content = node.node.content
-        content = get_node_content(node,content)
-        node.headers_dict["content"] = content
-    end
-
-    node.headers_dict["subdebateinfo"] = subdebateinfo
-    node.headers_dict["debateinfo"] = debateinfo
-    node.headers_dict["path"] = node.node.path
-    row = collect(values(node.headers_dict))
-    row_ = []
-    for r in row
-        if typeof(r) <: Int
-            push!(row_,r)
-        else
-            push!(row_,clean_text(r))
-        end
-    end
-
-    return row_
-end
+#function construct_row(node::Node{<:AbstractNode{<:AbstractPhase}},node_tree)
+#    phase = get_phasetype(node)
+#    debateinfo =  find_section_title(node_tree,node.soup,DebateNode{phase})
+#    subdebateinfo =  find_section_title(node_tree,node.soup,SubdebateNode{phase})
+#    if node.headers_dict["content"] == "N/A"
+#        content = node.node.content
+#        content = get_node_content(node,content)
+#        node.headers_dict["content"] = content
+#    end
+#
+#    node.headers_dict["subdebateinfo"] = subdebateinfo
+#    node.headers_dict["debateinfo"] = debateinfo
+#    node.headers_dict["path"] = node.node.path
+#    row = collect(values(node.headers_dict))
+#    row_ = []
+#    for r in row
+#        if typeof(r) <: Int
+#            push!(row_,r)
+#        else
+#            push!(row_,clean_text(r))
+#        end
+#    end
+#    return row_
+#end
 
 function define_headers(::Type{<:AbstractPhase})
-    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
+    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"] 
+#    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","chamber_flag","name","name.id","electorate","party","role","page.no","content","subdebateinfo","debateinfo","path"]
     headers_dict = OrderedDict(headers .=> ["N/A" for h in headers]) 
     return headers_dict
 end
