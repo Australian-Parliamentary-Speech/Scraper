@@ -154,13 +154,20 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     #    Threads.@threads for (year,fn) in xml_paths
     for (year,fn) in xml_paths
         output_path_ = joinpath(output_path,"$year")
-        date_float,date = get_date(fn)
-        create_dir(output_path_)
-        if run_xml_toggle
-            run_xml(fn,output_path_,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
+        try
+            xdoc = readxml(fn) 
+        catch
+            @info "$fn did not pass opening the xml..."
+        else
+            date_float,date = get_date(fn)
+            create_dir(output_path_)
+            if run_xml_toggle
+                run_xml(fn,output_path_,xml_parsing,csv_edit, edit_funcs,which_house,log_temp_dir)
+            end
+            remove_steps(output_path_,remove_num,date)
         end
-        remove_steps(output_path_,remove_num,date)
     end
+
     if sample_write
         copy_sample_file(output_path,length(edit_funcs))
     end
