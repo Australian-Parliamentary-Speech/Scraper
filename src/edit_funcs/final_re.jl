@@ -10,7 +10,6 @@ function final_re(input_fn,output_fn,::Type{<:AbstractEditPhase})
             row_ = @. collect(row)
             row = row_[1]
             row = if_speaker_then_speech(row,header_to_num)
-#            row = final_name_attempt(row,header_to_num)
             row = final_add_from_Speaker(row,header_to_num)
             row = edit_row_final(row,header_to_num)
             content = row[header_to_num[:content]]
@@ -52,6 +51,8 @@ function edit_row_final(row,header_to_num)
     content = replace(content, r" +$" => "")
     #change double space to single space
     content = replace(content, r" +" => " ")
+    #deletes space before and after -
+    content = replace(content, r"\s*-\s*" => "-")
     row[content_num] = content
     return row
 end

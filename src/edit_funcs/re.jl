@@ -30,12 +30,13 @@ function edit_row(row,header_to_num)
 end
 
 function final_name_attempt(row,header_to_num)
+    all_titles_ = all_titles()
     content = row[header_to_num[:content]]
     split_content = split(content,r"\.\s*-")
     maybe_name = clean_text(split_content[1])
     if length(split_content) == 2 && is_name(maybe_name) && row[header_to_num[:name]] == "N/A"
-        occur = @. occursin(["Mr","Mrs","Miss","Ms","Dr","Sir","Prof","Minister","The Hon","The Honourable","THE ACTING","CHAIRMAN","Opposition Members","The DEPUTY"], maybe_name)
-        if !iszero(occur)
+        occur = @. occursin(all_titles_, maybe_name)
+        if !iszero(occur) && !(is_part_speech(maybe_name))
             row[header_to_num[:name]] = maybe_name
             content = replace_known_beginning(content,maybe_name)
             row[header_to_num[:content]] = content
@@ -58,16 +59,39 @@ function not_just_title(s)
     return occursin(r"[A-Za-z]", t) ? true : false
 end
 
+function is_part_speech(speaker)
+    function get_next_word_after_speaker(line::String)
+        pattern = r"\bspeaker\b,\s*(\w+)"i
+        m = match(pattern, line)
+        return m === nothing ? nothing : m.captures[1]
+    end
+    if occursin(r"speaker,"i,speaker)
+        next_word = get_next_word_after_speaker(speaker)
+        all_titles_ = all_titles()
+        push!(all_titles_, "The")
+        for title in all_titles_
+            if occursin(Regex(next_word,"i"), title)
+                return false
+            end
+        end
+        return true
+    else
+        return false
+    end
+end
+
 function find_speaker_content(row,header_to_num)
-   content = row[header_to_num[:content]]
+    content = row[header_to_num[:content]]
     res = speaker_regs()
     for re in res
         speaker = match(re,content)
         if !isnothing(speaker)
             speaker = speaker.match
-            row[header_to_num[:name]] = clean_text(speaker)
-            content = replace_known_beginning(content,speaker)
-            row[header_to_num[:content]] = content
+            if !is_part_speech(speaker)
+                row[header_to_num[:name]] = clean_text(speaker)
+                content = replace_known_beginning(content,speaker)
+                row[header_to_num[:content]] = content
+            end
         end
     end
     return row 
@@ -147,7 +171,9 @@ function delete_talker_from_content(row,header_to_num)
     talker = row[header_to_num[:name]]
     content = row[header_to_num[:content]]
     content = replace_known_beginning(content,talker)
-    row[header_to_num[:content]] = content
+    if occursin(r"\w+",content)
+        row[header_to_num[:content]] = content
+    end
     return row
 end
 
