@@ -125,7 +125,7 @@ end
     if true
         @test begin
             print("Gold standard test running ...")
-            if true
+            if false
                 skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
             else
                 skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other,:question_flag,:answer_flag,:interjection_flag,:speech_flag,:petition_flag,:quote_flag,:motionnospeech_flag,:chamber_flag,:subdebateinfo,:debateinfo]

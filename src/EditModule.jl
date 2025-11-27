@@ -158,7 +158,9 @@ function fill_row(new_headers, row_dict)
     return [row_dict[header] for header in new_headers]
 end
 
-
+function all_titles()
+    return ["Mr","Mrs","Miss","Ms","Dr","Sir","Prof","Minister","The Hon","The Honourable","THE ACTING","CHAIRMAN","Opposition Members","The DEPUTY"]
+end
 
 
 
