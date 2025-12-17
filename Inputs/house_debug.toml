@@ -13,7 +13,7 @@
 
 [ general_options ]
     which_house = "house"
-    year = [1901,2025]
+    year = [1990,2000]
     xml_parsing = true
     edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
     csv_edit = true

@@ -13,13 +13,15 @@ function stage_direction(input_fn,output_fn,::Type{<:AbstractEditPhase})
             row = row_[1]
             content = row[header_to_num[:content]]
             for sd in stage_directions
-                if occursin(sd,content)
+                if occursin(sd,content) || row[header_to_num[:chamber_flag]] == 3
                     flag_indices,all_flags = find_all_flags(row,header_to_num)
                     for i in flag_indices
                         row[i] = 0
                     end
-                    row[header_to_num[:name]] = "N/A"
-                    row[header_to_num[Symbol("name.id")]] = "N/A"
+                    if occursin(sd,content)
+                        row[header_to_num[:name]] = "N/A"
+                        row[header_to_num[Symbol("name.id")]] = "N/A"
+                    end
                 end
             end
                 
