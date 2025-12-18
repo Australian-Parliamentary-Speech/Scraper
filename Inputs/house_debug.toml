@@ -19,5 +19,5 @@
     csv_edit = true
     run_xml_toggle = true
     sample = true
-    remove_nums = []
+    remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false

@@ -16,7 +16,11 @@ function flatten(input_fn, output_fn,::Type{<:AbstractEditPhase})
                     row = row_[1]
                     row_content = row[content_pos]
                     children_content,is_written = find_all_child_speeches(row_index,rows,header_to_num,is_written)
-                    row[content_pos] = row_content*" $children_content"
+                    if row_content != "N/A"
+                        row[content_pos] = row_content*" $children_content"
+                    else
+                        row[content_pos] = children_content
+                    end
                 else
                     row_ = @. collect(row)
                     row = row_[1]

@@ -98,6 +98,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
             talker_parent = parent_node
         end
 
+
         p_interjecting_name(node::Node{<:PNode},parent_node)
         if node.headers_dict["name"] == "N/A"
             find_talker_in_p(node)
@@ -111,7 +112,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
 
         if node.headers_dict["name"] == "N/A"
            #only the first node takes after the name in the parent node
-            if is_first_node_type(node,parent_node,allowed_names,node_tree)
+           if is_first_node_type(node,parent_node,allowed_names,node_tree)
                get_talker_from_parent(node,parent_node)
                 if !(is_free_node(node,parent_node))
                     if node.headers_dict["name"] == "N/A"
