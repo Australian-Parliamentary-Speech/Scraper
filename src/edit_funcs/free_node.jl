@@ -22,8 +22,8 @@ function free_node(input_fn, output_fn,::Type{<:AbstractEditPhase})
                 talker = row[name_pos]
                 id = row[id_pos]
                 debate, subdebate = row[header_to_num[:debateinfo]],row[header_to_num[:subdebateinfo]]
-                if debate == prev_debate && subdebate == prev_subdebate
-                  prev_row = get_row(rows, row_index-1)
+                if debate == prev_debate && subdebate == prev_subdebate 
+                   prev_row = get_row(rows, row_index-1)
                    row = free_node_op(row,prev_talker,prev_id,header_to_num,talker)
                    row = speech_quote_speaker(row,prev_row,prev_talker,prev_id,header_to_num,talker)
                 end
@@ -31,9 +31,7 @@ function free_node(input_fn, output_fn,::Type{<:AbstractEditPhase})
                 prev_subdebate = subdebate
                 if cell_not_null(talker) && row[header_to_num[:interjection_flag]] == 0
                     prev_talker = talker
-                    if id != "N/A"
-                        prev_id = id
-                    end
+                    prev_id = id
                 end 
            else
                 row_ = @. collect(row)

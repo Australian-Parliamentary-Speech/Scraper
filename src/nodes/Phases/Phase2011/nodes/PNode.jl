@@ -137,6 +137,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
         else
             flag_parent = node_tree[end]
         end
+
         define_flags(node,flag_parent,node_tree)
     else
         define_flags(node,node,node_tree)

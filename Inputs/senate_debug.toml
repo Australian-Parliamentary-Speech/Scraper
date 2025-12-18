@@ -3,7 +3,7 @@
 
 ###choose one: XML or XML_DIR
 [[ XML ]]
-    filename = "hansard/senate_xmls/1980/1980_02_28.xml"
+    filename = "hansard/senate_xmls/2005/2005_09_08.xml"
 
 
 #[[ XML_DIR ]]
