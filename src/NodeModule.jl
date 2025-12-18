@@ -278,7 +278,7 @@ function get_talker_from_parent(node::Node,parent_node::Node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
-
+   
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
         if isnothing(talker_content_node)
@@ -299,8 +299,6 @@ function get_talker_from_parent(node::Node,parent_node::Node)
             end
         end
     end
-
-
     function find_headers_from_node(node,parent_node,headers)
         talker_xpaths_nodes = ["/@speaker","/@nameid","/@electorate","/@party","/@role","/@page"]
         header_and_xpath = zip(headers,talker_xpaths_nodes)

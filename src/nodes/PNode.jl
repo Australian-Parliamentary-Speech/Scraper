@@ -72,7 +72,6 @@ function process_node(node::Node{<:PNode},node_tree)
             end
         end
     end
-
     if node.headers_dict["name"] == "N/A"
         #only the first node takes after the name in the parent node
         if is_first_node_type(node,parent_node,allowed_names,node_tree)
@@ -225,7 +224,9 @@ function p_with_a_as_parent(p_node)
         p_talker_id = findfirst_in_subsoup(parent_path,"/@href",soup)
         p_talker = isnothing(p_talker) ? "N/A" : p_talker.content
         p_talker_id = isnothing(p_talker_id) ? "N/A" : p_talker_id.content
-        p_node.headers_dict["name"] = clean_text(p_talker)
+        if p_talker != "Bill"
+            p_node.headers_dict["name"] = clean_text(p_talker)
+        end
         p_node.headers_dict["name.id"] = clean_text(p_talker_id)
 #        if p_node.headers_dict["name"] != "N/A"
 #            edge_case = "PNode_a_as_parent"

@@ -21,13 +21,22 @@ function speaker_time(input_fn,output_fn,::Type{<:AbstractEditPhase})
 end
 
 function other_information(row,header_to_num)
+    function is_name_(name)
+        if occursin(r"\d",name)
+            return false
+        end
+
+        occurs = @. occursin(["Committee"],name)
+        return iszero(occurs)
+    end
+
     name = row[header_to_num[:name]]
     function return_row(row,other_content)
         row[header_to_num[Symbol("name.id")]] = "N/A"
         row[header_to_num[:name]] = "N/A"
         return vcat(row,[other_content])
     end
-    if !is_name(name)
+    if !is_name_(name)
         id_ = row[header_to_num[Symbol("name.id")]]
         if id_ != "N/A"
             other_content = name * " " * id_
