@@ -122,7 +122,7 @@ function is_name_inline(content)
     if occursin(r",$", content)
         return false
     end
-    possible_titles = ["Mr","Ms","Miss","Mrs","Dr","Prof","Sir","The Hon","Hon"]
+    possible_titles = ["Mr","Ms","Miss","Mrs","Dr","Prof","Sir","The Hon","Hon","Senator"]
     if true in occursin.(possible_titles, content)
         content = replace(content, r"^(?i)(Mr|Mrs|Ms|Miss|Dr|Prof|Sir|The Hon|Hon)\.?\s*" => "") |> x -> replace(x, r"[^A-Za-z\s]" => "")
         if length(content) > 1

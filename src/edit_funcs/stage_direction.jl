@@ -14,7 +14,8 @@ function stage_direction(input_fn,output_fn,::Type{<:AbstractEditPhase})
     r"(?i)Message from the Governor-General recommending appropriation announced",
     r"(?i)Report adopted",
     r"(?i)Bill read a .+ time",
-    r"(?i)Leave granted"
+    r"(?i)Leave granted",
+    r"(?i)Senate adjourned"
     ]
 
 #    stage_directions = ["A division having been called in the House of Representatives","Sitting suspended from","Debate adjourned", "Federation Chamber adjourned at","Question agreed to","Question resolved in the affirmative","Bill read a second time","Message from the Governor-General recommending appropriation announced","Report adopted",r"Bill read a .+ time","Leave granted"]
