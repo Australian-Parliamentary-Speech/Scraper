@@ -1,14 +1,14 @@
 
-function clean_gs_files()
+function clean_gs_files(gold_standard_path)
     test_dir = @__DIR__
-    original_gs_dir = joinpath([test_dir,"gold_standard","original"])
+    original_gs_dir = joinpath([gold_standard_path,"original"])
     gs_csvs = get_all_csvnames(original_gs_dir)
     for gs_csv in gs_csvs
         csvfile = CSV.File(gs_csv)
         headers_ = copy(propertynames(csvfile))
         header_to_num = edit_set_up(headers_)
         rows = eachrow(csvfile)
-        output_fn = joinpath([test_dir, "gold_standard",basename(gs_csv)])
+        output_fn = joinpath([gold_standard_path,basename(gs_csv)])
         open(output_fn, "w") do io
             write_row_to_io(io,string.(headers_))
             for row in rows

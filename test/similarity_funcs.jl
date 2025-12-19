@@ -37,7 +37,7 @@ end
 
 function gs_sample_content_match(gs_content,sample_content,test_setup)
     if test_setup.which_test == :exact
-        return content_distance_score(gs_content,sample_cell)
+        return content_distance_score(gs_content,sample_content)
     elseif test_setup.which_test == :fuzzy
         return fuzzy_bar_match(gs_content,sample_content,test_setup)
     end
@@ -232,7 +232,6 @@ function compare_row(sample_rows, gs_row, header_to_num,test_setup)
     end
     
     the_correct_row = find_correct_row(sample_rows,content_num,gs_content,test_setup)
-#    @show the_correct_row
     if the_correct_row[1] != 0
         sample_row = get_row(sample_rows[the_correct_row[1]])
         row_score = 0

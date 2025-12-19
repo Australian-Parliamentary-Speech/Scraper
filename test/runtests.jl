@@ -21,6 +21,7 @@ import ParlinfoSpeechScraper.RunModule.Utils.create_dir as create_dir
 struct test_struct
     skip_cols::Vector{Any}
     which_test::Symbol
+    #fuzzy_bar_length, fuzzy_interval 
     fuzzy_search::Vector{Int64}
     toml::Any
 end
@@ -116,25 +117,24 @@ end
 
 
 @testset verbose = true "Entire set" begin
-    which_house = :house
+    which_house = :senate
     inputpath, outputpath, toml = setup(which_house)
-    test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs"])
-    create_dir(test_output_path)
-
     #gold standard
     if true
         @test begin
             print("Gold standard test running ...")
+            test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs","$which_house"])
+            create_dir(test_output_path)
             if false
                 skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
             else
                 skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other,:question_flag,:answer_flag,:interjection_flag,:speech_flag,:petition_flag,:quote_flag,:motionnospeech_flag,:chamber_flag,:subdebateinfo,:debateinfo]
             end
             which_test = [:exact,:fuzzy][2]
-            fuzzy_search = [8,2]
+            fuzzy_search = [5,2]
             test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
-            gold_standard_path = joinpath(@__DIR__,"gold_standard")
-            clean_gs_files()
+            gold_standard_path = joinpath([@__DIR__,"gold_standard","$which_house"])
+            clean_gs_files(gold_standard_path)
             gold_standard_csvs = get_all_csvnames(gold_standard_path)
             test_output_path_csv = joinpath(test_output_path,"CSVs")
             create_dir(test_output_path_csv)
