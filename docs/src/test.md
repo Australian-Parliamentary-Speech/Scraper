@@ -37,18 +37,18 @@ There are two key challenges when comparing two CSV files:
 To address this, we use the **speech content as the row identifier**, since it is typically the most unique attribute.
 
 
-## Two Matching Modes
+#### Two Matching Modes
 
 We support two matching modes:
 
-### 1. Exact Mode
+##### 1. Exact Mode
 
 In **exact mode**, the full speech text from the gold standard is used to find an identical match in the scraped output.
  
 Limitation: even a tiny difference—like a missing space or a changed quotation mark—can prevent a match.This can cause the score to appear lower than it should be.
 
 
-### 2. Fuzzy Mode
+##### 2. Fuzzy Mode
 
 To reduce false mismatches, **fuzzy mode** uses **partial text sampling** instead of the full speech.
 
