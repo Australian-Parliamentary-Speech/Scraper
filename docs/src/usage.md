@@ -23,21 +23,14 @@ In this section, we give a comprehensive explanation of all the toml options, an
 * output\_path (under [ global ]): 
     - where to save the final CSV files after processing
     Example: if set to "../../Outputs/HouseCSV/hansard", files will be saved there 
-    - Example: if set to "../../Outputs/HouseCSV/hansard", files will be saved there
-    output\_path = "../../Outputs/HouseCSV/hansard"
-
-* filename (under [[ XML ]]):
-    - This is optional, only put in if you want to run one single file
-    - Path to a specific XML file to process
-    - Example: "house\_xmls/1983/1983\_11\_09.xml" processes just that one file
 
 * path (under [[ XML\_DIR ]]):
-    - This is optional, only put in if you want to run the entire directory. You can either run one single file or one entire directory. you need to have either path or filename present.
-    - Folder containing XML files to process
-    - Example: "house\_xmls" will process all XML files in that folder
+    - You can either run one single file or one entire directory. 
+    - Example for an entire directory: "house\_xmls" will process all XML files in that folder
+    - Example for a single file: "house\_xmls/1983/1983\_11\_09.xml" processes just that one file
+
 
 * which\_house (under [general\_options] )
-    - Which parliamentary house to scrape
     - Options: "house" for House of Representatives, "senate" for Senate
  
 * year (under [general\_options])
@@ -46,24 +39,25 @@ In this section, we give a comprehensive explanation of all the toml options, an
     - Example: [2000,2000] processes only year 2000
 
 * xml\_parsing (under [general\_options])
-    - Whether to extract data from XML files
+    - Whether to skip scraping 
     - true = extract data from XML files
-    - false = skip scraping, but editing steps will still run on existing data
+    - false = skip scraping, assuming there exists outputs 
 
 * edit (under [general\_options])
     - Processing steps to clean and format the data
     - These run in the order listed - each step processes the output of the previous step
-    - Common steps: "speaker\_time", "re", "free\_node", "flatten", "column\_decorate"
+    - Common steps: "speaker\_time", "re", "free\_node", "flatten", "column\_decorate" (more explanation see below)
+    - The order matters. It is strongly recommended to use the list provided in the sample file for the best outcome 
 
 * csv\_edit 
     - Whether to apply editing operations to CSV files
-    - true = apply edits to make data cleaner and more usable
+    - true = apply edits 
     - false = skip edits, keep raw extracted data
 
 * run\_xml\_toggle
     - Master switch for all XML processing functions
     - true = run all XML processing steps normally
-    - false = skip all XML functions, only write samples or remove processing steps
+    - false = skip all XML functions, only write samples or remove processing steps. 
 
 * sample
     - Whether to create sample output files for testing
@@ -82,7 +76,8 @@ In this section, we give a comprehensive explanation of all the toml options, an
     - Whether to clean up XML filenames for inconsistent date formats
     - true = rename files to standard format
     - false = keep original filenames
- 
+
+
 ### Quick start input files
 
 For a single xml file (for senate):
@@ -167,10 +162,59 @@ For a directory of xmls (for House):
     remove_nums = [0,1,2,3,4,5,6]
     xml_name_clean = false
 ```
+## Edit steps
+
+### stage\_direction
+
+Identifies and standardises procedural (non-speech) rows.
+
+- Detects parliamentary stage directions using known procedural phrases
+- Clears speaker attribution for procedural rows
 
 
-## Outputs
+### speaker\_time (often not used)
+Extracts timing and auxiliary information from speech rows.
 
-Where the output files go can be edited by the user in the toml file shown above. Currently, they are stored in Outputs/hansard.
+- Separates embedded time markers from speech content into a dedicated time column
+- Adds new columns for speaker label, time, and other extracted metadata
+- Moves non-speaker or descriptive labels into an auxiliary “Other” field
+
+### re
+
+Extracts speaker information and cleans speech text.
+
+- Identifies speaker names embedded in speech content and moves them to the speaker column
+- Detects and labels interjections
+- Makes an attempt to infer missing speaker names from structured text
+- Removes speaker labels, punctuation artefacts, and formatting noise from speech content
+- Drops rows with empty speech content
+
+### free\_node
+
+Resolves unattributed (“free-flowing”) rows within a debate.
+
+- Assigns free or missing speaker names to the most recent valid speaker in the same debate
+- Attributes quoted or continued speech to the correct speaker where possible
+- Does not cross debate or sub-debate boundaries
+- Removes placeholder speaker labels from the output
+
+### flatten
+
+Flattens multi-row speeches into single rows.
+
+- Merges consecutive speech rows from the same speaker into one row
+- Appends child speech content to the parent speech
+- Stops merging when a new speaker, debate context, or stage direction is encountered
+- Ensures each speech appears only once in the output
+
+### Final edit stage
+
+Applies final cleaning and standardisation to the CSV output.
+
+- Fills missing speaker names from available speaker metadata
+- Reclassifies rows with speaker information as speech
+- Cleans speech text by removing leading punctuation and excess whitespace
+- Drops rows with empty speech content
+ 
 
 

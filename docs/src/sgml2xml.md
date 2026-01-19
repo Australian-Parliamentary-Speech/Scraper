@@ -28,7 +28,7 @@ The XML files should be in the directory senate\_xmls or house\_xmls
 hansard.dtd (converts sgml to xml)
 HansardSGML.csv (all the links required)
 sgml2xml.jl
-download\_utils.jl (hidden file)
+download\_utils.jl 
 run (bash script)
 
 
