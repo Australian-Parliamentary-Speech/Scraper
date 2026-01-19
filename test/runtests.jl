@@ -43,10 +43,11 @@ function test_input_setup()
     toml = setup_input(tomlpath, false)
     test_params = toml["TEST_PARAMS"]
     skip_cols = @. Symbol(test_params["SKIP_COLS"])
-    which_test = Symbol(test_params["WHICH_TEST"])
+    which_sim_test = Symbol(test_params["WHICH_SIM_TEST"])
     fuzzy_search = test_params["FUZZY_SEARCH"]
     which_house = test_params["WHICH_HOUSE"]
-    return skip_cols, which_test, fuzzy_search, which_house
+    which_tests = test_params["WHICH_TESTS"]
+    return skip_cols, which_sim_test, fuzzy_search, which_house, which_tests
 end
 
 function find_date(str)
@@ -129,17 +130,16 @@ end
 
 
 @testset verbose = true "Entire set" begin
-    skip_cols, which_test, fuzzy_search, which_house = test_input_setup()
+    skip_cols, which_sim_test, fuzzy_search, which_house, which_tests = test_input_setup()
     inputpath, outputpath, toml = setup(which_house)
-
     #gold standard
-    if true
+    if "gold_standard" ∈ which_tests
         @test begin
             print("Gold standard test running ...")
             test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs","$which_house"])
             create_dir(test_output_path)
 
-            test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml,which_house)
+            test_setup = test_struct(skip_cols,which_sim_test,fuzzy_search,toml,which_house)
             gold_standard_path = joinpath([@__DIR__,"gold_standard","$which_house"])
             clean_gs_files(gold_standard_path)
             gold_standard_csvs = get_all_csvnames(gold_standard_path)
@@ -150,7 +150,7 @@ end
                 compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path_csv,gold_standard_csvs)
             end
 
-            if false
+            if "MP_specific_gs" ∈ which_tests
                 print("Gold standard MP-specific test running ...")
                 dates = all_GS_dates(gold_standard_csvs)
                 date_to_list = MPs_not_perfect(dates,test_output_path_csv)
@@ -191,7 +191,7 @@ end
 
     end
 
-    if false
+    if "toy_xml_test" ∈ which_tests
         #Test XML samples
         @test begin
             print("Test XML test running ...")
@@ -238,7 +238,7 @@ end
         end
     end
 
-    if false
+    if "summary" ∈ which_tests
         print("Dates...")
         @test begin
             sitting_house, sitting_senate = read_sitting_dates(@__DIR__) 
@@ -252,10 +252,12 @@ end
             csvs = csv[:, 2]
             only_in_xml = setdiff(xmls, csvs)
             only_in_csv = setdiff(csvs, xmls)
-            if which_house == :senate
+            if which_house == "senate"
                 only_in_sitting = setdiff(sitting_senate,xmls)
-            elseif which_house == :house
+            elseif which_house == "house"
                 only_in_sitting = setdiff(sitting_house,xmls)
+            else
+                @assert "which_house is ill-defined"
             end
             open(joinpath(["test_outputs","dates","only_in_xml_$(which_house).csv"]), "w") do io
                 for date in only_in_xml

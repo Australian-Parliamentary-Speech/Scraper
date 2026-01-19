@@ -132,7 +132,7 @@ function process_node(node::Node{PNode{Phase2011}},node_tree)
         end
 
 
-        if typeof(node_tree[end]) <: Node{<:InterTalkNode}
+        if typeof(node_tree[end]) <: Node{<:InterTalkNode} && length(node_tree)>1
             flag_parent = node_tree[end-1]
         else
             flag_parent = node_tree[end]
