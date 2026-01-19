@@ -62,13 +62,27 @@ To reduce false mismatches, **fuzzy mode** uses **partial text sampling** instea
 This allows us to match rows even when minor differences exist.
 
 
-## Scoring
+#### Scoring
 
-Once a row is matched, the similarity score for that row is calculated as:
+The test system implemented in `test/runtests.jl` provides a comprehensive framework for comparing generated CSV outputs against gold-standard CSV files and computing similarity ratios.
+
+The system compares generated CSV files with gold-standard files stored in `test/gold_standard/`. For each test run, sample CSV files are first copied from the main output directory into `test/sample_csv/`. The similarity between each pair of files is then computed using the `similarity_csv` function defined in `similarity_funcs.jl`.
+
+The comparison process works by first matching rows between the gold-standard file and the sample file based on speech content. Once a row is matched, the similarity score for that row is calculated as:
 
 Row similarity = (number of matching cells) / (total number of cells)
 
-The test system in `test/runtests.jl` implements a comprehensive comparison framework between gold standard CSV files and generated sample CSV files with similarity ratio calculation. The system compares generated CSV outputs against gold standard files stored in `test/gold_standard/` by first copying sample files from the main output directory to `test/sample_csv/`, then calculating two types of similarity ratios using the `similarity_csv` function in `similarity_funcs.jl:1`. The comparison works by matching rows based on content fields, then checking all other columns except those specified in the `skip_cols` parameter. It returns two ratios: `success/length(gs\_rows)` (exact matches) and `content_success/length(gs\_rows)` (content-based matches), allowing users to specify which columns to ignore during comparison via the `test_setup.skip_cols` vector in the `test_struct` defined at `runtests.jl:16-18`. The system can be run by uncommenting lines 150-155 in `runtests.jl` and customizing the `skip_cols` array with column names like `:speaker_no`, `:stage_direction_flag`, or `Symbol("page.no")` to exclude specific columns from the similarity calculation.
+where all remaining columns are compared, except for those explicitly excluded via the `skip_cols` parameter. This allows users to ignore metadata fields that are not relevant for assessing scrape quality.
+
+The system returns **two similarity ratios**:
+
+- **Similarity ratio**  
+  The similarity ratio between the generated sample CSV file and the corresponding gold-standard CSV file.
+
+- **Maximum similarity ratio**  
+  The similarity ratio obtained by comparing the gold-standard CSV file with itself.
+
+The maximum similarity ratio is generally **less than 1**, even though the files being compared are identical. This is expected behaviour and reflects inherent limitations of content-based row matching. In particular, some speeches consist of very short or highly repetitive phrases (such as *“hear, hear”*), which are not unique identifiers. In such cases, the matching algorithm cannot always determine unambiguously which row corresponds to which, leading to a non-perfect similarity score even for identical files.
 
 ## Input test toml file
 This testing requires two toml files, one is the same input file for the Scraper program (with slight modification of the output\_path), and the other one specifically designed for this testing suite. 
