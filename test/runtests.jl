@@ -146,7 +146,7 @@ end
             test_output_path_csv = joinpath(test_output_path,"CSVs")
             create_dir(test_output_path_csv)
 
-            if true
+           if true
                 compare_gold_standard(outputpath, @__DIR__,test_setup, test_output_path_csv,gold_standard_csvs)
             end
 

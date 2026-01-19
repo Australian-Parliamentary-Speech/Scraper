@@ -6,7 +6,7 @@ LOGGING = true
 OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs/Output"
 
 [METADATA]
-TIME = "13:47:04"
+TIME = "14:02:35"
 ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs/test.toml"
 DATE = "2026-01-19"
 
