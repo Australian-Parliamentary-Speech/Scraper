@@ -92,11 +92,11 @@ For a single xml file (for senate):
     which_house = "senate"
     year = [1901,2025]
     xml_parsing = true
-    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
+    edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
     csv_edit = true
     run_xml_toggle = true
-    sample = false
-    remove_nums = [0,1,2,3,4,5,6]
+    sample = true
+    remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false
 ```
 Note that if the date for the single xml is out of range from the year defined, the program might not run.
@@ -124,44 +124,57 @@ For a directory of xmls (for Senate):
 For a single xml file (for House):
 ```
 [ global ]
-    output_path = "../../Outputs/HouseCSV/hansard"
+    output_path = "../Outputs/HouseCSV/hansard"
 
 [[ XML ]]
-    filename = "house_xmls/1999/1999_06_25.xml"
+    filename = "hansard/house_xmls/2010/2010_02_10.xml"
 
 [ general_options ]
-    which_house = "house"
+    which_house = "senate"
     year = [1901,2025]
     xml_parsing = true
-    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
+    edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
     csv_edit = true
     run_xml_toggle = true
-    sample = false
-    remove_nums = [0,1,2,3,4,5,6]
+    sample = true
+    remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false
 ```
+
 Note that if the date for the single xml is out of range from the year defined, the program might not run.
 
 For a directory of xmls (for House):
 
 ```
 [ global ]
-    output_path = "../../Outputs/HouseCSV/hansard"
+    output_path = "../Outputs/HouseCSV/hansard"
+
+###choose one: XML or XML_DIR
+#[[ XML ]]
+#    filename = "hansard/house_xmls/2010/2010_02_10.xml"
 
 [[ XML_DIR ]]
-    path = "house_xmls"
+    path = "../../Download/house_xmls"
+
+[[ XML_DIR ]]
+    path = "../../sgml2xml/house_reserve_xmls"
+
+[[ XML_DIR ]]
+    path = "../../sgml2xml/house_xmls"
+
 
 [ general_options ]
     which_house = "house"
     year = [1901,2025]
     xml_parsing = true
-    edit = ["speaker_time","re","free_node","flatten","flatten","column_decorate","re"]
+    edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
     csv_edit = true
     run_xml_toggle = true
-    sample = false
-    remove_nums = [0,1,2,3,4,5,6]
+    sample = true
+    remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false
 ```
+
 ## Edit steps
 
 ### stage\_direction
@@ -207,7 +220,7 @@ Flattens multi-row speeches into single rows.
 - Stops merging when a new speaker, debate context, or stage direction is encountered
 - Ensures each speech appears only once in the output
 
-### Final edit stage
+### final\_re
 
 Applies final cleaning and standardisation to the CSV output.
 
