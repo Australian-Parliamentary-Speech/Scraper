@@ -127,7 +127,7 @@ function run_ParlinfoSpeechScraper(toml::Dict{String, Any})
     xml_dirs = get(toml,"XML_DIR",[])
     for xml_dir in xml_dirs
         path = xml_dir["PATH"]
-        @info "$path is being read ..."
+        @show "$path is being read ..."
         if ! isabspath(path)
             path = joinpath(input_path,path)
         end
@@ -205,7 +205,7 @@ function copy_sample_file(output_path,num)
             command = `cp $(fn) $sample_dir`
             run(command)
         else
-            @info "Uploading $(fn) failed: file not found"
+            @info "Sampling $(fn) failed: file not found"
         end
     end
 end
