@@ -1,0 +1,17 @@
+[GLOBAL]
+BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs/"
+INPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs"
+LOG_FILE = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs/Output/log.txt"
+LOGGING = true
+OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs/Output"
+
+[METADATA]
+TIME = "13:47:04"
+ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/test/Inputs/test.toml"
+DATE = "2026-01-19"
+
+[TEST_PARAMS]
+WHICH_TEST = "fuzzy"
+SKIP_COLS = ["speaker_no", "non_speech_flag", "page.no", "name", "electorate", "party", "role", "path", "Speaker", "Time", "Other"]
+WHICH_HOUSE = "house"
+FUZZY_SEARCH = [5, 2]

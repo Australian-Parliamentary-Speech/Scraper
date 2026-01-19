@@ -1,21 +1,27 @@
 [ global ]
-    output_path = "../Outputs/HouseCSV/hansard"
+    output_path = "../../Outputs/SenateCSV/hansard"
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "house_xmls/2011/2011_09_13.xml"
+#    filename = "senate_xmls/2020/2020_02_12.xml"
 
 
 [[ XML_DIR ]]
-    path = "hansard/house_xmls"
+    path = "hansard/senate_xmls"
 
 [ general_options ]
-    which_house = "house"
+    which_house = "senate"
     year = [1901,2025]
+    #false to skip scraping, edit still remains
     xml_parsing = true
     edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
+    #false to skip edits
     csv_edit = true
+    #false to skip all run xml functions and only to write samples or remove steps
     run_xml_toggle = true
     sample = true
     remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false
+
+
+

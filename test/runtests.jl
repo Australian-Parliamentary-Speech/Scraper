@@ -24,10 +24,11 @@ struct test_struct
     #fuzzy_bar_length, fuzzy_interval 
     fuzzy_search::Vector{Int64}
     toml::Any
+    which_house::String
 end
 
 function setup(which_house)
-    tomlpath = "$(which_house).toml"
+    tomlpath = joinpath("Inputs","$(which_house).toml")
     toml = setup_input(tomlpath,false)
     global_options = toml["GLOBAL"]
     outputpath = global_options["OUTPUT_PATH"]
@@ -35,6 +36,17 @@ function setup(which_house)
     xml_path = xml_path_toml["PATH"]
     inputpath = joinpath("..","Inputs",xml_path)
     return inputpath,outputpath,toml
+end
+
+function test_input_setup()
+    tomlpath = joinpath("Inputs","test.toml")
+    toml = setup_input(tomlpath, false)
+    test_params = toml["TEST_PARAMS"]
+    skip_cols = @. Symbol(test_params["SKIP_COLS"])
+    which_test = Symbol(test_params["WHICH_TEST"])
+    fuzzy_search = test_params["FUZZY_SEARCH"]
+    which_house = test_params["WHICH_HOUSE"]
+    return skip_cols, which_test, fuzzy_search, which_house
 end
 
 function find_date(str)
@@ -89,7 +101,7 @@ end
 
 
 function compare_gold_standard(outputpath, testpath,test_setup,test_output_path_csv,gold_standard_csvs)
-    sample_csv_path = joinpath(testpath,"sample_csv")
+    sample_csv_path = joinpath([testpath,"sample_csv", test_setup.which_house])
     create_dir(sample_csv_path)
     get_sample_csvs(outputpath,gold_standard_csvs,sample_csv_path,test_setup)
     similarity_ratio(gold_standard_csvs,sample_csv_path, test_output_path_csv,test_setup) 
@@ -117,22 +129,17 @@ end
 
 
 @testset verbose = true "Entire set" begin
-    which_house = :senate
+    skip_cols, which_test, fuzzy_search, which_house = test_input_setup()
     inputpath, outputpath, toml = setup(which_house)
+
     #gold standard
     if true
         @test begin
             print("Gold standard test running ...")
             test_output_path = joinpath([@__DIR__,"test_outputs","gs_outputs","$which_house"])
             create_dir(test_output_path)
-            if false
-                skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other]
-            else
-                skip_cols = [:speaker_no,:non_speech_flag,Symbol("page.no"),:name,:electorate,:party,:role,:path,:Speaker,:Time,:Other,:question_flag,:answer_flag,:interjection_flag,:speech_flag,:petition_flag,:quote_flag,:motionnospeech_flag,:chamber_flag,:subdebateinfo,:debateinfo]
-            end
-            which_test = [:exact,:fuzzy][2]
-            fuzzy_search = [5,2]
-            test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml)
+
+            test_setup = test_struct(skip_cols,which_test,fuzzy_search,toml,which_house)
             gold_standard_path = joinpath([@__DIR__,"gold_standard","$which_house"])
             clean_gs_files(gold_standard_path)
             gold_standard_csvs = get_all_csvnames(gold_standard_path)
