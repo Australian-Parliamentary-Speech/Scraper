@@ -1,7 +1,7 @@
 #Inputs
-Inputs/senate_xmls/
-Inputs/house_xmls/
-Inputs/house_test_xmls/
+Inputs/hansard/senate_xmls/
+Inputs/hansard/house_xmls/
+Inputs/hansard/house_test_xmls/
 Outputs/HouseCSV/hansard/
 Outputs/SenateCSV/hansard/
 **/*.png
