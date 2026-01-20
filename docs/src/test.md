@@ -108,13 +108,13 @@ For diagnostic purposes, the test writes lists of problematic dates to:
 The test always passes and is intended to provide a diagnostic summary rather than enforce a hard failure.
 
 
-### Toy XML Tests (Edge-Case XML Testing)
+## Toy XML Tests (Edge-Case XML Testing)
 
 This test block implements **toy XML tests**, which are designed to validate the XML parsing pipeline using small, hand-crafted XML files that target specific edge cases.
 
 The test runs only when `"toy_xml_test"` is included in `which_tests`.
 
-#### Purpose
+### Purpose
 
 The goal of these tests is to ensure correct behaviour on edge cases that are:
 - small and easy to inspect,
@@ -123,7 +123,7 @@ The goal of these tests is to ensure correct behaviour on edge cases that are:
 
 By working with minimal XML examples, it becomes straightforward to verify whether specific XML structures are handled correctly.
 
-#### How the Test Works
+### How the Test Works
 
 - The test iterates over multiple XML parsing phases:
   - `AbstractPhase`
@@ -143,7 +143,7 @@ By working with minimal XML examples, it becomes straightforward to verify wheth
 
 The test always returns `true`; its role is to provide validation feedback rather than enforce a hard failure.
 
-#### Adding a New Edge Case
+### Adding a New Edge Case
 
 Adding a new XML edge case is intentionally simple. Users only need to insert two lines into Scraper when generating the test XML:
 
