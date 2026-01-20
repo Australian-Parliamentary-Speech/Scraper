@@ -1,6 +1,10 @@
 # ParlinfoSpeechScraper  
 
-This project is divided into three parts, which correspond to three repos: Download, sgml2xml, and Scraper. The repo Download downloads the XML files directly from the Parlinfo roadmap. The repo sgml2xml downloads the sgml files and convert them into XML files. This is for the years where the XML files are missing. Finally Scraper parses the XML files and produces CSV files that contain all the speech information. The detailed documentation is in the documentation page [here](https://australian-parliamentary-speech.github.io/Scraper/). 
+This project is divided into three parts, which correspond to three repos: Download, sgml2xml, and Scraper. The repo Download downloads the XML files directly from the Parlinfo roadmap. The repo sgml2xml downloads the sgml files and convert them into XML files. This is for the years where the XML files are missing. 
+
+There are some XML files that are corruptped or missing. For those we could recover, we have put them into Inputs/ in the Scraper repo.
+
+Finally Scraper parses the XML files and produces CSV files that contain all the speech information. The detailed documentation is in the documentation page [here](https://australian-parliamentary-speech.github.io/Scraper/). 
 
 # Windows users
 
