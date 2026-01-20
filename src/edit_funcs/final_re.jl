@@ -33,7 +33,7 @@ function if_speaker_then_speech(row,header_to_num)
     speaker, id = row[header_to_num[:name]],row[header_to_num[Symbol("name.id")]]
     if speaker != "N/A" || id != "N/A"
         if row[header_to_num[:non_speech_flag]] == 1
-            row[header_to_num[:non_speech_flag]] == 0
+            row[header_to_num[:non_speech_flag]] = 0
             row[header_to_num[:speech_flag]] = 1
         end
     end
