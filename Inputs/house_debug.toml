@@ -2,12 +2,12 @@
     output_path = "../Outputs/HouseCSV/hansard"
 
 ###choose one: XML or XML_DIR
-#[[ XML ]]
-#    filename = "hansard/house_xmls/2010/2010_02_10.xml"
+[[ XML ]]
+    filename = "hansard/house_xmls/1996/1996_12_12.xml"
 
 
-[[ XML_DIR ]]
-    path = "hansard/house_xmls"
+#[[ XML_DIR ]]
+#    path = "hansard/house_xmls"
 
 
 

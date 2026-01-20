@@ -23,13 +23,22 @@ function define_flags(node::Node{<:AbstractNode{PhaseSGML}},parent_node,node_tre
     end
     chamber = find_chamber(node,node_tree)
 
-#    # add a non-speech node in there
-#    title = find_section_title(node_tree,node.soup,DebateNode{PhaseSGML})
-#    if !(1 ∈ flags) && (node.headers_dict["name"] =="N/A") && (title == "NOTICES" || title == "PAPERS")
-#        node.headers_dict["nonspeech"] = 1
-#    else
-#        node.headers_dict["nonspeech"] = 0
-#    end
+    # recognize the quote through weird formatting
+    font = findfirst_in_subsoup(node.node.path,"/@font-size",node.soup)
+    if !isnothing(font)
+        if font.content == "-=2"
+            parent_debate_node = find_prev_node_from_tree(node_tree, DebateNode)
+            if !isnothing(parent_debate_node)
+                #attributes
+                type = findfirst_in_subsoup(parent_debate_node.node.path,"/@type",node.soup)
+                if !isnothing(type)
+                    if type.content != "Bill"
+                        node.headers_dict["quote_flag"] = 1
+                    end
+                end
+            end
+        end 
+    end
 end
 
 

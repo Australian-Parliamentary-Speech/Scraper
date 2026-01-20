@@ -20,18 +20,21 @@ function is_first_node_type(node::Node{PNode{PhaseSGML}},parent_node,allowed_nam
     if typeof(parent_node) <: Node{<:MotionnospeechNode}
         return true
     end
+
     if !hasprevnode(node.node)
-        return true
+       return true
     end
+    
     if hasprevnode(prevnode(node.node))
-        if nodename(prevnode(prevnode(node.node))) == "talker"
-            return true
+        if nodename(prevnode(prevnode(node.node))) == "talker" || nodename(prevnode(prevnode(node.node))) == "talk.start"
+           return true
         else
             return false
         end
     else
         return false
     end
+
 end
 
 
@@ -77,26 +80,5 @@ function process_node(node::Node{PNode{PhaseSGML}},node_tree)
     return construct_row(node,node_tree)
 end
 
-
-function define_flags(node::Node{PNode{PhaseSGML}},parent_node,node_tree)
-    ParentTypes = [QuestionNode,AnswerNode,InterjectionNode,SpeechNode,PetitionNode,QuoteNode_{PhaseSGML},MotionnospeechNode]
-    headers = ["question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag"]
-    flags = map(node_type -> parent_node isa Node{<:node_type} ? 1 : 0, ParentTypes)
-    header_and_flag = zip(headers,flags)
-    for couple in header_and_flag
-        node.headers_dict[couple[1]] = couple[2]
-    end
-    chamber = find_chamber(node,node_tree)
-
-    # recognize the quote through weird formatting
-    font = findfirst_in_subsoup(node.node.path,"/@font-size",node.soup)
-    if !isnothing(font)
-        if font.content == "-=2"
-            node.headers_dict["quote_flag"] = 1
-        end 
-    end
- 
-
-end
 
 

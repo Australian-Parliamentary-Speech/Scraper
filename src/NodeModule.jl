@@ -278,6 +278,9 @@ function get_talker_from_parent(node::Node,parent_node::Node)
     soup = parent_node.soup
     parent_node = parent_node.node
     talker_node = findfirst_in_subsoup(parent_node.path,"//talker",soup)
+     if occursin("The Law and Justice Legislation Amendment Bill 1996 amends", node.node.content)
+        @show talker_node.content
+    end
    
     function find_content(xpath)
         talker_content_node = findfirst_in_subsoup(talker_node.path,xpath,soup)
@@ -614,6 +617,16 @@ function is_name(name)
 
     occurs = @. occursin(["Committee"],name)
     return iszero(occurs)
+end
+
+function find_prev_node_from_tree(node_tree, node_type)
+    for node in reverse(node_tree)
+        if node isa Node{<:node_type}
+            return node
+        end
+    end
+    @info "no prev node found for $node_type"
+    return missing
 end
 
 

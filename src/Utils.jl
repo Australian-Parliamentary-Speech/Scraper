@@ -24,7 +24,6 @@ function create_dict_multiple_values(keys,values)
     return d
 end
 
-
 function edit_row(row)
     edit_row = ""
     for i in row
