@@ -28,7 +28,7 @@ function define_flags(node::Node{<:AbstractNode{PhaseSGML}},parent_node,node_tre
     if !isnothing(font)
         if font.content == "-=2"
             parent_debate_node = find_prev_node_from_tree(node_tree, DebateNode)
-            if !isnothing(parent_debate_node)
+            if !ismissing(parent_debate_node)
                 #attributes
                 type = findfirst_in_subsoup(parent_debate_node.node.path,"/@type",node.soup)
                 if !isnothing(type)

@@ -86,7 +86,7 @@ For a single xml file (for senate):
     output_path = "../../Outputs/SenateCSV/hansard"
 
 [[ XML ]]
-    filename = "senate_xmls/1999/1999_06_25.xml"
+    filename = "hansard/senate_reserve_xmls/1999/1999_06_25.xml"
 
 [ general_options ]
     which_house = "senate"
@@ -108,7 +108,7 @@ For a directory of xmls (for Senate):
     output_path = "../../Outputs/SenateCSV/hansard"
 
 [[ XML_DIR ]]
-    path = "senate_xmls"
+    path = "hansard/senate_reserve_xmls"
 
 [ general_options ]
     which_house = "senate"
@@ -127,10 +127,10 @@ For a single xml file (for House):
     output_path = "../Outputs/HouseCSV/hansard"
 
 [[ XML ]]
-    filename = "hansard/house_xmls/2010/2010_02_10.xml"
+    filename = "hansard/house_reserve_xmls/2010/2010_02_10.xml"
 
 [ general_options ]
-    which_house = "senate"
+    which_house = "house"
     year = [1901,2025]
     xml_parsing = true
     edit = ["speaker_time","re","stage_direction","free_node","flatten","flatten","column_decorate","final_re"]
@@ -143,7 +143,7 @@ For a single xml file (for House):
 
 Note that if the date for the single xml is out of range from the year defined, the program might not run.
 
-For a directory of xmls (for House):
+For a directory of xmls (for House), this is also anexample where you can run multiple directories:
 
 ```
 [ global ]
@@ -151,7 +151,7 @@ For a directory of xmls (for House):
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
-#    filename = "hansard/house_xmls/2010/2010_02_10.xml"
+#    filename = "hansard/house_reserve_xmls/2010/2010_02_10.xml"
 
 [[ XML_DIR ]]
     path = "../../Download/house_xmls"

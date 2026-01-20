@@ -28,7 +28,7 @@ struct test_struct
 end
 
 function setup(which_house)
-    tomlpath = joinpath("Inputs","$(which_house).toml")
+    tomlpath = joinpath("test_inputs","$(which_house).toml")
     toml = setup_input(tomlpath,false)
     global_options = toml["GLOBAL"]
     outputpath = global_options["OUTPUT_PATH"]
@@ -39,7 +39,7 @@ function setup(which_house)
 end
 
 function test_input_setup()
-    tomlpath = joinpath("Inputs","test.toml")
+    tomlpath = joinpath("test_inputs","test.toml")
     toml = setup_input(tomlpath, false)
     test_params = toml["TEST_PARAMS"]
     skip_cols = @. Symbol(test_params["SKIP_COLS"])

@@ -625,7 +625,6 @@ function find_prev_node_from_tree(node_tree, node_type)
             return node
         end
     end
-    @info "no prev node found for $node_type"
     return missing
 end
 

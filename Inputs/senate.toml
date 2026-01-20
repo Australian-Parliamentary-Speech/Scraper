@@ -16,7 +16,7 @@
     path = "../../sgml2xml/senate_xmls"
 
 [[ XML_DIR ]]
-    path = "../../sgml2xml/senate_reserve_xmls"
+    path = "hansard/senate_reserve_xmls"
 
 
 [ general_options ]
