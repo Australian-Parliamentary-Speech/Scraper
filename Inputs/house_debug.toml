@@ -9,7 +9,8 @@
 [[ XML_DIR ]]
     path = "hansard/house_xmls"
 
-
+[[ XML_DIR ]]
+    path = "hansard/house_reserve_xmls"
 
 [ general_options ]
     which_house = "house"
