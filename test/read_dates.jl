@@ -45,7 +45,7 @@ end
 
 
 function read_sitting_dates(testpath)
-    csvfile = CSV.File(joinpath([testpath,"test_outputs","dates","sitting_dates.csv"]))
+    csvfile = CSV.File(joinpath([testpath,"test_inputs","sitting_dates.csv"]))
     rows = eachrow(csvfile)
     house = []
     senate = []
@@ -60,6 +60,11 @@ function read_sitting_dates(testpath)
         if day < 10
             day = "0$day"
         end
+        ##test##
+        if year == 1996 && month == 12 && day == 13
+            @show row
+        end
+        #
         if_senate = row[3]
         if_house = row[2]
         if if_senate

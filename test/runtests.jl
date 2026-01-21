@@ -253,9 +253,12 @@ end
             only_in_xml = setdiff(xmls, csvs)
             only_in_csv = setdiff(csvs, xmls)
             if which_house == "senate"
-                only_in_sitting = setdiff(sitting_senate,xmls)
+                only_in_sitting_not_xml = setdiff(sitting_senate,xmls)
+                only_in_sitting_not_csv = setdiff(sitting_senate,csvs) 
             elseif which_house == "house"
-                only_in_sitting = setdiff(sitting_house,xmls)
+                only_in_sitting_not_xml = setdiff(sitting_house,xmls)
+                only_in_sitting_not_csv = setdiff(sitting_house,csvs)
+ 
             else
                 @assert "which_house is ill-defined"
             end
@@ -264,11 +267,17 @@ end
                     println(io, date)
                 end
             end
-            open(joinpath(["test_outputs","dates","only_in_sitting_$(which_house).csv"]), "w") do io
-                for date in only_in_sitting
+            open(joinpath(["test_outputs","dates","only_in_sitting_not_xml_$(which_house).csv"]), "w") do io
+                for date in only_in_sitting_not_xml
                     println(io, date)
                 end
             end
+            open(joinpath(["test_outputs","dates","only_in_sitting_not_csv_$(which_house).csv"]), "w") do io
+                for date in only_in_sitting_not_csv
+                    println(io, date)
+                end
+            end
+ 
             true
         end
     end
