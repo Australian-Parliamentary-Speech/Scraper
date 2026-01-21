@@ -36,7 +36,7 @@ function get_date(fn)
     end
 
     function get_date_from_fn(fn)
-        #had to change from year to fn_year, WHAT???
+        #had to change from year to fn_year, weird
         fn = process_fn(fn)
         fn_year,fn_month,fn_day = split(fn,"_")
         fn_time = replace(fn, "_" => "-")
