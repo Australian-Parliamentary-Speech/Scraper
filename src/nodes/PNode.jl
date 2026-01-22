@@ -214,9 +214,9 @@ function find_talker_in_p(p_node::Node{<:PNode})
     p_talker_soup = findfirst_in_subsoup(p_node.node.path,"//a",p_node.soup)
     if isnothing(p_talker_soup)
         p_with_a_as_parent(p_node)
-        if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"
-            p_inline_name(p_node)
-        end
+#        if p_node.headers_dict["name.id"] == "N/A" && p_node.headers_dict["name"] == "N/A"
+#            p_inline_name(p_node)
+#        end
     else
         p_talker = p_talker_soup.content
 

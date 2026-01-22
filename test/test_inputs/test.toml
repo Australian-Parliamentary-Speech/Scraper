@@ -2,7 +2,8 @@
     #skip_cols = ["speaker_no","non_speech_flag","page.no","name","electorate","party","role","path","Speaker","Time","Other","question_flag","answer_flag","interjection_flag","speech_flag","petition_flag","quote_flag","motionnospeech_flag","chamber_flag","subdebateinfo","debateinfo"]  
     skip_cols = ["speaker_no","non_speech_flag","page.no","name","electorate","party","role","path","Speaker","Time","Other"]
     #or exact
+   # ["gold_standard","summary","toy_xml_test","MP_specific_gs"]
     which_sim_test = "fuzzy"
     fuzzy_search = [5,2]
-    which_house = "senate"
-    which_tests = ["summary"]
+    which_house = "house"
+    which_tests = ["gold_standard"]
