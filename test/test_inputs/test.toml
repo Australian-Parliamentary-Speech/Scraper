@@ -4,5 +4,5 @@
     #or exact
     which_sim_test = "fuzzy"
     fuzzy_search = [5,2]
-    which_house = "house"
+    which_house = "senate"
     which_tests = ["summary"]

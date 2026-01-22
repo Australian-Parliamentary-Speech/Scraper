@@ -155,7 +155,34 @@ end
 
  
 function p_inline_name(p_node::Node{<:PNode})
-    p_inline = findfirst_in_subsoup(p_node.node.path, "//inline",p_node.soup)
+    function not_name_check(next_node)
+        if occursin(r"^\s*'", next_node.content)
+            return true
+        end
+        return false
+    end
+
+    function find_inline_node(p_node)
+        enodes = nodes(p_node.node)
+        for e in enodes
+            if nodename(e) == "inline"
+                if hasnextnode(e)
+                    next_node = nextnode(e)
+                    if nodename(next_node) == "text" && not_name_check(next_node)
+                        @show e.content
+                        return nothing
+                    else
+                        return e
+                    end
+                else
+                    return e
+                end
+            end
+        end
+        return nothing
+    end
+            
+    p_inline = find_inline_node(p_node)
     p_content = p_node.node.content
     if !isnothing(p_inline)
         p_inline_content = p_inline.content
