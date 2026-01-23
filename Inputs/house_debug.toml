@@ -6,11 +6,12 @@
 #    filename = "hansard/house_xmls/1975/1975_07_09.xml"
 
 
-#[[ XML_DIR ]]
-#    path = "hansard/house_xmls"
+[[ XML_DIR ]]
+    path = "hansard/house_xmls"
+
 
 [[ XML_DIR ]]
-    path = "hansard/house_test_xmls"
+    path = "hansard/house_reserve_xmls"
 
 [ general_options ]
     which_house = "house"

@@ -6,17 +6,11 @@
 #    filename = "hansard/senate_xmls/1945/1945_03_02.xml"
 
 
-#[[ XML_DIR ]]
-#    path = "hansard/senate_xmls"
+[[ XML_DIR ]]
+    path = "hansard/senate_xmls"
 
 [[ XML_DIR ]]
     path = "hansard/senate_reserve_xmls"
-
-#[[ XML_DIR ]]
-#    path = "../../Download/senate_xmls"
-#
-#[[ XML_DIR ]]
-#    path = "../../sgml2xml/senate_xmls"
 
 
 
