@@ -6,12 +6,10 @@ This document describes what each Julia file in `src/nodes` does during XML pars
 
 The system processes parliamentary transcripts from different time periods with different XML structures:
 - **PhaseSGML** (1981-1997): Earlier SGML-based format 
-- **Phase2011** (1998-2011): Later XML format with different structure
+- **Phase2011** (1998-2011, plus historical 1901-1980 data): Later XML format with different structure
 - **Default Phase**: Modern format (post-2011)
 
-Each phase has different XML tag names, processing rules, and output formats.
-
-The phase system ensures that parliamentary transcripts from different eras are processed consistently while preserving their unique structural characteristics and historical context.
+The phase system ensures that parliamentary transcripts from different eras are processed differently according to their unique structural characteristics.
 
 ## Base Node Processing Workflows
 
@@ -42,7 +40,12 @@ The phase system ensures that parliamentary transcripts from different eras are 
 1. **Session marker**: Identifies `<debate>` sections in the XML
 2. **Simple recognition**: No content extraction - just recognizes when this section begins
 3. **Title extraction**: Extracts debate title information from `/debateinfo/title` path within the debate
-4. **Legacy filtering**: Contains commented logic that would filter out debates titled "BILLS" (currently disabled)
+4. **Filtering**: Contains commented logic that would filter out debates titled "BILLS" (currently disabled)
+
+### DebateTextNode.jl - Debate Text Container Processing
+**What it does:**
+1. **Container identification**: Identifies `<debate.text>` and `<subdebate.text>` elements
+2. **Simple recognition**: No content extraction - just recognizes the section so PNodes nested within it are picked up
 
 ### DivisionNode.jl - Voting Division Processing
 **What it does:**
@@ -56,44 +59,56 @@ The phase system ensures that parliamentary transcripts from different eras are 
 
 ### InterTalkNode.jl - Inter-Speaker Dialogue Processing
 **What it does:**
-1. **Content extraction**: Looks for `<talk.start>` elements and extracts text from `//talk.text` paths
-2. **Missing content handling**: If no talk text is found, sets content to a space character
-3. **Speaker identification**: Gets talker information from the parent node in the node tree
-4. **Context validation**: Ensures the talk is happening within an interjection section
+1. **Recognition only**: Identifies `<talk.start>` sections via `get_xpaths`, but does not process them
+2. **Disabled processing**: `process_node()` and `parse_node()` both `return nothing`, so no row is produced — InterTalk processing is effectively off in *all* phases (the full content-extraction logic is commented out)
 
 ### InterjectionNode.jl - Interjection Section Processing
 **What it does:**
 1. **Session marker**: Identifies `<interjection>` sections in the XML
 2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
+### MotionnospeechNode.jl - Motion Without Speech Processing
+**What it does:**
+1. **Session marker**: Identifies `<motionnospeech>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
+
+### PetitionNode.jl - Petition Processing
+**What it does:**
+1. **Session marker**: Identifies `<petition>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
+
 ### PNode.jl - Paragraph Content Processing (Most Complex, Highly Phase-Specific)
 
 **Base PNode (Default Phase) - uses `<p>` tags:**
-1. **Context identification**: Looks for `<p>` tags within speeches, questions, answers, or business sections
-2. **First paragraph detection**: Determines if this is the first `<p>` element under its parent node
+1. **Context identification**: Looks for `<p>` tags within speech, question, answer, business, debate, subdebate, or debate-text sections
+2. **First paragraph detection**: Determines if this is the first `<p>` element under its parent node. This is important for extracting speakers.
 3. **Speaker extraction**: Gets speaker from parent node or searches within paragraph content
-4. **Content processing**: Handles item labels, cleans text, builds complete records
+4. **Content processing**: Handles item flags (speech or answer or question, for example), cleans text
 
 **Phase2011 PNode - uses `<para>` tags:**
-1. **Different XML structure**: Processes `<para>` tags instead of `<p>` tags
+1. **Different XML tag**: Processes `<para>` tags instead of `<p>` tags
 2. **Expanded section support**: Can appear in more section types including `AdjournmentNode`, `SubdebateNode`
-3. **Advanced first-node detection**: 
+3. **Different first-node detection**: 
    - Always treats nodes under `MotionnospeechNode` as first
    - Checks for "talker" elements two nodes back to determine if it's a first paragraph
 4. **Quote node handling**: Special logic where quote nodes act like paragraph containers
 5. **InterTalk integration**: Special handling when paragraphs appear within InterTalkNode contexts
 
 **PhaseSGML PNode - uses `<para>` tags with SGML-specific features:**
-1. **SGML format processing**: Handles older SGML-based XML structure with `<para>` tags
+1. **Different XML tag**: Processes `<para>` tags instead of `<p>` tags
 2. **Parent finding logic**: Uses special `find_p_node_parent()` function for complex parent relationships
-3. **Font-based quote detection**: Identifies quotes by checking `@font-size="-=2"` attribute
-4. **Nonspeech node detection**: Identifies non-speech content in "NOTICES" and "PAPERS" sections
-5. **Special flag handling**: Adds `nonspeech` flag for administrative content without speakers
+3. **Font-based quote detection**: Identifies quotes by checking the `@font-size` attribute (in `define_flags`)
+4. **Speaker fallback**: When no talker is found on the parent, searches for a `//name` element under the parent path
 
 ### QuestionNode.jl - Question Processing
 **What it does:**
 1. **Question identification**: Identifies `<question>` XML elements in Q&A sessions
 2. **Continuation support**: Handles "continue" elements by validating parent node context
+
+### QuoteNode_.jl - Quote Processing
+**What it does:**
+1. **Session marker**: Identifies `<quote>` sections in the XML
+2. **Simple recognition**: No content extraction - just recognizes when this section begins
 
 ### SpeechNode.jl - Speech Processing
 **What it does:**
@@ -106,7 +121,14 @@ The phase system ensures that parliamentary transcripts from different eras are 
 2. **Simple recognition**: No content extraction - just recognizes when this section begins
 3. **Title extraction**: Gets subdebate title information from `/subdebateinfo/title` path
 
+### TableNode.jl - Table Processing
+**What it does:**
+1. **Container identification**: Identifies `<table>` elements
+2. **Content exclusion**: Recognizes tables specifically so their contents are not captured as speech text
+
 ## Phase-Specific Node Files
+
+These files override or extend the base nodes above for a particular phase (e.g. different tag names or section rules). Where a node type also has a base file (such as `MotionnospeechNode`, `PetitionNode`, `QuoteNode_`), the phase-specific file replaces only the differing behavior; everything else is inherited from the base node.
 
 ### Phase2011 Specific Nodes (src/nodes/Phases/Phase2011/nodes/)
 
@@ -115,12 +137,6 @@ The phase system ensures that parliamentary transcripts from different eras are 
 1. **Session marker**: Identifies `<adjournment>` sections in the XML
 2. **Simple recognition**: No content extraction - just recognizes when this section begins
 3. **Phase-specific structure**: Only exists in Phase2011, handles 1998-2011 adjournment format
-
-#### InterTalkNode.jl - Phase2011 Inter-Talk Processing (Disabled)
-**What it does:**
-1. **Recognition only**: Identifies `<talk.start>` elements but doesn't process them
-2. **Disabled processing**: `process_node()` and `parse_node()` functions return nothing
-3. **Simple validation**: Just checks if node name matches allowed XPath patterns
 
 #### MotionnospeechNode.jl - Phase2011 Motion Without Speech
 **What it does:**
@@ -143,11 +159,6 @@ The phase system ensures that parliamentary transcripts from different eras are 
 **What it does:**
 1. **SGML debate formats**: Handles multiple debate names: `<debate>`, `<qwn>`, `<answer.to.qon>`
 2. **Title extraction**: Gets titles from `/title` path instead of `/debateinfo/title`
-
-#### InterTalkNode.jl - PhaseSGML Inter-Talk Processing (Disabled)
-**What it does:**
-1. **Disabled processing**: Both `process_node()` and `parse_node()` return nothing
-2. **Format incompatibility**: Inter-talk processing is turned off for SGML format
 
 #### InterjectionNode.jl - PhaseSGML Interjection Processing
 **What it does:**
@@ -180,7 +191,6 @@ The phase system ensures that parliamentary transcripts from different eras are 
 ### Phase2011 (1998-2011) Features:
 - **Date Range**: 1998-2011 and historical 1901-1980 data
 - **New Node Types**: AdjournmentNode for session boundaries
-- **Disabled Features**: InterTalkNode processing turned off
 - **Enhanced Paragraphs**: More complex parent-child relationships in PNode
 - **Additional Content Types**: Petition, quote, motionnospeech support
 
@@ -189,25 +199,26 @@ The phase system ensures that parliamentary transcripts from different eras are 
 - **Extended Recognition**: More debate types (qwn, answer.to.qon)
 - **Different Tags**: `<interject>` instead of `<interjection>`
 - **Grouped Content**: Petition groups (`petition.grp`)
-- **Disabled Features**: InterTalkNode processing turned off
 
 ### Processing Differences Across Phases:
 1. **Tag Names**: Different XML element names for same concepts
 2. **Hierarchical Structure**: Different parent-child relationships
 3. **Content Detection**: Different methods for identifying quotes, speakers, etc.
 4. **Feature Availability**: Some processing features disabled in certain phases
-5. **Output Headers**: Different metadata fields in final CSV output
+5. **Output Headers**: Unified across all phases — identical CSV metadata fields (see below)
 6. **Validation Rules**: Phase-specific logic for determining node types
 
 ## Header Systems Across Phases
 
-Each phase defines different header configurations for the final CSV output:
+All phases share a single, unified header configuration for the final CSV output. The default phase (`NodeModule.jl:488`), Phase2011 (`Phase2011.jl:43`), and PhaseSGML (`PhaseSGML.jl:45`) each define `define_headers` returning the identical set of fields:
 
-### Default Phase (GenericPhase) - `NodeModule.jl:464`
 - **question_flag**: 1 if within QuestionNode, 0 otherwise
 - **answer_flag**: 1 if within AnswerNode, 0 otherwise
 - **interjection_flag**: 1 if within InterjectionNode, 0 otherwise
 - **speech_flag**: 1 if within SpeechNode, 0 otherwise
+- **petition_flag**: 1 if within PetitionNode, 0 otherwise
+- **quote_flag**: 1 if within QuoteNode, 0 otherwise
+- **motionnospeech_flag**: 1 if within MotionnospeechNode, 0 otherwise
 - **chamber_flag**: Chamber type (0=none, 1=chamber, 2=federal, 3=answers)
 - **name**: Speaker name
 - **name.id**: Speaker ID
@@ -220,16 +231,6 @@ Each phase defines different header configurations for the final CSV output:
 - **debateinfo**: Title of debate section
 - **path**: XML path to the node
 
-### Phase2011 (1998-2011) - `Phase2011.jl:44`
-**All default headers above, plus:**
-- **petition_flag**: 1 if within PetitionNode, 0 otherwise
-- **quote_flag**: 1 if within QuoteNode, 0 otherwise
-- **motionnospeech_flag**: 1 if within MotionnospeechNode, 0 otherwise
-
-### PhaseSGML (1981-1997) - `PhaseSGML.jl:37`
-**All Phase2011 headers above, plus:**
-- **nonspeech**: 1 for administrative content in "NOTICES"/"PAPERS" sections with no speaker, 0 otherwise
-
-The header system progressively adds more content classification capabilities in later phases while maintaining backward compatibility with core parliamentary data fields.
+Because the header set is unified across phases, every phase produces CSV output with the same columns in the same order, ensuring consistent downstream processing regardless of the source document era. Phases still differ in *how* they populate these fields (tag names, content detection, feature availability), but the output schema is shared.
 
 

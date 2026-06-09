@@ -1,9 +1,11 @@
 # Usage
 
-Here we start with the description of the user interface regarding inputs and outputs. Details about some structurally important functions are listed after.
+Here we desribe the user interface regarding inputs and outputs. 
 
-## Inputs
-The input xml files live in the directory src/Inputs/, and specifically where they live is specified in the toml file. For example, as currently stated in Inputs/hansard/hansard.toml, the xmls live in src/Inputs/hansard/xmls. You can define your own toml and your own directory of where the xmls live. To run the program, head to the src/ directory and run:
+## Input XML files
+The location of the input XML files is configured via a TOML file in src/Inputs/. The default configuration at Inputs/hansard/<house|senate>.toml specifies three directories under XML\_DIR. To use custom input paths, provide your own TOML file and set XML_DIR accordingly.
+
+To run the program, navigate to the src/ directory and run:
 
 ```console 
 ./run Inputs/hansard/house.toml
@@ -11,18 +13,15 @@ The input xml files live in the directory src/Inputs/, and specifically where th
 or 
 
 ```console
-./run <insert your toml file>
+./run <insert your TOML file>
 ```
 
-### Input toml file
-
-The input toml file allows the user to select options for the run. The output directory, the year range, whether the first step of the process is done and whether edit is preferred are the options that the user can edit. In terms of what files the program runs, we have two modes available when running the program. It can run one xml file or a directory of xml files.
-
-In this section, we give a comprehensive explanation of all the toml options, and provides some quick starts that you can use for senate or house.
+### Input TOML file
+The input TOML file defines all configuration for the program. This section documents every available option, and provides ready-to-use starter TOML files for both the Senate and the House.
 
 * output\_path (under [ global ]): 
     - where to save the final CSV files after processing
-    Example: if set to "../../Outputs/HouseCSV/hansard", files will be saved there 
+    Example: if set to "../../Outputs/HouseCSV/hansard", the output files will be saved there 
 
 * path (under [[ XML\_DIR ]]):
     - You can either run one single file or one entire directory. 
@@ -41,10 +40,10 @@ In this section, we give a comprehensive explanation of all the toml options, an
 * xml\_parsing (under [general\_options])
     - Whether to skip scraping 
     - true = extract data from XML files
-    - false = skip scraping, assuming there exists outputs 
+    - false = skip scraping, assuming there exists outputs. This is for runs that require editting only. 
 
 * edit (under [general\_options])
-    - Processing steps to clean and format the data
+    - Processing steps to clean and format the CSV files after parsing
     - These run in the order listed - each step processes the output of the previous step
     - Common steps: "speaker\_time", "re", "free\_node", "flatten", "column\_decorate" (more explanation see below)
     - The order matters. It is strongly recommended to use the list provided in the sample file for the best outcome 
@@ -56,7 +55,7 @@ In this section, we give a comprehensive explanation of all the toml options, an
 
 * run\_xml\_toggle
     - Master switch for all XML processing functions
-    - true = run all XML processing steps normally
+    - true = run all XML processing steps normally. This is the recommended option.
     - false = skip all XML functions, only write samples or remove processing steps. 
 
 * sample
@@ -66,21 +65,21 @@ In this section, we give a comprehensive explanation of all the toml options, an
 
 * remove\_nums 
     - Which intermediate CSV files to delete after processing (to save disk space)
-    - The program creates files named like "data\_step\_0.csv", "data\_step\_1.csv", etc.
-    - This setting deletes those intermediate files, keeping only the final result
+    - The program creates files named like "data\_step\_0.csv", "data\_step\_1.csv", etc. This setting deletes those intermediate files, keeping only the final result
+    - Default: [0,1,2,3,4,5,6,7] deletes everything except the final step.
     - Example: [0,1,2,3,4,5,6] deletes steps 0 through 6 (keeps only the final step)
     - Example: [0,1,2] deletes only the first 3 intermediate files
     - Example: [] keeps all intermediate files (uses more disk space)
 
 * xml\_name\_clean
     - Whether to clean up XML filenames for inconsistent date formats
-    - true = rename files to standard format
+    - true = rename files to standard format. This is the recommended option.
     - false = keep original filenames
 
 
 ### Quick start input files
 
-For a single xml file (for senate):
+For a single XML file (for senate):
 ```
 [ global ]
     output_path = "../../Outputs/SenateCSV/hansard"
@@ -99,7 +98,7 @@ For a single xml file (for senate):
     remove_nums = [0,1,2,3,4,5,6,7]
     xml_name_clean = false
 ```
-Note that if the date for the single xml is out of range from the year defined, the program might not run.
+Note that if the date for the single XML is out of range from the year defined, the program might not run.
 
 For a directory of xmls (for Senate):
 
@@ -121,7 +120,7 @@ For a directory of xmls (for Senate):
     remove_nums = [0,1,2,3,4,5,6]
     xml_name_clean = false
 ```
-For a single xml file (for House):
+For a single XML file (for House):
 ```
 [ global ]
     output_path = "../Outputs/HouseCSV/hansard"
@@ -141,7 +140,7 @@ For a single xml file (for House):
     xml_name_clean = false
 ```
 
-Note that if the date for the single xml is out of range from the year defined, the program might not run.
+Note that if the date for the single XML is out of range from the year defined, the program might not run.
 
 For a directory of xmls (for House), this is also anexample where you can run multiple directories:
 
@@ -179,18 +178,17 @@ For a directory of xmls (for House), this is also anexample where you can run mu
 
 ### stage\_direction
 
-Identifies and standardises procedural (non-speech) rows.
+Identifies the parliamentary stage directions.
 
 - Detects parliamentary stage directions using known procedural phrases
-- Clears speaker attribution for procedural rows
+- Set speaker to "N/A". 
 
 
-### speaker\_time (often not used)
-Extracts timing and auxiliary information from speech rows.
+### speaker\_time
+Extracts timing and auxiliary information from speech rows. This is an early feature that was later deemed not very useful.
 
 - Separates embedded time markers from speech content into a dedicated time column
 - Adds new columns for speaker label, time, and other extracted metadata
-- Moves non-speaker or descriptive labels into an auxiliary “Other” field
 
 ### re
 
@@ -199,12 +197,12 @@ Extracts speaker information and cleans speech text.
 - Identifies speaker names embedded in speech content and moves them to the speaker column
 - Detects and labels interjections
 - Makes an attempt to infer missing speaker names from structured text
-- Removes speaker labels, punctuation artefacts, and formatting noise from speech content
+- Removes speaker prefixes and formatting noise from speech content
 - Drops rows with empty speech content
 
 ### free\_node
 
-Resolves unattributed (“free-flowing”) rows within a debate.
+There are many unauthored speeches from the raw processing of XML. This step resolves unattributed (“free-flowing”) rows within a debate.
 
 - Assigns free or missing speaker names to the most recent valid speaker in the same debate
 - Attributes quoted or continued speech to the correct speaker where possible
@@ -216,15 +214,12 @@ Resolves unattributed (“free-flowing”) rows within a debate.
 Flattens multi-row speeches into single rows.
 
 - Merges consecutive speech rows from the same speaker into one row
-- Appends child speech content to the parent speech
 - Stops merging when a new speaker, debate context, or stage direction is encountered
-- Ensures each speech appears only once in the output
 
 ### final\_re
 
 Applies final cleaning and standardisation to the CSV output.
 
-- Fills missing speaker names from available speaker metadata
 - Reclassifies rows with speaker information as speech
 - Cleans speech text by removing leading punctuation and excess whitespace
 - Drops rows with empty speech content

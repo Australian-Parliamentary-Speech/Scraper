@@ -33,9 +33,9 @@ download\_utils.jl
 run (bash file)
 
 ## logfile
-The logfiles are in sitemap\_logfiles/. It contains information on how many links in total were detected (to compare with the parlinfo website) and how many missing were updated from this run.
+The logfiles are in sitemap\_logfiles/. It contains information on how many links in total were detected (to compare with the parlinfo website) and how many missing were updated from this run. This directory will be generated upon running.
 
-## To update the download
+## To update the download (Needs change)
 The update process does not download all files again, it downloads only the files that are not present in the current directory. 
 
 The same command above can be used again to update the XMLs:
