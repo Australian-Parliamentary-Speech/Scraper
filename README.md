@@ -2,6 +2,7 @@
 
 # Parsing
 
+
 ## Step one, in your preferred directory, clone this repo with HTTP or SSH:
 ```
 git clone https://github.com/Australian-Parliamentary-Speech/Scraper.git
