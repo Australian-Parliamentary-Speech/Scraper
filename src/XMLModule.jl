@@ -1,11 +1,9 @@
 module XMLModule
-using Reexport
-using AndExport
-@reexport using EzXML
 
 using ..Utils
 
-@xport function clean_xml_names(xml_paths)
+export clean_xml_names
+function clean_xml_names(xml_paths)
     function add_zero(str)
         if length(str) == 1
             return "0$str"
@@ -18,21 +16,21 @@ using ..Utils
         fn = basename(xml_path_)
         dir = dirname(xml_path_)
         m = match(r"(\d+)[_](\d+)[_](\d+)\.xml", fn)
-        first,second,third = m.captures
+        first, second, third = m.captures
         if length(first) < 4 && length(third) == 4
             year = third
             day = add_zero(first)
             month = add_zero(second)
-       elseif length(first) == 4
+        elseif length(first) == 4
             year = first
             month = add_zero(second)
             day = add_zero(third)
-       else
+        else
             @debug "xml name $(xml_path_) has invalid date format"
         end
         cleaned_fn = "$(year)_$(month)_$(day).xml"
-        cleaned_xml_path = joinpath(dir,cleaned_fn)
-        push!(cleaned_xml_paths,(year,cleaned_xml_path))
+        cleaned_xml_path = joinpath(dir, cleaned_fn)
+        push!(cleaned_xml_paths, (year, cleaned_xml_path))
         if xml_path_ != cleaned_xml_path
             command = `mv $(xml_path_) $(cleaned_xml_path)`
             run(command)
@@ -41,15 +39,18 @@ using ..Utils
     return cleaned_xml_paths
 end
 
-@xport function findall_in_subsoup(path,xpath,soup)
-    return findall("$(path)$xpath",soup)
+export findall_in_subsoup
+function findall_in_subsoup(path, xpath, soup)
+    return findall("$(path)$xpath", soup)
 end
 
-@xport function findfirst_in_subsoup(path,xpath,soup)
-    return findfirst("$(path)$xpath",soup)
+export findfirst_in_subsoup
+function findfirst_in_subsoup(path, xpath, soup)
+    return findfirst("$(path)$xpath", soup)
 end
 
-@xport function filter_node_content_by_paths(node,paths)
+export filter_node_content_by_paths
+function filter_node_content_by_paths(node, paths)
     content = ""
     path = node.path
     for child in nodes(node)
@@ -69,21 +70,23 @@ end
 ##    s = replace(s, '"' => "")
 #    return s
 #end
-#
-@xport function clean_name(str::AbstractString)
+
+export clean_name
+function clean_name(str::AbstractString)
     str = clean_text(str)
-    unwanted_char = ["(",")",".","-"]
+    unwanted_char = ["(", ")", ".", "-"]
     for char in unwanted_char
         str = replace(str, char => "")
     end
     return str
 end
 
-@xport function clean_text(str::AbstractString)
+export clean_text
+function clean_text(str::AbstractString)
     # Replace newline characters with an empty string
     filtered_str = replace(str, "\n" => "")
 
-#    filtered_str = replace.(str, r"^[ \.]?-+" => "")
+    #    filtered_str = replace.(str, r"^[ \.]?-+" => "")
     # Replace multiple spaces with a single space, excluding spaces between words
     filtered_str = replace(filtered_str, r"\s+" => " ")
     if all(isspace, filtered_str)
