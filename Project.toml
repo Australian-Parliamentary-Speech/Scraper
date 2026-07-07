@@ -1,29 +1,35 @@
-name = "ParlinfoSpeechScraper"
+name = "PSSConvert"
 uuid = "3fb2ed58-985e-428b-9a27-55663dc902eb"
-authors = ["Eve <evecheng999@gmail.com>"]
-version = "0.1.0"
+version = "1.0.0"
+authors = ["Eve Cheng <evecheng999@gmail.com>", "Patrick Armstrong <patrick.james.1998@gmail.com>"]
+
+[workspace]
+projects = ["test", "docs"]
 
 [deps]
-AndExport = "4484d908-372d-4f90-b90b-0ec97f005b8c"
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
 BetterInputFiles = "c0b1955d-4702-4680-a946-720482e78a48"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
-Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
-Gumbo = "708ec375-b3d6-5a57-a7ce-8257bf98657a"
-HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+PSSUtils = "3b0d97d8-c816-44bb-9b91-056f8c661615"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
-Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 
 [compat]
+ArgParse = "1.2.0"
 BetterInputFiles = "1.3.0"
+CSV = "0.10.16"
+DataFrames = "1.8.2"
 DocStringExtensions = "0.9.5"
+EzXML = "1.2.3"
+InteractiveUtils = "1.11.0"
 Logging = "1.11.0"
-Random = "1.11.0"
+OrderedCollections = "1.8.2"
+ProgressMeter = "1.11.0"
+Reexport = "1.2.2"
+julia = "1.12"
