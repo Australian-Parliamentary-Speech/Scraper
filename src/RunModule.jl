@@ -286,7 +286,7 @@ function run_xml(fn, output_path, xml_parsing, csv_edit, edit_funcs, which_house
         println(file, error_files)
     end
 
-    #Base.GC.gc()
+    Base.GC.gc()
     return date
 end
 
