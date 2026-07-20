@@ -46,6 +46,12 @@ range_to_phase = Dict()
 #    end
 #end
 
+"""
+    detect_edit_phase(date)
+
+Looks up `date` in `date_to_phase` (exact match or within a registered
+range); returns `AbstractEditPhase` if nothing matches.
+"""
 function detect_edit_phase(date)
     # See if year has specific phase
     phase = get(date_to_phase, date, nothing)

@@ -83,8 +83,8 @@ function get_date(fn)
         year, month, day, time = get_date_from_fn(fn)
         @info "Failure retrieving date from XML: year$year,month$month,day$day"
     end
-    # Base.GC.gc()
-    return date_to_float(parse(Int, year), parse(Int, month), parse(Int, day)), time
+#    Base.GC.gc()
+    return date_to_float(parse(Int, year), parse(Int, month), parse(Int, day)), time, soup
 end
 
 """
@@ -145,6 +145,7 @@ function run_PSSConvert(toml::Dict{String,Any})
             end
         end
     end
+    @show xml_name_clean
 
     if xml_name_clean
         xml_paths = clean_xml_names(xml_paths)
@@ -155,7 +156,7 @@ function run_PSSConvert(toml::Dict{String,Any})
 
     #    Threads.@threads for (year,fn) in xml_paths
     @showprogress for (year, fn) in xml_paths
-        _, date = try
+        date_float, date, soup = try
             get_date(fn)
         catch e
             @info "$fn did not pass opening the xml..."
@@ -166,17 +167,22 @@ function run_PSSConvert(toml::Dict{String,Any})
         mkpath(output_path_)
         final_csv = joinpath(output_path_, "$(date)_edit_step$(remove_num[end] + 1).csv")
         if run_xml_toggle & !isfile(final_csv)
-            run_xml(fn, output_path_, xml_parsing, csv_edit, edit_funcs, which_house, log_temp_dir)
+            run_xml(fn, output_path_, xml_parsing, csv_edit, edit_funcs, which_house, log_temp_dir,date,date_float,soup)
         end
         remove_steps(output_path_, remove_num, date)
     end
-
+    
     if sample_write
         copy_sample_file(output_path, length(edit_funcs))
     end
     log_close(log_temp_dir)
 end
 
+"""
+    remove_steps(output_path_, remove_num, date)
+
+Deletes the intermediate edit-step CSVs for `date` listed in `remove_num`.
+"""
 function remove_steps(output_path_, remove_num, date)
     for num in remove_num
         if num == 0
@@ -197,6 +203,11 @@ function remove_steps(output_path_, remove_num, date)
     end
 end
 
+"""
+    copy_sample_file(output_path, num)
+
+Copies the final CSV for each date listed in `dates.csv` into `upload/`.
+"""
 function copy_sample_file(output_path, num)
     sample_dates = readlines(joinpath(dirname(output_path), "dates.csv"))
     sample_dir = joinpath(dirname(output_path), "upload")
@@ -253,18 +264,12 @@ Inputs:
 - `csv_exist`: Boolean flag indicating if a CSV file already exists.
 - `edit_funcs`: list of edit functions
 """
-function run_xml(fn, output_path, xml_parsing, csv_edit, edit_funcs, which_house, log_temp_dir)
+function run_xml(fn, output_path, xml_parsing, csv_edit, edit_funcs, which_house, log_temp_dir,date,date_float,soup)
     error_files = []
-    xdoc = nothing
-    try
-        xdoc = readxml(fn)
-    catch e
-        push!(error_files, fn)
-        #Base.GC.gc()
-        return
-    end
-    soup = root(xdoc)
-    date_float, date = get_date(fn)
+#    xdoc = nothing
+#    soup = root(xdoc)
+##    date_float, date = get_date(fn)
+    #@show date
     logger = log_setup(date, log_temp_dir)
     log_debug(logger, "$date debugging messages \n")
 
@@ -286,7 +291,7 @@ function run_xml(fn, output_path, xml_parsing, csv_edit, edit_funcs, which_house
         println(file, error_files)
     end
 
-    Base.GC.gc()
+#    Base.GC.gc()
     return date
 end
 

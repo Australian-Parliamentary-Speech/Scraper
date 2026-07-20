@@ -5,6 +5,7 @@ using Test
 using CSV, DataFrames
 using Glob
 using BetterInputFiles
+using PSSUtils
 using Dates
 include(joinpath(@__DIR__, "utils.jl"))
 include(joinpath(@__DIR__, "similarity_funcs.jl"))
@@ -33,8 +34,21 @@ function setup(which_house)
     outputpath = global_options["OUTPUT_PATH"]
     xml_path_toml = toml["XML_DIR"][1]
     xml_path = xml_path_toml["PATH"]
-    inputpath = joinpath("..", "Inputs", xml_path)
+    inputpath = joinpath("test_inputs", xml_path)
     return inputpath, outputpath, toml
+end
+
+function ensure_decompressed(path)
+    tarball = path * ".tar.zst"
+    tmp = tempname(dirname(path); cleanup=false)
+    @info "Decompressing $tarball into scratch dir $tmp (leaving the original tarball untouched)..."
+    decompress(tarball, tmp, clear=false)
+    return tmp
+end
+
+function cleanup_decompressed(path)
+    @info "Removing scratch dir $path..."
+    rm(path, force=true, recursive=true)
 end
 
 function test_input_setup()
@@ -131,6 +145,11 @@ end
 @testset verbose = true "Entire set" begin
     skip_cols, which_sim_test, fuzzy_search, which_house, which_tests = test_input_setup()
     inputpath, outputpath, toml = setup(which_house)
+    needs_outputpath = ("gold_standard" ∈ which_tests) || ("summary" ∈ which_tests)
+    if needs_outputpath
+        outputpath = ensure_decompressed(outputpath)
+    end
+    try
     #gold standard
     if "gold_standard" ∈ which_tests
         @test begin
@@ -278,6 +297,11 @@ end
             end
 
             true
+        end
+    end
+    finally
+        if needs_outputpath
+            cleanup_decompressed(outputpath)
         end
     end
 end

@@ -3,6 +3,12 @@ export AnswerNode
 abstract type AnswerNode{P} <: AbstractNode{P} end
 
 
+"""
+    is_nodetype(node, node_tree, ::Type{<:AnswerNode}, phase, soup, args...; kwargs...)
+
+A `<continue>` tag counts as an `AnswerNode` if its parent's tag does - it
+inherits type from context rather than being named `answer` itself.
+"""
 function is_nodetype(node, node_tree,nodetype::Type{<:AnswerNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...)
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)

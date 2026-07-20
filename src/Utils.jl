@@ -4,6 +4,12 @@ export write_row_to_io
 export date_to_float
 export edit_row
 
+"""
+    date_to_float(year, month, day)
+
+Encode `year`/`month`/`day` as one sortable `Float64` (month and day packed
+into the fractional part).
+"""
 function date_to_float(year, month, day)
     return round(year + month / 120 + day / 3100, digits=6)
 end

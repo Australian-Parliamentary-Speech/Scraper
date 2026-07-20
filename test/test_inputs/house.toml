@@ -1,5 +1,5 @@
 [ global ]
-    output_path = "../../Outputs/HouseCSV/hansard"
+    output_path = "../../../../output/source_csv/house"
 
 ###choose one: XML or XML_DIR
 #[[ XML ]]
@@ -7,7 +7,10 @@
 
 
 [[ XML_DIR ]]
-    path = "hansard/house_xmls"
+    path = "../../../../output/source_xml/house/xmls"
+
+[[ XML_DIR ]]
+    path = "../../../../output/source_sgml/house/xmls"
 
 [ general_options ]
     which_house = "house"

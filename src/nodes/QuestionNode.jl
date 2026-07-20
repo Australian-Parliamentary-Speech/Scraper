@@ -3,6 +3,11 @@ export QuestionNode
 abstract type QuestionNode{P} <: AbstractNode{P} end
 
 
+"""
+    is_nodetype(node, node_tree, ::Type{<:QuestionNode}, phase, soup, args...; kwargs...)
+
+A `<continue>` tag counts as a `QuestionNode` if its parent's tag does.
+"""
 function is_nodetype(node, node_tree,nodetype::Type{<:QuestionNode},phase::Type{<:AbstractPhase},soup, args...; kwargs...)
     nodetype = nodetype{phase}
     allowed_names = get_xpaths(nodetype)

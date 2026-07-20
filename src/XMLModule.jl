@@ -3,6 +3,14 @@ module XMLModule
 using ..Utils
 
 export clean_xml_names
+"""
+    clean_xml_names(xml_paths)
+
+Rewrite each `(year, path)` in `xml_paths` to the canonical
+`<year>_<month>_<day>.xml` filename, detecting whether the existing filename
+is `day_month_year` or `year_month_day` ordered by which of the first/third
+numbers is 4 digits long, and renaming the file on disk if it changed.
+"""
 function clean_xml_names(xml_paths)
     function add_zero(str)
         if length(str) == 1

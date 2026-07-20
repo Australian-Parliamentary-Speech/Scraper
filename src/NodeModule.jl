@@ -80,6 +80,12 @@ function detect_phase(date, which_house)
     end
 end
 
+"""
+    detect_phase_senate(date)
+
+Looks up `date` in `date_to_phase_senate`; falls back to `detect_phase_house`
+if no senate-specific phase is registered.
+"""
 function detect_phase_senate(date)
     phase = get(date_to_phase_senate, date, nothing)
     if !isnothing(phase)
@@ -96,6 +102,12 @@ function detect_phase_senate(date)
     end
 end
 
+"""
+    detect_phase_house(date)
+
+Looks up `date` in `date_to_phase` (exact match or within a registered
+range); returns `AbstractPhase` if nothing matches.
+"""
 function detect_phase_house(date)
     # See if year has specific phase
     phase = get(date_to_phase, date, nothing)
@@ -364,6 +376,11 @@ function free_node_parent_types(node::Node{<:AbstractNode{<:AbstractPhase}})
     return [DebateNode, SubdebateNode, SpeechNode]
 end
 
+"""
+    is_free_node(node, parent_node)
+
+True if `parent_node`'s type is one of `free_node_parent_types(node)`.
+"""
 function is_free_node(node::Node{<:AbstractNode{<:AbstractPhase}}, parent_node)
     """to toggle the free node feature"""
     if true
@@ -489,6 +506,12 @@ function define_headers(::Type{<:AbstractPhase})
     return headers_dict
 end
 
+"""
+    get_node_content(node, content)
+
+Rebuilds `content` from `node`'s children, adding a space around any
+`"inline"` child's text.
+"""
 function get_node_content(node::Node{<:AbstractNode{<:AbstractPhase}}, content)
     content = ""
     for element in nodes(node.node)
@@ -598,6 +621,12 @@ function write_test_xml(trigger_node, parent_node, edge_case)
 end
 
 
+"""
+    is_name(name)
+
+False if `name` is `nothing`, has more than 5 words, contains a digit, or is
+`"Committee"`; true otherwise.
+"""
 function is_name(name)
     if isnothing(name)
         return false
