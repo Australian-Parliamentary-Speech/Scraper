@@ -83,7 +83,7 @@ function get_date(fn)
         year, month, day, time = get_date_from_fn(fn)
         @info "Failure retrieving date from XML: year$year,month$month,day$day"
     end
-#    Base.GC.gc()
+    Base.GC.gc()
     return date_to_float(parse(Int, year), parse(Int, month), parse(Int, day)), time, soup
 end
 
@@ -291,7 +291,7 @@ function run_xml(fn, output_path, xml_parsing, csv_edit, edit_funcs, which_house
         println(file, error_files)
     end
 
-#    Base.GC.gc()
+    Base.GC.gc()
     return date
 end
 
