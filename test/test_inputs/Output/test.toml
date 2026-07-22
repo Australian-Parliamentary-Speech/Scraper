@@ -1,14 +1,14 @@
 [GLOBAL]
-BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/test_inputs/"
-INPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/test_inputs"
-LOG_FILE = "/home/eve/Development/ParlinfoSpeechScraper/test/test_inputs/Output/log.txt"
+BASE_PATH = "/home/eve/Development/ParlinfoSpeechScraper/src/PSSConvert/test/test_inputs/"
+INPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/src/PSSConvert/test/test_inputs"
+LOG_FILE = "/home/eve/Development/ParlinfoSpeechScraper/src/PSSConvert/test/test_inputs/Output/log.txt"
 LOGGING = true
-OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/test/test_inputs/Output"
+OUTPUT_PATH = "/home/eve/Development/ParlinfoSpeechScraper/src/PSSConvert/test/test_inputs/Output"
 
 [METADATA]
-TIME = "15:01:54"
-ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/test/test_inputs/test.toml"
-DATE = "2026-01-22"
+TIME = "20:04:32"
+ORIGINAL = "/home/eve/Development/ParlinfoSpeechScraper/src/PSSConvert/test/test_inputs/test.toml"
+DATE = "2026-07-20"
 
 [TEST_PARAMS]
 WHICH_SIM_TEST = "fuzzy"

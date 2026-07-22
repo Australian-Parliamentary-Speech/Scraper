@@ -300,9 +300,10 @@ end
         end
     end
     finally
-        if needs_outputpath
-            cleanup_decompressed(outputpath)
-        end
+        nothing
+#        if needs_outputpath
+#            cleanup_decompressed(outputpath)
+#        end
     end
 end
 
